@@ -1,11 +1,10 @@
 using Ansjon.Components;
 using Ansjon.Components.Account;
+using Ansjon.Infrastructures.Repositories.CommunicationRepos;
 using Ansjon.Infrastructures.SqlDatabase;
+using Ansjon.UseCases.Communications;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Ansjon.UseCases;
-using Ansjon.UseCases.Communications;
-using Ansjon.Infrastructures.Repositories.CommunicationRepos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,7 +41,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
-//builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
 
