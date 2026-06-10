@@ -1,5 +1,4 @@
 using Ansjon.Core.Entities;
-using Ansjon.Infrastructures.SqlDatabase;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
