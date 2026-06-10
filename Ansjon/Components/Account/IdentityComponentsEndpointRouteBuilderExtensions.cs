@@ -1,6 +1,6 @@
 using Ansjon.Components.Account.Pages;
 using Ansjon.Components.Account.Pages.Manage;
-using Ansjon.Data;
+using Ansjon.Infrastructures.SqlDatabase;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -11,7 +11,7 @@ using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace Microsoft.AspNetCore.Routing
+namespace Ansjon.Components.Account
 {
     internal static class IdentityComponentsEndpointRouteBuilderExtensions
     {

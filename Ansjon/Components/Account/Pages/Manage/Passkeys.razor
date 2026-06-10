@@ -1,8 +1,7 @@
 ﻿@page "/Account/Manage/Passkeys"
 
-@using Ansjon.Data
+@using Ansjon.Infrastructures.SqlDatabase;
 @using Microsoft.AspNetCore.Identity
-@using System.ComponentModel.DataAnnotations
 @using System.Buffers.Text
 
 @inject UserManager<ApplicationUser> UserManager
