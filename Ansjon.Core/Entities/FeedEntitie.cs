@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ansjon.Core.Entities
+﻿namespace Ansjon.Core.Entities
 {
-    public class Feed    {
+    public class Feed
+    {
         public Guid Id { get; set; }
-        
         public required string Title { get; set; }
         public string Content { get; set; } = string.Empty;
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
