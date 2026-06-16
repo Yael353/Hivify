@@ -8,4 +8,5 @@ namespace Ansjon.UseCases.Communications
         Task<IEnumerable<Feed>> GetAllFeedsAsync();
 
     }
+
 }
