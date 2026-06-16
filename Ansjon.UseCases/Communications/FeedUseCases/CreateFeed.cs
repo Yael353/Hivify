@@ -6,18 +6,15 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
 
     public class CreateFeed
     {
-        private ICommunicationRepo communicationRepo;
-        public CreateFeed(ICommunicationRepo _communicationRepo)
+        private readonly ICommunicationRepo _communicationRepo;
+        public CreateFeed(ICommunicationRepo communicationRepo)
         {
-            communicationRepo = _communicationRepo;
+            _communicationRepo = communicationRepo;
         }
 
-        public Guid CreateFeedCommand(CreateFeedDto input)
+        public async Task<Guid> Execute(CreateFeedDto input)
         {
-            if (input == null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
+            ArgumentNullException.ThrowIfNull(input);
 
             if (string.IsNullOrWhiteSpace(input.Title))
             {
@@ -31,11 +28,14 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
 
             var feed = new Feed
             {
+                Id = Guid.NewGuid(),
                 Title = input.Title.Trim(),
-                Content = input.Content?.Trim() ?? string.Empty
+                Content = input.Content,
+                AuthorId = input.AuthorId,
+                CreatedDate = DateTime.UtcNow
             };
 
-            await communicationRepo.CreateFeedAsync(feed);
+            await _communicationRepo.CreateFeedAsync(feed);
 
             return feed.Id;
 
