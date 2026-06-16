@@ -7,18 +7,12 @@ namespace Ansjon.Infrastructures.Repositories.CommunicationRepos
 {
     public class CommunicationRepo : ICommunicationRepo
     {
-        private readonly ApplicationDbContext _context;
-
-        public CommunicationRepo(ApplicationDbContext context)
+        // db injection
+        public Task CreateFeedAsync(Feed FeedRecord)
         {
-            _context = context;
-        }
-        public async Task<IEnumerable<Feed>> GetAllFeedsAsync()
-        {
-            return await _context.Feeds.ToListAsync();
-        }
 
-        public async Task<Feed?> GetByIdAsync(Guid id)
+        }
+        public Task<IEnumerable<Feed>> GetAllFeedsAsync()
         {
             return await _context.Feeds.FindAsync(id);
         }
