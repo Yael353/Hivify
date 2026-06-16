@@ -5,17 +5,11 @@ namespace Ansjon.Infrastructures.Repositories.CommunicationRepos
 {
     public class CommunicationRepo : ICommunicationRepo
     {
-        //private readonly  
+        // db injection
+        public Task CreateFeedAsync(Feed FeedRecord)
+        {
 
-        //public CommunicationRepo(ICommunicationRepo communicationRepo)
-        //{
-        //    _communicationRepo = communicationRepo;
-        //}
-
-        //public Task GetAllFeedsAsync()
-        //{
-        //    return _communicationRepo.GetAllFeedsAsync();
-        //}
+        }
         public Task<IEnumerable<Feed>> GetAllFeedsAsync()
         {
             throw new NotImplementedException();
