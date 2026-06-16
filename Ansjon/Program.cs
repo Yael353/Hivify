@@ -3,6 +3,7 @@ using Ansjon.Components.Account;
 using Ansjon.Infrastructures.Repositories.CommunicationRepos;
 using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Communications;
+using Ansjon.UseCases.Communications.FeedUseCases;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,6 +44,11 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
+builder.Services.AddScoped<CreateFeed>();
+builder.Services.AddScoped<ViewFeeds>();
+builder.Services.AddScoped<UpdateFeed>();
+builder.Services.AddScoped<DeleteFeed>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
