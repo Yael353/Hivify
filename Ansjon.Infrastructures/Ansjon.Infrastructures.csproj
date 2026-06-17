@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Ansjon.UseCases\Ansjon.UseCases.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SqlDatabase\Migrations\" />
+  </ItemGroup>
+
 </Project>

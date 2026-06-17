@@ -10,11 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents();
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    ));
-builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
+
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityRedirectManager>();
@@ -26,12 +22,10 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 builder.Services.AddAuthorization();
-
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
     {
         options.SignIn.RequireConfirmedAccount = true;
@@ -42,6 +36,10 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+// Yas-odi 
+builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
+builder.Services.AddFeedServices();
 
 var app = builder.Build();
 

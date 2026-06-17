@@ -5,11 +5,24 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
 {
     public class ViewFeeds
     {
-        //GetAllFeeds
-        // A feed can be a post, an article, etc. has a title, post-date(CreatedAt) and a discription.It will be created by the system.  It will only be displayed in a feedcomponent for the users.
-        public async Task<IEnumerable<Feed>> GetAllFeeds()
+        private readonly ICommunicationRepo _communicationRepo;
+
+        public ViewFeeds(ICommunicationRepo communicationRepo)
         {
-            throw new NotImplementedException();
+            _communicationRepo = communicationRepo;
         }
+
+        public async Task<IEnumerable<Feed>> GetAllFeedsAsync()
+        {
+            var feed = await _communicationRepo.GetAllFeedsAsync();
+            Console.Write(feed);
+            return feed;
+        }
+
+        public async Task<IEnumerable<Feed>> GetFeedsByDateAsync(DateTime date)
+        {
+            return await _communicationRepo.GetAllByDateAsync(date);
+        }
+
     }
 }
