@@ -1,7 +1,4 @@
-﻿using Ansjon.UseCases.Communications.dto;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Ansjon.Core.Entities;
 
 namespace Ansjon.UseCases.Communications.FeedUseCases
 {
@@ -14,19 +11,15 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
             _communicationRepo = communicationRepo;
         }
 
-        public async Task Execute(UpdateFeedDto input)
+        public async Task UpdateFeedAsync(Feed input)
         {
             var existing = await _communicationRepo.GetByIdAsync(input.Id);
             if (existing == null)
             {
                 throw new KeyNotFoundException($"Feed with ID {input.Id} not found.");
             }
-
-            
             existing.Title = input.Title?.Trim() ?? existing.Title;
             existing.Content = input.Content?.Trim() ?? existing.Content;
-
-            
 
             await _communicationRepo.UpdateFeedAsync(existing);
         }

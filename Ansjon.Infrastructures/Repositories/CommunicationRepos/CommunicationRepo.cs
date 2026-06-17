@@ -13,11 +13,11 @@ namespace Ansjon.Infrastructures.Repositories.CommunicationRepos
         {
             _context = context;
         }
-        public async Task<Guid> CreateFeedAsync(Feed feed)
+        public async Task CreateFeedAsync(Feed feed)
         {
             _context.Feeds.Add(feed);
             await _context.SaveChangesAsync();
-            return feed.Id;
+
         }
         public async Task<IEnumerable<Feed>> GetAllFeedsAsync()
         {
@@ -27,12 +27,6 @@ namespace Ansjon.Infrastructures.Repositories.CommunicationRepos
         public async Task<Feed?> GetByIdAsync(Guid id)
         {
             return await _context.Feeds.FindAsync(id);
-        }
-
-        public async Task DeleteFeedAsync(Feed feed)
-        {
-            _context.Feeds.Remove(feed);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Feed>> GetAllByDateAsync(DateTime CreatedDate)

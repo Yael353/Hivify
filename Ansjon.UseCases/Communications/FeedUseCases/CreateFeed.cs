@@ -12,7 +12,7 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
             _communicationRepo = communicationRepo;
         }
 
-        public async Task<Guid> Execute(CreateFeedDto input)
+        public async Task<Guid> CreateFeedAsync(CreateFeedDto input)
         {
             ArgumentNullException.ThrowIfNull(input);
 
@@ -28,11 +28,8 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
 
             var feed = new Feed
             {
-                Id = Guid.NewGuid(),
                 Title = input.Title.Trim(),
                 Content = input.Content,
-                AuthorId = input.AuthorId,
-                CreatedDate = DateTime.UtcNow
             };
 
             await _communicationRepo.CreateFeedAsync(feed);

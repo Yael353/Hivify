@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ansjon.UseCases.Communications.FeedUseCases
+﻿namespace Ansjon.UseCases.Communications.FeedUseCases
 {
     public class DeleteFeed
     {
@@ -14,13 +10,7 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
 
         public async Task DeleteFeedAsync(Guid feedId)
         {
-            var existing = await _communicationRepo.GetByIdAsync(feedId);
-            if (existing == null)
-            {
-                throw new KeyNotFoundException($"Feed with ID {feedId} not found.");
-            }
-
-            await _communicationRepo.DeleteFeedAsync(existing);
+            await _communicationRepo.DeleteFeedByIdAsync(feedId);
         }
     }
 }

@@ -15,7 +15,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
-builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityRedirectManager>();
@@ -27,10 +26,6 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 builder.Services.AddAuthorization();
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
@@ -44,11 +39,10 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+// Yas-odi 
 builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
-builder.Services.AddScoped<CreateFeed>();
-builder.Services.AddScoped<ViewFeeds>();
-builder.Services.AddScoped<UpdateFeed>();
-builder.Services.AddScoped<DeleteFeed>();
+builder.Services.AddFeedServices();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
