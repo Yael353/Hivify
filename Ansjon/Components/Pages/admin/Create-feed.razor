@@ -1,0 +1,73 @@
+﻿@page "/admin/create-feed"
+@using Ansjon.UseCases.Communications.DTO
+@using Ansjon.UseCases.Communications.FeedUseCases
+@using Ansjon.Models
+
+@inject CreateFeed CreateFeedHandler
+
+<h2>Skapa ny feed</h2>
+<hr />
+
+@* Formulär *@
+
+<EditForm Model="@NewFeed" OnValidSubmit="@HandleSubmit" FormName="create-feed-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Titel:</label>
+        <InputText @bind-Value="NewFeed.Title" />
+        <ValidationMessage For="@(() => NewFeed.Title)" />
+    </div>
+
+    <div>
+        <label>Innehåll:</label>
+        <InputTextArea @bind-Value="NewFeed.Content" />
+        <ValidationMessage For="@(() => NewFeed.Content)" />
+    </div>
+
+    <button type="submit">Skicka</button>
+</EditForm>
+    
+@if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger mt-3">
+            <strong>Fel:</strong> @errorMessage
+        </div>
+    }
+
+@code {
+    private string? errorMessage;
+    private FeedInputModel NewFeed = new();
+    private bool IsSubmitting = false;
+    private bool IsSuccess = false;
+    private async Task HandleSubmit()
+    {
+        IsSubmitting = true;
+        IsSuccess = false;
+
+        try
+        {
+            var dto = new CreateFeedDto
+            {
+                Title = NewFeed.Title,
+                Content = NewFeed.Content,
+            };
+
+            await CreateFeedHandler.CreateFeedAsync(dto);
+            IsSuccess = true;
+            NewFeed = new();
+        }
+        catch (ArgumentException)
+        {
+            errorMessage = "Ett oväntat fel uppstod. Försök igen senare.";
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+
+    }
+
+}
+
