@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Ansjon.UseCases.Communications.FeedUseCases;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Ansjon.UseCases.Communications.FeedUseCases;
+namespace Ansjon.UseCases.Communications;
 
 public static class ServiceCollectionExtensions
 {

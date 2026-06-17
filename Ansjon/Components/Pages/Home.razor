@@ -1,7 +1,37 @@
-﻿@page "/"
+﻿@using Ansjon.UseCases.Communications.FeedUseCases
+@using Ansjon.Core.Entities
+
+@page "/"
+@inject ViewFeeds ViewFeeds
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h3>Feeds</h3>
 
-Welcome to your new app.
+@if (feeds == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <ul>
+        @foreach (var feed in feeds)
+        {
+            <li>
+               <h2>@feed.AuthorId</h2>
+                <h4>@feed.Title</h4>
+                <p>@feed.Content</p>
+                <small>@feed.CreatedDate</small>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private IEnumerable<Feed>? feeds;
+
+    protected override async Task OnInitializedAsync()
+    {
+        feeds = await ViewFeeds.GetAllFeedsAsync();
+    }
+}

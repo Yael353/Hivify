@@ -14,7 +14,9 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
 
         public async Task<IEnumerable<Feed>> GetAllFeedsAsync()
         {
-            return await _communicationRepo.GetAllFeedsAsync();
+            var feed = await _communicationRepo.GetAllFeedsAsync();
+            Console.Write(feed);
+            return feed;
         }
 
         public async Task<IEnumerable<Feed>> GetFeedsByDateAsync(DateTime date)
