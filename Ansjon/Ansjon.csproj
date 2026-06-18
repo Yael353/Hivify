@@ -12,7 +12,4 @@
     <ProjectReference Include="..\Ansjon.Infrastructures\Ansjon.Infrastructures.csproj" />
     <ProjectReference Include="..\Ansjon.UseCases\Ansjon.UseCases.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
-  </ItemGroup>
 </Project>

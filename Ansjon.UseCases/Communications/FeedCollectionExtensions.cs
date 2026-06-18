@@ -1,4 +1,6 @@
 ﻿using Ansjon.UseCases.Communications.FeedUseCases;
+using Ansjon.UseCases.Communications.Validators;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Ansjon.UseCases.Communications;
@@ -12,7 +14,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<UpdateFeed>();
         services.AddScoped<DeleteFeed>();
         services.AddScoped<ViewFeeds>();
-
+        services.AddValidatorsFromAssemblyContaining<CreateFeedDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<UpdateFeedDtoValidator>();
         return services;
     }
 }

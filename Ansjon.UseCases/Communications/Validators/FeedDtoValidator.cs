@@ -1,6 +1,7 @@
-﻿using FluentValidation;
+﻿using Ansjon.UseCases.Communications.DTO.FeedDto;
+using FluentValidation;
 
-namespace Ansjon.UseCases.Communications.DTO.FeedDto
+namespace Ansjon.UseCases.Communications.Validators
 {
     public class CreateFeedDtoValidator : AbstractValidator<CreateFeedDto>
     {
