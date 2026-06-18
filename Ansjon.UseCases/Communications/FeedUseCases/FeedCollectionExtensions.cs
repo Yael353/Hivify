@@ -1,9 +1,8 @@
-﻿using Ansjon.UseCases.Communications.FeedUseCases;
-using Ansjon.UseCases.Communications.Validators;
+﻿using Ansjon.UseCases.Communications.Validators;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Ansjon.UseCases.Communications;
+namespace Ansjon.UseCases.Communications.FeedUseCases;
 
 public static class ServiceCollectionExtensions
 {
