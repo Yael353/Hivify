@@ -14,16 +14,15 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Feed>().HasData(
-            new Feed
+            new
             {
                 Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                 Title = "Welcome to Ansjon",
                 Content = "This is the first seeded feed.",
                 CreatedDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 AuthorId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
-
             },
-            new Feed
+            new
             {
                 Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
                 Title = "Getting Started",
