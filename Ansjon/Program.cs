@@ -3,6 +3,8 @@ using Ansjon.Components.Account;
 using Ansjon.Infrastructures.Repositories.CommunicationRepos;
 using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Communications;
+using Ansjon.UseCases.Communications.DTO.FeedDto;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,9 +38,14 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-
+//validation
+builder.Services.AddScoped<IValidator<CreateFeedDto>, CreateFeedDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateFeedDto>, UpdateFeedDtoValidator>();
 // Yas-odi 
+
+
 builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
+
 builder.Services.AddFeedServices();
 
 var app = builder.Build();
