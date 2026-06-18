@@ -1,42 +1,34 @@
 ﻿using Ansjon.Core.Entities;
-using Ansjon.UseCases.Communications.DTO;
+using Ansjon.UseCases.Communications;
+using FluentValidation;
 
-namespace Ansjon.UseCases.Communications.FeedUseCases
+public class CreateFeed
 {
+    private readonly ICommunicationRepo _communicationRepo;
+    private readonly IValidator<CreateFeedDto> _validator;
 
-    public class CreateFeed
+    public CreateFeed(
+        ICommunicationRepo communicationRepo,
+        IValidator<CreateFeedDto> validator)
     {
-        private readonly ICommunicationRepo _communicationRepo;
-        public CreateFeed(ICommunicationRepo communicationRepo)
-        {
-            _communicationRepo = communicationRepo;
-        }
-
-        public async Task<Guid> CreateFeedAsync(CreateFeedDto input)
-        {
-            ArgumentNullException.ThrowIfNull(input);
-
-            if (string.IsNullOrWhiteSpace(input.Title))
-            {
-                throw new ArgumentException("Title is required.", nameof(input.Title));
-            }
-
-            if (input.Title.Length > 200)
-            {
-                throw new ArgumentException("Title cannot exceed 200 characters.", nameof(input.Title));
-            }
-
-            var feed = new Feed
-            {
-                Title = input.Title.Trim(),
-                Content = input.Content,
-            };
-
-            await _communicationRepo.CreateFeedAsync(feed);
-
-            return feed.Id;
-
-        }
-
+        _communicationRepo = communicationRepo;
+        _validator = validator;
     }
+
+    public async Task<Guid> CreateFeedAsync(CreateFeedDto input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+
+        await _validator.ValidateAndThrowAsync(input);
+
+        var feed = new Feed(
+        input.Title,
+        input.Content
+        );
+
+        await _communicationRepo.CreateFeedAsync(feed);
+
+        return feed.Id;
+    }
+
 }
