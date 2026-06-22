@@ -15,7 +15,6 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
         public async Task<IEnumerable<Feed>> GetAllFeedsAsync()
         {
             var feed = await _communicationRepo.GetAllFeedsAsync();
-            Console.Write(feed);
             return feed;
         }
 

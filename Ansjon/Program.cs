@@ -3,6 +3,7 @@ using Ansjon.Components.Account;
 using Ansjon.Infrastructures.Repositories.CommunicationRepos;
 using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Communications;
+using Ansjon.UseCases.Communications.FeedUseCases;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;

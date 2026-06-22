@@ -1,26 +1,31 @@
-﻿using Ansjon.Core.Entities;
+﻿using Ansjon.UseCases.Communications.DTO.FeedDto;
+using FluentValidation;
 
 namespace Ansjon.UseCases.Communications.FeedUseCases
 {
     public class UpdateFeed
     {
         private readonly ICommunicationRepo _communicationRepo;
-
-        public UpdateFeed(ICommunicationRepo communicationRepo)
+        private readonly IValidator<UpdateFeedDto> _validator;
+        public UpdateFeed(ICommunicationRepo communicationRepo, IValidator<UpdateFeedDto> validator)
         {
             _communicationRepo = communicationRepo;
+            _validator = validator;
         }
 
-        public async Task UpdateFeedAsync(Feed input)
+        public async Task UpdateFeedAsync(Guid id, UpdateFeedDto input)
         {
-            var existing = await _communicationRepo.GetByIdAsync(input.Id);
+
+            await _validator.ValidateAndThrowAsync(input);
+            var existing = await _communicationRepo.GetByIdAsync(id);
             if (existing == null)
             {
-                throw new KeyNotFoundException($"Feed with ID {input.Id} not found.");
+                throw new KeyNotFoundException(
+                    $"Feed {id} not found"
+                );
             }
-            existing.Title = input.Title?.Trim() ?? existing.Title;
-            existing.Content = input.Content?.Trim() ?? existing.Content;
-
+            existing.ChangeTitle(input.Title);
+            existing.ChangeContent(input.Content);
             await _communicationRepo.UpdateFeedAsync(existing);
         }
     }
