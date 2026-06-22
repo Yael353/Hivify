@@ -1,5 +1,6 @@
 ﻿using Ansjon.Core.Entities;
 using Ansjon.UseCases.Communications.DTO;
+using System.Diagnostics;
 
 namespace Ansjon.UseCases.Communications.FeedUseCases
 {
@@ -32,7 +33,11 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
                 Content = input.Content,
             };
 
+            Console.WriteLine($"🔄 Use Case: Spara feed med titel: {input.Title}");
+
             await _communicationRepo.CreateFeedAsync(feed);
+
+            Console.WriteLine($"✅ Use Case: Feed sparades med ID: {input.Title}");
 
             return feed.Id;
 

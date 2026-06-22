@@ -2,59 +2,62 @@
 @using Ansjon.UseCases.Communications.DTO
 @using Ansjon.UseCases.Communications.FeedUseCases
 @using Ansjon.Models
+@using MudBlazor
 
 @inject CreateFeed CreateFeedHandler
+@inject ISnackbar Snackbar
 
-<div class="feed-container">
-    <h2 class="feed-title">Skapa ny feed</h2>
-    <hr class="feed-divider" />
+<MudForm @ref="_form"
+         @bind-IsValid="_isValid"
+         Model="@NewFeed"
+         @onsubmit:preventDefault="true">
+    
 
-    @if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <div class="alert alert-danger">
-            <strong>Fel:</strong> @errorMessage
-        </div>
-    }
+    <MudText Typo="Typo.h4" GutterBottom="true" Class="mb-4">
+        Skapa ny feed
+    </MudText>
+    <MudDivider Class="mb-6" />
 
-    <EditForm Model="@NewFeed" OnValidSubmit="@HandleSubmit" FormName="create-feed-form">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+    <MudTextField @bind-Value="NewFeed.Title"
+                  Label="Titel"
+                  For="@(() => NewFeed.Title)"
+                  Required="true"
+                  RequiredError="Titel är obligatorisk"
+                  Immediate="true"
+                  Variant="Variant.Outlined"
+                  Class="mb-4" />
 
-        <div class="form-group">
-            <label for="title" class="form-label">Titel</label>
-            <InputText id="title" class="form-input" @bind-Value="NewFeed.Title" placeholder="Ange en rubrik..." />
-            <ValidationMessage For="@(() => NewFeed.Title)" class="validation-message" />
-        </div>
+    <MudTextField @bind-Value="NewFeed.Content"
+                  Label="Innehåll"
+                  For="@(() => NewFeed.Content)"
+                  Required="true"
+                  RequiredError="Innehåll är obligatoriskt"
+                  Immediate="true"
+                  Lines="5"
+                  Variant="Variant.Outlined"
+                  Class="mb-6" />
 
-        <div class="form-group">
-            <label for="content" class="form-label">Innehåll</label>
-            <InputTextArea id="content" class="form-textarea" @bind-Value="NewFeed.Content" placeholder="Skriv ditt innehåll här..." rows="6" />
-            <ValidationMessage For="@(() => NewFeed.Content)" class="validation-message" />
-        </div>
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               Disabled="@_isSubmitting"
+               OnClick="@(() => HandleSubmit())">
+        @if (_isSubmitting)
+        {
+            <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+        }
+        @(_isSubmitting ? "Sparar..." : "Skicka")
+    </MudButton>
+</MudForm>
 
-        <div class="form-actions">
-            <button type="submit" class="btn-submit" disabled="@IsSubmitting">
-                @(IsSubmitting ? "Sparar..." : "Skicka")
-            </button>
-        </div>
-    </EditForm>
-
-    @if (IsSuccess)
-    {
-        <div class="alert alert-success mt-3">
-            <strong>Feed skapades!</strong>
-        </div>
-    }
-</div>
 @code {
-    private string? errorMessage;
+    private MudForm? _form;
+    private bool _isValid;
     private FeedInputModel NewFeed = new();
-    private bool IsSubmitting = false;
-    private bool IsSuccess = false;
+    private bool _isSubmitting = false;
+
     private async Task HandleSubmit()
     {
-        IsSubmitting = true;
-        IsSuccess = false;
+        _isSubmitting = true;
 
         try
         {
@@ -65,21 +68,26 @@
             };
 
             await CreateFeedHandler.CreateFeedAsync(dto);
-            IsSuccess = true;
+
+            Snackbar.Add("✅ Feed skapades!", Severity.Success);
             NewFeed = new();
 
-            
+            if (_form is not null)
+            {
+                await _form.ResetAsync();
+            }
         }
-        catch (ArgumentException)
+        catch (ArgumentException ex)
         {
-            errorMessage = "Ett oväntat fel uppstod. Försök igen senare.";
+            Snackbar.Add($"❌ {ex.Message}", Severity.Error);
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("❌ Ett oväntat fel uppstod. Försök igen senare.", Severity.Error);
         }
         finally
         {
-            IsSubmitting = false;
+            _isSubmitting = false;
         }
-
     }
-
 }
-
