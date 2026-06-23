@@ -6,11 +6,13 @@ using Ansjon.UseCases.Communications;
 using Ansjon.UseCases.Communications.FeedUseCases;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorComponents();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 
 builder.Services.AddCascadingAuthenticationState();
@@ -41,6 +43,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 // Yas-odi 
 builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
 builder.Services.AddFeedServices();
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 
@@ -61,7 +64,8 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapRazorComponents<App>();
+app.MapRazorComponents<App>()
+.AddInteractiveServerRenderMode();
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();

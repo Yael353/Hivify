@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Entities;
+using Ansjon.Core.Entities;
 using Ansjon.UseCases.Communications;
 using FluentValidation;
 

@@ -1,0 +1,93 @@
+﻿@page "/admin/create-feed"
+@using Ansjon.UseCases.Communications.DTO
+@using Ansjon.UseCases.Communications.FeedUseCases
+@using Ansjon.Models
+@using MudBlazor
+
+@inject CreateFeed CreateFeedHandler
+@inject ISnackbar Snackbar
+
+<MudForm @ref="_form"
+         @bind-IsValid="_isValid"
+         Model="@NewFeed"
+         @onsubmit:preventDefault="true">
+    
+
+    <MudText Typo="Typo.h4" GutterBottom="true" Class="mb-4">
+        Skapa ny feed
+    </MudText>
+    <MudDivider Class="mb-6" />
+
+    <MudTextField @bind-Value="NewFeed.Title"
+                  Label="Titel"
+                  For="@(() => NewFeed.Title)"
+                  Required="true"
+                  RequiredError="Titel är obligatorisk"
+                  Immediate="true"
+                  Variant="Variant.Outlined"
+                  Class="mb-4" />
+
+    <MudTextField @bind-Value="NewFeed.Content"
+                  Label="Innehåll"
+                  For="@(() => NewFeed.Content)"
+                  Required="true"
+                  RequiredError="Innehåll är obligatoriskt"
+                  Immediate="true"
+                  Lines="5"
+                  Variant="Variant.Outlined"
+                  Class="mb-6" />
+
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               Disabled="@_isSubmitting"
+               OnClick="@(() => HandleSubmit())">
+        @if (_isSubmitting)
+        {
+            <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+        }
+        @(_isSubmitting ? "Sparar..." : "Skicka")
+    </MudButton>
+</MudForm>
+
+@code {
+    private MudForm? _form;
+    private bool _isValid;
+    private FeedInputModel NewFeed = new();
+    private bool _isSubmitting = false;
+
+    private async Task HandleSubmit()
+    {
+        _isSubmitting = true;
+
+        try
+        {
+            var dto = new CreateFeedDto
+            {
+                Title = NewFeed.Title,
+                Content = NewFeed.Content,
+            };
+
+            await CreateFeedHandler.CreateFeedAsync(dto);
+
+            Snackbar.Add("✅ Feed skapades!", Severity.Success);
+            NewFeed = new();
+
+            if (_form is not null)
+            {
+                await _form.ResetAsync();
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            Snackbar.Add($"❌ {ex.Message}", Severity.Error);
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("❌ Ett oväntat fel uppstod. Försök igen senare.", Severity.Error);
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
+    }
+}

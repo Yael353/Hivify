@@ -12,4 +12,7 @@
     <ProjectReference Include="..\Ansjon.Infrastructures\Ansjon.Infrastructures.csproj" />
     <ProjectReference Include="..\Ansjon.UseCases\Ansjon.UseCases.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MudBlazor" Version="9.5.0" />
+  </ItemGroup>
 </Project>

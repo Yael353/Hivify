@@ -1,30 +1,35 @@
-﻿@using Ansjon.UseCases.Communications.FeedUseCases
+﻿@page "/"
 @using Ansjon.Core.Entities
+@using Ansjon.UseCases.Communications.FeedUseCases
+@using Ansjon.Components.Feed
+@using MudBlazor
 
-@page "/"
 @inject ViewFeeds ViewFeeds
 
 <PageTitle>Home</PageTitle>
 
-<h3>Feeds</h3>
+<MudText Typo="Typo.h4" GutterBottom="true" Class="mb-4">
+    Senaste feeds
+</MudText>
+
+<MudDivider Class="mb-4" />
 
 @if (feeds == null)
 {
-    <p>Loading...</p>
+    <MudText>Laddar...</MudText>
+}
+else if (!feeds.Any())
+{
+    <MudText>Inga feeds hittades.</MudText>
 }
 else
 {
-    <ul>
+    <div class="d-flex flex-column gap-3">
         @foreach (var feed in feeds)
         {
-            <li>
-               <h2>@feed.AuthorId</h2>
-                <h4>@feed.Title</h4>
-                <p>@feed.Content</p>
-                <small>@feed.CreatedDate</small>
-            </li>
+            <FeedCard Feed="@feed" />
         }
-    </ul>
+    </div>
 }
 
 @code {
