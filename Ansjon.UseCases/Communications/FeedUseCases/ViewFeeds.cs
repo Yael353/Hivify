@@ -15,12 +15,13 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
         public async Task<IEnumerable<Feed>> GetAllFeedsAsync()
         {
             var feed = await _communicationRepo.GetAllFeedsAsync();
-            return feed;
+            return feed.OrderByDescending(f => f.CreatedDate);
         }
 
         public async Task<IEnumerable<Feed>> GetFeedsByDateAsync(DateTime date)
         {
-            return await _communicationRepo.GetAllByDateAsync(date);
+            var feed = await _communicationRepo.GetAllByDateAsync(date);
+            return feed.OrderByDescending(f => f.CreatedDate);
         }
 
     }
