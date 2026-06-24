@@ -2,10 +2,13 @@
 
 public class CreateFeedDto
 {
-    [Required]
-    [StringLength(200)]
+    [Required(ErrorMessage = "Titel är obligatorisk")]
+    [StringLength(200, ErrorMessage = "Titeln får vara max 200 tecken")]
     public string Title { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Innehåll är obligatoriskt")]
     public string Content { get; set; } = string.Empty;
 }
+
+
+ 
