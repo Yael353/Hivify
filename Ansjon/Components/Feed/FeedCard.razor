@@ -1,6 +1,7 @@
 ﻿@using Ansjon.Core.Entities
 @using Ansjon.UseCases.Communications.DTO.FeedDto
 @using Ansjon.UseCases.Communications.FeedUseCases
+@using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 
 @inject UpdateFeed UpdateFeedHandler
@@ -8,59 +9,72 @@
 @inject ISnackbar Snackbar
 @inject ILogger<FeedCard> Logger
 
+
 <MudCard Elevation="4">
 
-    @if (_editing)
+    @if (_editing && ShowAdminActions)
     {
-        <MudCardContent Class="pa-6">
+        <AuthorizeView Roles="Admin">
 
-            <MudStack Spacing="3">
+            <Authorized>
 
-                <MudText Typo="Typo.h6">
-                    Redigera feed
-                </MudText>
+                <MudCardContent Class="pa-6">
 
-                <MudTextField Label="Titel"
-                              Variant="Variant.Outlined"
-                              @bind-Value="_model.Title"
-                              Required="true" />
+                    <MudStack Spacing="3">
 
-                <MudTextField Label="Innehåll"
-                              Variant="Variant.Outlined"
-                              TextArea="true"
-                              Lines="5"
-                              @bind-Value="_model.Content" />
-
-            </MudStack>
-
-        </MudCardContent>
-
-        <MudDivider />
-
-        <MudCardActions Class="pa-4">
-
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Success"
-                       StartIcon="@Icons.Material.Filled.Save"
-                       Disabled="_saving"
-                       OnClick="SaveAsync">
-
-                @(_saving ? "Sparar..." : "Spara")
-
-            </MudButton>
+                        <MudText Typo="Typo.h6">
+                            Redigera feed
+                        </MudText>
 
 
-            <MudButton Variant="Variant.Outlined"
-                       Color="Color.Secondary"
-                       StartIcon="@Icons.Material.Filled.Close"
-                       Disabled="_saving"
-                       OnClick="Cancel">
+                        <MudTextField Label="Titel"
+                                      Variant="Variant.Outlined"
+                                      @bind-Value="_updateDto.Title"
+                                      Required="true" />
 
-                Avbryt
 
-            </MudButton>
+                        <MudTextField Label="Innehåll"
+                                      Variant="Variant.Outlined"
+                                      TextArea="true"
+                                      Lines="5"
+                                      @bind-Value="_updateDto.Content" />
 
-        </MudCardActions>
+                    </MudStack>
+
+                </MudCardContent>
+
+
+                <MudDivider />
+
+
+                <MudCardActions Class="pa-4">
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Success"
+                               StartIcon="@Icons.Material.Filled.Save"
+                               Disabled="_saving"
+                               OnClick="SaveAsync">
+
+                        @(_saving ? "Sparar..." : "Spara")
+
+                    </MudButton>
+
+
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Secondary"
+                               StartIcon="@Icons.Material.Filled.Close"
+                               Disabled="_saving"
+                               OnClick="Cancel">
+
+                        Avbryt
+
+                    </MudButton>
+
+                </MudCardActions>
+
+            </Authorized>
+
+        </AuthorizeView>
     }
     else
     {
@@ -74,20 +88,32 @@
 
             </CardHeaderContent>
 
+
             <CardHeaderActions>
 
-                <MudIconButton Icon="@Icons.Material.Filled.Edit"
-                               Color="Color.Primary"
-                               OnClick="StartEdit" />
+                @if (ShowAdminActions)
+                {
+                    <AuthorizeView Roles="Admin">
 
-                <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                               Color="Color.Error"
-                               OnClick="DeleteAsync" />
+                        <Authorized>
+
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                           Color="Color.Primary"
+                                           OnClick="StartEdit" />
+
+
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                           Color="Color.Error"
+                                           OnClick="DeleteAsync" />
+
+                        </Authorized>
+
+                    </AuthorizeView>
+                }
 
             </CardHeaderActions>
 
         </MudCardHeader>
-
 
         <MudDivider />
 
@@ -107,9 +133,11 @@
                       Spacing="1"
                       Class="mt-4">
 
+
                 <MudIcon Icon="@Icons.Material.Filled.Schedule"
                          Size="Size.Small"
                          Color="Color.Secondary" />
+
 
                 <MudText Typo="Typo.caption"
                          Color="Color.Secondary">
@@ -118,12 +146,16 @@
 
                 </MudText>
 
+
             </MudStack>
 
+
         </MudCardContent>
+
     }
 
 </MudCard>
+
 
 
 @code {
@@ -136,31 +168,43 @@
     public EventCallback OnChanged { get; set; }
 
 
+    // Enable only on admin pages
+    [Parameter]
+    public bool ShowAdminActions { get; set; }
+
+
+
+    private UpdateFeedDto _updateDto = new();
+
+
     private bool _editing;
+
 
     private bool _saving;
 
 
-    private EditFeedModel _model = new();
-
 
     private void StartEdit()
     {
-        _model = new EditFeedModel
+        _updateDto = new UpdateFeedDto
         {
             Title = Feed.Title,
             Content = Feed.Content
         };
 
+
         _editing = true;
     }
+
 
 
     private void Cancel()
     {
         _editing = false;
-        _model = new();
+
+        _updateDto = new UpdateFeedDto();
     }
+
 
 
     private async Task SaveAsync()
@@ -174,21 +218,25 @@
             _saving = true;
 
 
-            var dto = new UpdateFeedDto
-            {
-                Title = _model.Title.Trim(),
-                Content = _model.Content.Trim()
-            };
+            _updateDto.Title =
+                _updateDto.Title.Trim();
+
+
+            _updateDto.Content =
+                _updateDto.Content.Trim();
+
 
 
             await UpdateFeedHandler.UpdateFeedAsync(
                 Feed.Id,
-                dto);
+                _updateDto);
+
 
 
             Snackbar.Add(
                 "Feed uppdaterades.",
                 Severity.Success);
+
 
 
             _editing = false;
@@ -197,11 +245,11 @@
             await OnChanged.InvokeAsync();
 
         }
-        catch (Exception ex)
+        catch(Exception ex)
         {
             Logger.LogError(
                 ex,
-                "Error updating feed {FeedId}",
+                "Failed updating feed {FeedId}",
                 Feed.Id);
 
 
@@ -216,6 +264,7 @@
     }
 
 
+
     private async Task DeleteAsync()
     {
         try
@@ -224,19 +273,21 @@
                 Feed.Id);
 
 
+
             Snackbar.Add(
                 "Feed borttagen.",
                 Severity.Success);
 
 
+
             await OnChanged.InvokeAsync();
 
         }
-        catch (Exception ex)
+        catch(Exception ex)
         {
             Logger.LogError(
                 ex,
-                "Error deleting feed {FeedId}",
+                "Failed deleting feed {FeedId}",
                 Feed.Id);
 
 
@@ -244,15 +295,6 @@
                 "Kunde inte ta bort feed.",
                 Severity.Error);
         }
-    }
-
-
-
-    private sealed class EditFeedModel
-    {
-        public string Title { get; set; } = "";
-
-        public string Content { get; set; } = "";
     }
 
 }

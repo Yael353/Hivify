@@ -1,8 +1,28 @@
 ﻿@page "/admin/feeds"
+
 @using Ansjon.Components.Feed
+@using Microsoft.AspNetCore.Authorization
+
 @rendermode InteractiveServer
 
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Hantera feeds</PageTitle>
 
-<AdminFeed />
+<AuthorizeView Roles="Admin">
+
+    <Authorized>
+
+        <AdminFeed />
+
+    </Authorized>
+
+    <NotAuthorized>
+
+        <MudAlert Severity="Severity.Error">
+            Du har inte behörighet att visa denna sida.
+        </MudAlert>
+
+    </NotAuthorized>
+
+</AuthorizeView>
