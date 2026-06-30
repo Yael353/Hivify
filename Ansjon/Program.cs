@@ -2,8 +2,8 @@ using Ansjon.Components;
 using Ansjon.Components.Account;
 using Ansjon.Infrastructures.Repositories.CommunicationRepos;
 using Ansjon.Infrastructures.SqlDatabase;
-using Ansjon.UseCases.Communications;
 using Ansjon.UseCases.Communications.FeedUseCases;
+using Ansjon.UseCases.Communications.interfaes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
@@ -44,6 +44,8 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
 builder.Services.AddFeedServices();
 builder.Services.AddMudServices();
+builder.Services.AddHttpContextAccessor();
+//builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 var app = builder.Build();
 
