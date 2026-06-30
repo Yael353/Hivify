@@ -7,7 +7,7 @@ namespace Ansjon.Infrastructures.Repositories.CommunicationRepos
 {
     public class CommunicationRepo : ICommunicationRepo
     {
-        // db injection
+
         private readonly ApplicationDbContext _context;
         public CommunicationRepo(ApplicationDbContext context)
         {

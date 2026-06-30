@@ -29,7 +29,7 @@ namespace Ansjon.Core.Entities
         public string Title { get; private set; }
         public string Content { get; private set; }
         public DateTime CreatedDate { get; private set; } = DateTime.UtcNow;
-        public string AuthorId { get; private set; }
+        public Guid AuthorId { get; private set; }
 
 
         public void ChangeTitle(string title)

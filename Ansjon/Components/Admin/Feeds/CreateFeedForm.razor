@@ -1,0 +1,171 @@
+﻿@using Ansjon.UseCases.Communications.DTO.FeedDto
+@using Ansjon.UseCases.Communications.FeedUseCases
+@using MudBlazor
+
+@inject CreateFeed CreateFeedHandler
+@inject ISnackbar Snackbar
+@inject ILogger<CreateFeedForm> Logger
+
+
+<MudExpansionPanels>
+
+    <MudExpansionPanel Text="Skapa ny feed"
+                       Icon="@Icons.Material.Filled.AddCircle">
+
+        <MudPaper Class="pa-6 mt-4"
+                  Elevation="0">
+
+            <MudForm @ref="_form">
+
+                <MudStack Spacing="4">
+
+
+                    <MudTextField Label="Titel"
+                                  @bind-Value="_feed.Title"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  RequiredError="Titel är obligatorisk"
+                                  MaxLength="100"
+                                  Counter="100" />
+
+
+                    <MudTextField Label="Innehåll"
+                                  @bind-Value="_feed.Content"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  RequiredError="Innehåll är obligatoriskt"
+                                  TextArea="true"
+                                  Lines="6"
+                                  MaxLength="5000"
+                                  Counter="5000" />
+
+
+                    <MudDivider />
+
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Size="Size.Large"
+                               StartIcon="@Icons.Material.Filled.Add"
+                               Disabled="_submitting"
+                               OnClick="CreateAsync">
+
+
+                        @if (_submitting)
+                        {
+                            <MudProgressCircular Size="Size.Small"
+                                                 Indeterminate="true"
+                                                 Class="me-2" />
+
+                            <span>
+                                Sparar...
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                Skapa feed
+                            </span>
+                        }
+
+
+                    </MudButton>
+
+
+                </MudStack>
+
+
+            </MudForm>
+
+
+        </MudPaper>
+
+
+    </MudExpansionPanel>
+
+
+</MudExpansionPanels>
+
+
+
+@code {
+
+    [Parameter]
+    public EventCallback OnCreated { get; set; }
+
+
+    private MudForm? _form;
+
+
+    private readonly CreateFeedDto _feed = new();
+
+
+    private bool _submitting;
+
+
+
+    private async Task CreateAsync()
+    {
+        if (_submitting || _form is null)
+            return;
+
+
+        await _form.ValidateAsync();
+
+
+        if (!_form.IsValid)
+            return;
+
+
+        try
+        {
+            _submitting = true;
+
+
+            _feed.Title = _feed.Title.Trim();
+
+            _feed.Content = _feed.Content.Trim();
+
+
+
+            await CreateFeedHandler.CreateFeedAsync(_feed);
+
+
+
+            Snackbar.Add(
+                "Feed skapades!",
+                Severity.Success);
+
+
+
+            _feed.Title = "";
+
+            _feed.Content = "";
+
+
+
+            await _form.ResetAsync();
+
+
+
+            await OnCreated.InvokeAsync();
+
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(
+                ex,
+                "Error creating feed");
+
+
+            Snackbar.Add(
+                "Kunde inte skapa feed.",
+                Severity.Error);
+        }
+        finally
+        {
+            _submitting = false;
+        }
+    }
+
+}
