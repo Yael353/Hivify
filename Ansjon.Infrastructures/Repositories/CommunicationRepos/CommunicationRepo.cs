@@ -1,6 +1,6 @@
 ﻿using Ansjon.Core.Entities;
 using Ansjon.Infrastructures.SqlDatabase;
-using Ansjon.UseCases.Communications;
+using Ansjon.UseCases.Communications.interfaes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ansjon.Infrastructures.Repositories.CommunicationRepos
