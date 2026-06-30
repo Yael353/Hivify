@@ -1,7 +1,6 @@
 ﻿@page "/"
 @using Ansjon.Core.Entities
 @using Ansjon.UseCases.Communications.FeedUseCases
-@using Ansjon.Components.Feed
 @using MudBlazor
 
 @inject ViewFeeds ViewFeeds
@@ -27,7 +26,7 @@ else
     <div class="d-flex flex-column gap-3">
         @foreach (var feed in feeds)
         {
-            <FeedCard Feed="@feed" />
+            <FeedCard Feed="feed" />
         }
     </div>
 }

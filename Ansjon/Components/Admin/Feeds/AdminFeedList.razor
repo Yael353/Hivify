@@ -47,10 +47,7 @@ else
 
         @foreach (var feed in _feeds.OrderByDescending(x => x.CreatedDate))
         {
-            <FeedCard Feed="@feed"
-                      ShowAdminActions="true"
-                      OnChanged="Refresh" />
-
+            <AdminFeedCard Feed="feed" OnChanged="Refresh" />
         }
 
     </MudStack>

@@ -53,11 +53,9 @@ builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
 builder.Services.AddFeedServices();
 builder.Services.AddMudServices();
 builder.Services.AddHttpContextAccessor();
-//builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
