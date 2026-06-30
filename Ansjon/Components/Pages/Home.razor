@@ -1,41 +1,28 @@
 ﻿@page "/"
-@using Ansjon.Core.Entities.Feed
-@using Ansjon.UseCases.Communications.FeedUseCases
-@using MudBlazor
 
+
+@using Ansjon.Components.Feeds
+@using Ansjon.UseCases.Communications.FeedUseCases
+@using Ansjon.Core.Entities.Feed
 @inject ViewFeeds ViewFeeds
 
 <PageTitle>Home</PageTitle>
 
-<MudText Typo="Typo.h4" GutterBottom="true" Class="mb-4">
+<MudText Typo="Typo.h4" GutterBottom="true">
     Senaste feeds
 </MudText>
 
 <MudDivider Class="mb-4" />
 
-@if (feeds == null)
-{
-    <MudText>Laddar...</MudText>
-}
-else if (!feeds.Any())
-{
-    <MudText>Inga feeds hittades.</MudText>
-}
-else
-{
-    <div class="d-flex flex-column gap-3">
-        @foreach (var feed in feeds)
-        {
-            <FeedCard Feed="feed" />
-        }
-    </div>
-}
+<FeedList Feeds="_feeds" />
 
 @code {
-    private IEnumerable<Feed>? feeds;
+
+    private IEnumerable<Feed>? _feeds;
 
     protected override async Task OnInitializedAsync()
     {
-        feeds = await ViewFeeds.GetAllFeedsAsync();
+        _feeds = await ViewFeeds.GetAllFeedsAsync();
     }
+
 }

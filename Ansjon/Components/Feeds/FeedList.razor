@@ -1,0 +1,30 @@
+﻿@using Ansjon.Core.Entities.Feed
+
+@if (Feeds is null)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else if (!Feeds.Any())
+{
+    <MudAlert Severity="Severity.Info">
+        Inga feeds hittades.
+    </MudAlert>
+}
+else
+{
+    <MudStack Spacing="3">
+
+        @foreach (var feed in Feeds)
+        {
+            <FeedCard Feed="feed" />
+        }
+
+    </MudStack>
+}
+
+@code {
+
+    [Parameter, EditorRequired]
+    public IEnumerable<Feed>? Feeds { get; set; }
+
+}
