@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Ansjon.Core\Ansjon.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Communications\ComplaintUseCases\" />
+  </ItemGroup>
+
 </Project>
