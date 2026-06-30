@@ -1,5 +1,5 @@
 using Ansjon.Core.Entities;
-using Ansjon.UseCases.Communications;
+using Ansjon.UseCases.Communications.interfaes;
 using FluentValidation;
 
 public class CreateFeed

@@ -1,6 +1,6 @@
 ﻿using Ansjon.Core.Entities;
 
-namespace Ansjon.UseCases.Communications
+namespace Ansjon.UseCases.Communications.interfaes
 {
     public interface ICommunicationRepo
     {

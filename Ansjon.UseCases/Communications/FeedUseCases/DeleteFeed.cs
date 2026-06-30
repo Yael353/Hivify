@@ -1,4 +1,6 @@
-﻿namespace Ansjon.UseCases.Communications.FeedUseCases
+﻿using Ansjon.UseCases.Communications.interfaes;
+
+namespace Ansjon.UseCases.Communications.FeedUseCases
 {
     public class DeleteFeed
     {
