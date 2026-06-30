@@ -1,4 +1,4 @@
-﻿using Ansjon.UseCases.Communications.Interfaces;
+﻿using Ansjon.UseCases.Communications.InterFaces;
 
 namespace Ansjon.UseCases.Communications.ComplaintUseCases
 {

@@ -1,5 +1,5 @@
-﻿using Ansjon.UseCases.Communications.DTO.FeedDto;
-using Ansjon.UseCases.Communications.interfaes;
+﻿using Ansjon.UseCases.Communications.DTOs.FeedDtos;
+using Ansjon.UseCases.Communications.InterFaces;
 using FluentValidation;
 
 namespace Ansjon.UseCases.Communications.FeedUseCases

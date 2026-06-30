@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Ansjon.Data;
+namespace Ansjon.Infrastructures.Data;
 
 public static class IdentitySeeder
 {

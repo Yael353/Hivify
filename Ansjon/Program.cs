@@ -1,10 +1,10 @@
 using Ansjon.Components;
 using Ansjon.Components.Account;
-using Ansjon.Data;
+using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Repositories.CommunicationRepos;
 using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Communications.FeedUseCases;
-using Ansjon.UseCases.Communications.interfaes;
+using Ansjon.UseCases.Communications.InterFaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;

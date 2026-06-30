@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Ansjon.UseCases.Communications.DTO.FeedDto
+namespace Ansjon.UseCases.Communications.DTOs.FeedDtos
 {
     public class UpdateFeedDto
     {

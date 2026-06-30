@@ -1,9 +1,9 @@
 ﻿using Ansjon.Core.Entities.Complaints;
 using Ansjon.Infrastructures.SqlDatabase;
-using Ansjon.UseCases.Communications.Interfaces;
+using Ansjon.UseCases.Communications.InterFaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ansjon.Infrastructure.Repositories.ComplaintRepos
+namespace Ansjon.Infrastructures.Repositories.ComplaintRepos
 {
     public class ComplaintRepo : IComplaintRepo
     {

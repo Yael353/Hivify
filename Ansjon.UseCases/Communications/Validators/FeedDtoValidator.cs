@@ -1,4 +1,4 @@
-﻿using Ansjon.UseCases.Communications.DTO.FeedDto;
+﻿using Ansjon.UseCases.Communications.DTOs.FeedDtos;
 using FluentValidation;
 
 namespace Ansjon.UseCases.Communications.Validators

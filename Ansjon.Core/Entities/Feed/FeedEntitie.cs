@@ -1,9 +1,6 @@
-﻿
+﻿using Ansjon.Core.Entities.Exceptions;
 
-
-using Ansjon.Core.Entities.Exceptions;
-
-namespace Ansjon.Core.Entities
+namespace Ansjon.Core.Entities.Feed
 {
     public class Feed
     {
