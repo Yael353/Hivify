@@ -1,0 +1,35 @@
+﻿@using MudBlazor
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
+
+    <MudPaper Class="pa-6 mb-6" Elevation="0">
+
+        <MudStack Row="true"
+                  AlignItems="AlignItems.Center"
+                  Spacing="2">
+
+        </MudStack>
+
+    </MudPaper>
+
+    <FeedList @ref="_feedList" />
+
+    <MudDivider Class="my-6" />
+
+    <CreateFeedForm OnCreated="RefreshFeeds" />
+
+</MudContainer>
+
+@code {
+
+    private FeedList? _feedList;
+
+    private async Task RefreshFeeds()
+    {
+        if (_feedList is not null)
+        {
+            await _feedList.Refresh();
+        }
+    }
+
+}

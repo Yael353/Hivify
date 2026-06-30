@@ -6,7 +6,7 @@ namespace Ansjon.Core.Entities.Complaints
 
     public class Complaint
     {
-        
+
         private Complaint()
         {
         }

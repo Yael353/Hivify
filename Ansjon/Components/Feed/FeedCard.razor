@@ -1,30 +1,258 @@
 ﻿@using Ansjon.Core.Entities
+@using Ansjon.UseCases.Communications.DTO.FeedDto
+@using Ansjon.UseCases.Communications.FeedUseCases
 @using MudBlazor
 
-<MudCard Class="mb-4" Elevation="2">
-    <MudCardContent>
-        
-        <MudText Typo="Typo.h5" Class="font-weight-bold">
-            @Feed.Title
-        </MudText>
+@inject UpdateFeed UpdateFeedHandler
+@inject DeleteFeed DeleteFeedHandler
+@inject ISnackbar Snackbar
+@inject ILogger<FeedCard> Logger
 
-@*         <MudText Typo="Typo.caption" Color="Color.Info" Class="mb-2">
-            Skapad av: @Feed.AuthorId
-        </MudText>  *@
+<MudCard Elevation="4">
 
-       
-        <MudText Typo="Typo.body1" Class="mb-3">
-            @Feed.Content
-        </MudText>
+    @if (_editing)
+    {
+        <MudCardContent Class="pa-6">
 
-        <!-- Datum -->
-        <MudText Typo="Typo.caption" Color="Color.Tertiary">
-            @Feed.CreatedDate.ToString("yyyy-MM-dd HH:mm")
-        </MudText>
-    </MudCardContent>
+            <MudStack Spacing="3">
+
+                <MudText Typo="Typo.h6">
+                    Redigera feed
+                </MudText>
+
+                <MudTextField Label="Titel"
+                              Variant="Variant.Outlined"
+                              @bind-Value="_model.Title"
+                              Required="true" />
+
+                <MudTextField Label="Innehåll"
+                              Variant="Variant.Outlined"
+                              TextArea="true"
+                              Lines="5"
+                              @bind-Value="_model.Content" />
+
+            </MudStack>
+
+        </MudCardContent>
+
+        <MudDivider />
+
+        <MudCardActions Class="pa-4">
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Success"
+                       StartIcon="@Icons.Material.Filled.Save"
+                       Disabled="_saving"
+                       OnClick="SaveAsync">
+
+                @(_saving ? "Sparar..." : "Spara")
+
+            </MudButton>
+
+
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Secondary"
+                       StartIcon="@Icons.Material.Filled.Close"
+                       Disabled="_saving"
+                       OnClick="Cancel">
+
+                Avbryt
+
+            </MudButton>
+
+        </MudCardActions>
+    }
+    else
+    {
+        <MudCardHeader>
+
+            <CardHeaderContent>
+
+                <MudText Typo="Typo.h6">
+                    @Feed.Title
+                </MudText>
+
+            </CardHeaderContent>
+
+            <CardHeaderActions>
+
+                <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                               Color="Color.Primary"
+                               OnClick="StartEdit" />
+
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               Color="Color.Error"
+                               OnClick="DeleteAsync" />
+
+            </CardHeaderActions>
+
+        </MudCardHeader>
+
+
+        <MudDivider />
+
+
+        <MudCardContent Class="pa-6">
+
+            <MudText Typo="Typo.body1"
+                     Style="white-space:pre-wrap;">
+
+                @Feed.Content
+
+            </MudText>
+
+
+            <MudStack Row="true"
+                      AlignItems="AlignItems.Center"
+                      Spacing="1"
+                      Class="mt-4">
+
+                <MudIcon Icon="@Icons.Material.Filled.Schedule"
+                         Size="Size.Small"
+                         Color="Color.Secondary" />
+
+                <MudText Typo="Typo.caption"
+                         Color="Color.Secondary">
+
+                    @Feed.CreatedDate.ToString("yyyy-MM-dd HH:mm")
+
+                </MudText>
+
+            </MudStack>
+
+        </MudCardContent>
+    }
+
 </MudCard>
 
+
 @code {
+
     [Parameter]
     public Feed Feed { get; set; } = default!;
+
+
+    [Parameter]
+    public EventCallback OnChanged { get; set; }
+
+
+    private bool _editing;
+
+    private bool _saving;
+
+
+    private EditFeedModel _model = new();
+
+
+    private void StartEdit()
+    {
+        _model = new EditFeedModel
+        {
+            Title = Feed.Title,
+            Content = Feed.Content
+        };
+
+        _editing = true;
+    }
+
+
+    private void Cancel()
+    {
+        _editing = false;
+        _model = new();
+    }
+
+
+    private async Task SaveAsync()
+    {
+        if (_saving)
+            return;
+
+
+        try
+        {
+            _saving = true;
+
+
+            var dto = new UpdateFeedDto
+            {
+                Title = _model.Title.Trim(),
+                Content = _model.Content.Trim()
+            };
+
+
+            await UpdateFeedHandler.UpdateFeedAsync(
+                Feed.Id,
+                dto);
+
+
+            Snackbar.Add(
+                "Feed uppdaterades.",
+                Severity.Success);
+
+
+            _editing = false;
+
+
+            await OnChanged.InvokeAsync();
+
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(
+                ex,
+                "Error updating feed {FeedId}",
+                Feed.Id);
+
+
+            Snackbar.Add(
+                "Kunde inte uppdatera feed.",
+                Severity.Error);
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+
+
+    private async Task DeleteAsync()
+    {
+        try
+        {
+            await DeleteFeedHandler.DeleteFeedAsync(
+                Feed.Id);
+
+
+            Snackbar.Add(
+                "Feed borttagen.",
+                Severity.Success);
+
+
+            await OnChanged.InvokeAsync();
+
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(
+                ex,
+                "Error deleting feed {FeedId}",
+                Feed.Id);
+
+
+            Snackbar.Add(
+                "Kunde inte ta bort feed.",
+                Severity.Error);
+        }
+    }
+
+
+
+    private sealed class EditFeedModel
+    {
+        public string Title { get; set; } = "";
+
+        public string Content { get; set; } = "";
+    }
+
 }

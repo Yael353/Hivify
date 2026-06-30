@@ -1,0 +1,83 @@
+﻿@using Ansjon.Core.Entities
+@using Ansjon.UseCases.Communications.FeedUseCases
+@using MudBlazor
+
+@inject ViewFeeds ViewFeeds
+
+@if (_loading)
+{
+    <MudPaper Class="pa-8">
+
+        <MudStack AlignItems="AlignItems.Center" Spacing="2">
+
+            <MudProgressCircular Indeterminate="true"
+                                 Color="Color.Primary" />
+
+            <MudText>Laddar feeds...</MudText>
+
+        </MudStack>
+
+    </MudPaper>
+}
+else if (!_feeds.Any())
+{
+    <MudPaper Class="pa-10">
+
+        <MudStack AlignItems="AlignItems.Center" Spacing="2">
+
+            <MudIcon Icon="@Icons.Material.Filled.Article"
+                     Size="Size.Large"
+                     Color="Color.Transparent" />
+
+            <MudText Typo="Typo.h5">
+                Inga feeds ännu
+            </MudText>
+
+            <MudText Color="Color.Secondary">
+                Skapa din första feed nedan.
+            </MudText>
+
+        </MudStack>
+
+    </MudPaper>
+}
+else
+{
+    <MudStack Spacing="3">
+
+        @foreach (var feed in _feeds.OrderByDescending(x => x.CreatedDate))
+        {
+            <FeedCard Feed="feed"
+                      OnChanged="Refresh" />
+        }
+
+    </MudStack>
+}
+
+@code {
+
+    private List<Feed> _feeds = new();
+
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Refresh();
+    }
+
+    public async Task Refresh()
+    {
+        _loading = true;
+
+        StateHasChanged();
+
+        _feeds = (await ViewFeeds.GetAllFeedsAsync())
+            .OrderByDescending(x => x.CreatedDate)
+            .ToList();
+
+        _loading = false;
+
+        StateHasChanged();
+    }
+
+}

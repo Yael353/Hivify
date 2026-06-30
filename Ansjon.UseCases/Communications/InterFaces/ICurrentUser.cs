@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ansjon.UseCases.Communications.interfaes
+﻿namespace Ansjon.UseCases.Communications.interfaes
 {
     internal interface ICurrentUser
     {
