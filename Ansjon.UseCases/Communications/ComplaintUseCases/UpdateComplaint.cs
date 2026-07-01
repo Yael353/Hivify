@@ -31,22 +31,18 @@ namespace Ansjon.UseCases.Communications.ComplaintUseCases
                 throw new KeyNotFoundException($"Complaint with ID {complaintId} not found.");
             }
 
-            // Uppdatera titel och beskrivning
             complaint.UpdateDetails(input.Title, input.Description);
 
-            // Om bild finns, uppdatera den
             if (!string.IsNullOrEmpty(input.ImageUrl))
             {
                 complaint.SetImage(input.ImageUrl);
             }
 
-            // Om status ska uppdateras
             if (input.Status.HasValue)
             {
                 complaint.UpdateStatus(input.Status.Value);
             }
 
-            // Om admin-kommentar finns
             if (!string.IsNullOrEmpty(input.AdminComment))
             {
                 complaint.AddAdminComment(input.AdminComment);
