@@ -6,16 +6,12 @@
 <MudSnackbarProvider />
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
     <main>
-        <div class="top-row px-4 auth">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+        <header class="top-row">
+            <NavMenu />
+        </header>
 
-        <article class="content px-4">
+        <article class="content px-4 mt-4">
             @Body
         </article>
     </main>
