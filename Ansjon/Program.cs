@@ -57,6 +57,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 // Yas-odi 
 builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
 builder.Services.AddScoped<IComplaintRepo, ComplaintRepo>();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddScoped<IValidator<CreateComplaintDto>, ComplaintDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateComplaintDto>, UpdateComplaintDtoValidator>();
 builder.Services.AddFeedServices();
