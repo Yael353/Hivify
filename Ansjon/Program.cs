@@ -1,5 +1,6 @@
 using Ansjon.Components;
 using Ansjon.Components.Account;
+using Ansjon.Infrastructure.Identity;
 using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Repositories.CommunicationRepos;
 using Ansjon.Infrastructures.Repositories.ComplaintRepos;
@@ -46,7 +47,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     options.SignIn.RequireConfirmedAccount = true;
     options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
 })
-.AddRoles<IdentityRole>()
+.AddRoles<IdentityRole<Guid>>()
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddSignInManager()
 .AddDefaultTokenProviders();
