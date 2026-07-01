@@ -3,10 +3,8 @@ using Ansjon.Core.Enums;
 
 namespace Ansjon.Core.Entities.Complaints
 {
-
     public class Complaint
     {
-
         private Complaint()
         {
         }

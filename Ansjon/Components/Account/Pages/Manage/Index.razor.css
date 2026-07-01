@@ -1,0 +1,11 @@
+.profile-form-wrap {
+    max-width: 34rem;
+}
+
+.profile-form-wrap :is(input, .form-control) {
+    border-radius: 0.75rem;
+}
+
+.profile-form-wrap .btn {
+    min-width: 10rem;
+}
