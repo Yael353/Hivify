@@ -1,0 +1,17 @@
+@using Ansjon.UseCases.Communications.DTOs.ComplaintsDto
+
+<MudTextField @bind-Value="NewComplaint.Title"
+							Label="Titel"
+							Variant="Variant.Outlined"
+							Class="mb-3" />
+
+<MudTextField @bind-Value="NewComplaint.Description"
+							Label="Beskrivning"
+							Variant="Variant.Outlined"
+							Lines="4"
+							Class="mb-3" />
+
+@code {
+		[Parameter]
+		public CreateComplaintDto NewComplaint { get; set; } = new();
+}
