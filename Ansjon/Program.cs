@@ -2,9 +2,14 @@ using Ansjon.Components;
 using Ansjon.Components.Account;
 using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Repositories.CommunicationRepos;
+using Ansjon.Infrastructures.Repositories.ComplaintRepos;
 using Ansjon.Infrastructures.SqlDatabase;
+using Ansjon.UseCases.Communications.ComplaintUseCases;
+using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
 using Ansjon.UseCases.Communications.FeedUseCases;
 using Ansjon.UseCases.Communications.InterFaces;
+using Ansjon.UseCases.Communications.Validators;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
@@ -50,9 +55,13 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 
 // Yas-odi 
 builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
+builder.Services.AddScoped<IComplaintRepo, ComplaintRepo>();
+builder.Services.AddScoped<IValidator<CreateComplaintDto>, ComplaintDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateComplaintDto>, UpdateComplaintDtoValidator>();
 builder.Services.AddFeedServices();
+builder.Services.AddComplaintServices();
 builder.Services.AddMudServices();
-builder.Services.AddHttpContextAccessor();
+//builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

@@ -11,14 +11,13 @@ namespace Ansjon.Core.Entities.Complaints
         {
         }
 
-        public Complaint(string title, string description, string authorId)
+        public Complaint(string title, string description, Guid authorId)
         {
             if (string.IsNullOrWhiteSpace(title))
                 throw new DomainException("Title is required.");
             if (string.IsNullOrWhiteSpace(description))
                 throw new DomainException("Description is required.");
-            if (string.IsNullOrWhiteSpace(authorId))
-                throw new DomainException("AuthorId is required.");
+           
 
             ComplaintId = Guid.NewGuid();
             Title = title.Trim();
@@ -31,7 +30,7 @@ namespace Ansjon.Core.Entities.Complaints
         public Guid ComplaintId { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
-        public string AuthorId { get; private set; }
+        public Guid AuthorId { get; private set; }
         public ComplaintStatus Status { get; private set; }
         public DateTime CreatedDate { get; private set; }
         public DateTime? UpdatedDate { get; private set; }
