@@ -1,5 +1,6 @@
 using Ansjon.Components;
 using Ansjon.Components.Account;
+using Ansjon.Infrastructure.Identity;
 using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Repositories.CommunicationRepos;
 using Ansjon.Infrastructures.SqlDatabase;
@@ -41,7 +42,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     options.SignIn.RequireConfirmedAccount = true;
     options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
 })
-.AddRoles<IdentityRole>()
+.AddRoles<IdentityRole<Guid>>()
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddSignInManager()
 .AddDefaultTokenProviders();
@@ -53,6 +54,7 @@ builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
 builder.Services.AddFeedServices();
 builder.Services.AddMudServices();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 var app = builder.Build();
 

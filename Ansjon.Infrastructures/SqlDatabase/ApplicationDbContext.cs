@@ -1,12 +1,13 @@
 using Ansjon.Core.Entities.Complaints;
 using Ansjon.Core.Entities.Feed;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ansjon.Infrastructures.SqlDatabase;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-    : IdentityDbContext<ApplicationUser>(options)
+    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<Feed> Feeds { get; set; }
     public DbSet<Complaint> Complaints { get; set; }

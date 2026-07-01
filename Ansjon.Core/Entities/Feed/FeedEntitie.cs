@@ -4,48 +4,42 @@ namespace Ansjon.Core.Entities.Feed
 {
     public class Feed
     {
-        private Feed()
+        private Feed() { }
+
+        public Feed(Guid authorId, string title, string content)
         {
-            // Required by EF Core
-        }
-        public Feed(string title, string content)
-        {
-            if (string.IsNullOrWhiteSpace(title))
-                throw new DomainException("Title is required.");
-            if (string.IsNullOrWhiteSpace(content))
-                throw new DomainException("Content is required.");
+            if (authorId == Guid.Empty)
+                throw new DomainException("Author is required.");
+
             Id = Guid.NewGuid();
             CreatedDate = DateTime.UtcNow;
-            Title = title;
-            Content = content;
+            AuthorId = authorId;
+
             ChangeTitle(title);
             ChangeContent(content);
         }
 
-        public Guid Id { get; private set; } = Guid.NewGuid();
+        public Guid Id { get; private set; }
+        public Guid AuthorId { get; private set; }
         public string Title { get; private set; }
         public string Content { get; private set; }
-        public DateTime CreatedDate { get; private set; } = DateTime.UtcNow;
-        public Guid AuthorId { get; private set; }
-
+        public DateTime CreatedDate { get; private set; }
 
         public void ChangeTitle(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
-                throw new DomainException(
-                    "Title is required."
-                );
+                throw new DomainException("Title is required.");
+
+            if (title.Length > 200)
+                throw new DomainException("Title cannot exceed 200 characters.");
 
             Title = title.Trim();
         }
 
-
         public void ChangeContent(string content)
         {
             if (string.IsNullOrWhiteSpace(content))
-                throw new DomainException(
-                    "Content is required."
-                );
+                throw new DomainException("Content is required.");
 
             Content = content.Trim();
         }
