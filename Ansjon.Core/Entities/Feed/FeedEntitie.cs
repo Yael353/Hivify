@@ -14,7 +14,6 @@ namespace Ansjon.Core.Entities.Feed
             Id = Guid.NewGuid();
             CreatedDate = DateTime.UtcNow;
             AuthorId = authorId;
-
             ChangeTitle(title);
             ChangeContent(content);
         }
@@ -40,7 +39,6 @@ namespace Ansjon.Core.Entities.Feed
         {
             if (string.IsNullOrWhiteSpace(content))
                 throw new DomainException("Content is required.");
-
             Content = content.Trim();
         }
     }
