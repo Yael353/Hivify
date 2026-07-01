@@ -32,7 +32,7 @@ namespace Ansjon.Infrastructures.Repositories.ComplaintRepos
             return await _context.Complaints.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Complaint>> GetAllComplaintsByAuthorAsync(string authorId)
+        public async Task<IEnumerable<Complaint>> GetAllComplaintsByAuthorAsync(Guid authorId)
         {
             return await _context.Complaints
                 .Where(c => c.AuthorId == authorId)
