@@ -1,15 +1,14 @@
 ﻿@using Ansjon.Infrastructures.SqlDatabase
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
-@@using Ansjon.Infrastructures.SqlDatabase
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 
 @if (externalLogins.Length == 0)
 {
-    <div>
-        <p>
+    <div class="text-body-secondary">
+        <p class="mb-0">
             There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
             about setting up this ASP.NET application to support logging in via external services</a>.
         </p>
@@ -17,16 +16,16 @@
 }
 else
 {
-    <form class="form-horizontal" action="Account/PerformExternalLogin" method="post">
-        <div>
-            <AntiforgeryToken />
-            <input type="hidden" name="ReturnUrl" value="@ReturnUrl" />
-            <p>
-                @foreach (var provider in externalLogins)
-                {
-                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                }
-            </p>
+    <form class="external-login-picker" action="Account/PerformExternalLogin" method="post">
+        <AntiforgeryToken />
+        <input type="hidden" name="ReturnUrl" value="@ReturnUrl" />
+        <div class="external-login-picker__buttons">
+            @foreach (var provider in externalLogins)
+            {
+                <button type="submit" class="btn btn-outline-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                    @provider.DisplayName
+                </button>
+            }
         </div>
     </form>
 }
