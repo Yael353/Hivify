@@ -7,35 +7,30 @@
 @inject ISnackbar Snackbar
 
 <MudGrid GutterSize="4" Class="complaint-form-grid">
-    <MudItem xs="12" md="7">
-        <MudPaper Class="pa-4 pa-md-5 complaint-form__panel" Elevation="0" Variant="Variant.Outlined">
-            <MudStack Spacing="3">
-           
+  <MudItem xs="12" md="7">
+    <MudPaper Class="pa-4 pa-md-5 complaint-form__panel" Elevation="0" Variant="Variant.Outlined">
+      <MudStack Spacing="3">
 
-                <ComplaintFormFields NewComplaint="@NewComplaint" />
-            </MudStack>
+        <ComplaintFormFields NewComplaint="@NewComplaint" />
+
+        <ComplaintFileUpload ImageUrl="@NewComplaint.ImageUrl"
+                             OnFileSelected="@OnFileSelected"
+                             OnRemoveImage="@RemoveImage"
+                             IsSubmitting="@_isSubmitting" />
+
+        <MudPaper Class="pa-4 complaint-form__submit-panel"
+                  Elevation="0"
+                  Variant="Variant.Outlined">
+          <MudStack Spacing="2">
+
+            <ComplaintSubmitButton IsSubmitting="@_isSubmitting"
+                                   OnSubmit="@HandleSubmit" />
+          </MudStack>
         </MudPaper>
-    </MudItem>
 
-    <MudItem xs="12" md="5">
-        <MudStack Spacing="3">
-            <ComplaintFileUpload ImageUrl="@NewComplaint.ImageUrl"
-                                 OnFileSelected="@OnFileSelected"
-                                 OnRemoveImage="@RemoveImage"
-                                 IsSubmitting="@_isSubmitting" />
-
-            <MudPaper Class="pa-4 pa-md-5 complaint-form__submit-panel" Elevation="0" Variant="Variant.Outlined">
-                <MudStack Spacing="2">
-                    <MudText Typo="Typo.h6" Class="font-weight-bold">
-                        Skicka in
-                    </MudText>
-            
-                    <ComplaintSubmitButton IsSubmitting="@_isSubmitting"
-                                           OnSubmit="@HandleSubmit" />
-                </MudStack>
-            </MudPaper>
-        </MudStack>
-    </MudItem>
+      </MudStack>
+    </MudPaper>
+  </MudItem>
 </MudGrid>
 
 @code {

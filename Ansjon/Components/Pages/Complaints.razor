@@ -1,20 +1,12 @@
 ﻿@page "/complaints"
 
-@* @attribute [Authorize] *@
-@using Ansjon.Components.User
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 @using Ansjon.Components.User.UserComplaints
 
 <PageTitle>Felanmälan</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="complaints-page">
-    <MudPaper Class="pa-6 pa-md-8 complaints-page__surface" Elevation="3">
-        <MudStack Spacing="2" Class="mb-6">
-            <MudText Typo="Typo.h3" Color="Color.Primary" Class="font-weight-bold">
-                Skicka in en felanmälan
-            </MudText>
-      
-        </MudStack>
 
         <ComplaintsForm />
-    </MudPaper>
 </MudContainer>
