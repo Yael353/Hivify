@@ -63,7 +63,6 @@ builder.Services.AddScoped<IValidator<UpdateComplaintDto>, UpdateComplaintDtoVal
 builder.Services.AddFeedServices();
 builder.Services.AddComplaintServices();
 builder.Services.AddMudServices();
-//builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
