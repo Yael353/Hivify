@@ -1,4 +1,4 @@
-﻿namespace Ansjon.Core.Interfaces
+﻿namespace Ansjon.Core.SharedKernel
 {
     public interface IValue
     {

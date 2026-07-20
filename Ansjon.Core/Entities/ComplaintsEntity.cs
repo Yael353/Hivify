@@ -1,5 +1,5 @@
-﻿using Ansjon.Core.Entities.Exceptions;
-using Ansjon.Core.Enums;
+﻿using Ansjon.Core.Enums;
+using Ansjon.Core.Exceptions;
 
 namespace Ansjon.Core.Entities
 {

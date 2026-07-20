@@ -1,6 +1,4 @@
-﻿using Ansjon.Core.Interfaces;
-
-namespace Ansjon.Core.Common
+﻿namespace Ansjon.Core.SharedKernel
 {
     public abstract class BaseEntity : IEntity
     {

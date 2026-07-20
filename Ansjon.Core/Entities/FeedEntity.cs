@@ -1,5 +1,5 @@
-﻿using Ansjon.Core.Common;
-using Ansjon.Core.Exceptions;
+﻿using Ansjon.Core.Exceptions;
+using Ansjon.Core.SharedKernel;
 
 namespace Ansjon.Core.Entities
 {
