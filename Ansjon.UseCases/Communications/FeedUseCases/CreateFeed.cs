@@ -1,4 +1,4 @@
-using Ansjon.Core.Entities.Feed;
+using Ansjon.Core.Entities;
 using Ansjon.UseCases.Communications.InterFaces;
 using FluentValidation;
 
@@ -25,7 +25,7 @@ public class CreateFeed
         await _validator.ValidateAndThrowAsync(input);
         var authorId = await _currentUser.GetUserIdAsync();
 
-        var feed = new Feed(
+        var feed = Feed.CreateFeed(
         authorId,
         input.Title,
         input.Content

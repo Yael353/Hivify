@@ -1,4 +1,5 @@
-﻿@using MudBlazor
+﻿@using Ansjon.Components.Common
+@using MudBlazor
 
 @inject CreateFeed CreateFeedHandler
 @inject ISnackbar Snackbar
@@ -6,18 +7,10 @@
 
 
 <MudExpansionPanels>
-
-    <MudExpansionPanel Text="Skapa ny feed"
-                       Icon="@Icons.Material.Filled.AddCircle">
-
-        <MudPaper Class="pa-6 mt-4"
-                  Elevation="0">
-
+    <MudExpansionPanel Text="Skapa ny feed" Icon="@Icons.Material.Filled.AddCircle">
+        <MudPaper Class="pa-6 mt-4" Elevation="0">
             <MudForm @ref="_form">
-
                 <MudStack Spacing="4">
-
-
                     <MudTextField Label="Titel"
                                   @bind-Value="_feed.Title"
                                   Variant="Variant.Outlined"
@@ -25,7 +18,6 @@
                                   RequiredError="Titel är obligatorisk"
                                   MaxLength="100"
                                   Counter="100" />
-
 
                     <MudTextField Label="Innehåll"
                                   @bind-Value="_feed.Content"
@@ -49,39 +41,15 @@
                                OnClick="CreateAsync">
 
 
-                        @if (_submitting)
-                        {
-                            <MudProgressCircular Size="Size.Small"
-                                                 Indeterminate="true"
-                                                 Class="me-2" />
-
-                            <span>
-                                Sparar...
-                            </span>
-                        }
-                        else
-                        {
-                            <span>
-                                Skapa feed
-                            </span>
-                        }
-
+                     <LoadingButtonContent IsLoading="_submitting"
+                          Text="Skapa feed"
+                          LoadingText="Sparar..." />
 
                     </MudButton>
-
-
                 </MudStack>
-
-
             </MudForm>
-
-
         </MudPaper>
-
-
     </MudExpansionPanel>
-
-
 </MudExpansionPanels>
 
 
@@ -91,16 +59,11 @@
     [Parameter]
     public EventCallback OnCreated { get; set; }
 
-
     private MudForm? _form;
-
 
     private readonly CreateFeedDto _feed = new();
 
-
     private bool _submitting;
-
-
 
     private async Task CreateAsync()
     {
@@ -119,32 +82,21 @@
         {
             _submitting = true;
 
-
             _feed.Title = _feed.Title.Trim();
 
             _feed.Content = _feed.Content.Trim();
 
-
-
             await CreateFeedHandler.CreateFeedAsync(_feed);
-
-
 
             Snackbar.Add(
                 "Feed skapades!",
                 Severity.Success);
 
-
-
             _feed.Title = "";
 
             _feed.Content = "";
 
-
-
             await _form.ResetAsync();
-
-
 
             await OnCreated.InvokeAsync();
 
@@ -154,7 +106,6 @@
             Logger.LogError(
                 ex,
                 "Error creating feed");
-
 
             Snackbar.Add(
                 "Kunde inte skapa feed.",

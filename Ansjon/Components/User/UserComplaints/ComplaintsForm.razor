@@ -10,7 +10,6 @@
   <MudItem xs="12" md="7">
     <MudPaper Class="pa-4 pa-md-5 complaint-form__panel" Elevation="0" Variant="Variant.Outlined">
       <MudStack Spacing="3">
-
         <ComplaintFormFields NewComplaint="@NewComplaint" />
 
         <ComplaintFileUpload ImageUrl="@NewComplaint.ImageUrl"
@@ -22,12 +21,9 @@
                   Elevation="0"
                   Variant="Variant.Outlined">
           <MudStack Spacing="2">
-
-            <ComplaintSubmitButton IsSubmitting="@_isSubmitting"
-                                   OnSubmit="@HandleSubmit" />
+            <ComplaintSubmitButton IsSubmitting="@_isSubmitting" OnSubmit="@HandleSubmit" />
           </MudStack>
         </MudPaper>
-
       </MudStack>
     </MudPaper>
   </MudItem>

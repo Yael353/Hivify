@@ -1,5 +1,4 @@
-using Ansjon.Core.Entities.Complaints;
-using Ansjon.Core.Entities.Feed;
+using Ansjon.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

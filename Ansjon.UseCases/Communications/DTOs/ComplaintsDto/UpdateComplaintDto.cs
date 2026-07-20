@@ -1,5 +1,4 @@
-﻿using Ansjon.Core.Entities.Complaints;
-using Ansjon.Core.Enums;
+﻿using Ansjon.Core.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Ansjon.UseCases.Communications.DTOs.ComplaintsDto

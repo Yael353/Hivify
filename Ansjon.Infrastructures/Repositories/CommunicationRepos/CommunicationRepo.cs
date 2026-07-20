@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Entities.Feed;
+﻿using Ansjon.Core.Entities;
 using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Communications.InterFaces;
 using Microsoft.EntityFrameworkCore;

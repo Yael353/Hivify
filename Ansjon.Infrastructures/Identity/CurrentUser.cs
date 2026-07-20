@@ -1,10 +1,8 @@
-﻿
-
-using Ansjon.UseCases.Communications.InterFaces;
+﻿using Ansjon.UseCases.Communications.InterFaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace Ansjon.Infrastructure.Identity;
+namespace Ansjon.Infrastructures.Identity;
 
 public class CurrentUser : ICurrentUser
 {

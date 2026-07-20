@@ -1,7 +1,7 @@
-﻿using Ansjon.Core.Entities.Exceptions;
-using Ansjon.Core.Enums;
+﻿using Ansjon.Core.Enums;
+using Ansjon.Core.Exceptions;
 
-namespace Ansjon.Core.Entities.Complaints
+namespace Ansjon.Core.Entities
 {
     public class Complaint
     {
@@ -15,7 +15,7 @@ namespace Ansjon.Core.Entities.Complaints
                 throw new DomainException("Title is required.");
             if (string.IsNullOrWhiteSpace(description))
                 throw new DomainException("Description is required.");
-           
+
 
             ComplaintId = Guid.NewGuid();
             Title = title.Trim();

@@ -1,4 +1,4 @@
-﻿namespace Ansjon.Core.Entities.Exceptions
+﻿namespace Ansjon.Core.Exceptions
 {
     public sealed class DomainException : Exception
     {
