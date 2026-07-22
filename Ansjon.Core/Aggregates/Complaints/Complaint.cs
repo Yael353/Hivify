@@ -5,6 +5,17 @@ namespace Ansjon.Core.Aggregates.Complaints
 {
     public class Complaint : BaseEntity, IAggregateRoot
     {
+
+        public ComplaintID ComplaintId { get; private set; }
+        public string Title { get; private set; }
+        public string Description { get; private set; }
+        public Guid AuthorId { get; private set; }
+        public ComplaintStatus Status { get; private set; }
+        public DateTime CreatedDate { get; private set; }
+        public DateTime? UpdatedDate { get; private set; }
+        public DateTime? ResolvedDate { get; private set; }
+        public string? ImageUrl { get; private set; }
+        public string? AdminComment { get; private set; }
         private Complaint() { }
 
         private Complaint(string title, string description, Guid authorId)
@@ -12,7 +23,7 @@ namespace Ansjon.Core.Aggregates.Complaints
             if (authorId == Guid.Empty)
                 throw new DomainException("Author is required.");
 
-            ComplaintId = Guid.NewGuid();
+            ComplaintId = new ComplaintID(Guid.NewGuid());
             AuthorId = authorId;
             Status = ComplaintStatus.New;
             CreatedDate = DateTime.UtcNow;
@@ -29,16 +40,6 @@ namespace Ansjon.Core.Aggregates.Complaints
             return new Complaint(title, description, authorId);
         }
 
-        public Guid ComplaintId { get; private set; }
-        public string Title { get; private set; }
-        public string Description { get; private set; }
-        public Guid AuthorId { get; private set; }
-        public ComplaintStatus Status { get; private set; }
-        public DateTime CreatedDate { get; private set; }
-        public DateTime? UpdatedDate { get; private set; }
-        public DateTime? ResolvedDate { get; private set; }
-        public string? ImageUrl { get; private set; }
-        public string? AdminComment { get; private set; }
 
         public void UpdateDetails(string title, string description)
         {

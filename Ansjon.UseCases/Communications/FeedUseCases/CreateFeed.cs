@@ -32,7 +32,7 @@ public class CreateFeed
         );
 
         await _communicationRepo.CreateFeedAsync(feed);
-        return feed.Id;
+        return feed.FeedId.Value;
     }
 
 }
