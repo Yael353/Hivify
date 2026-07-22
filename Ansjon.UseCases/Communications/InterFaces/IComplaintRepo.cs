@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Entities;
+﻿using Ansjon.Core.Entities.Complaint;
 
 namespace Ansjon.UseCases.Communications.InterFaces
 {

@@ -1,7 +1,7 @@
 ﻿using Ansjon.Core.Enums;
 using Ansjon.Core.Exceptions;
 
-namespace Ansjon.Core.Entities
+namespace Ansjon.Core.Entities.Complaint
 {
     public class Complaint
     {

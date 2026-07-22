@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Entities;
+﻿using Ansjon.Core.Entities.Complaint;
 using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
 using Ansjon.UseCases.Communications.InterFaces;
 using FluentValidation;

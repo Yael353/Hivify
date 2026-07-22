@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Entities;
+﻿using Ansjon.Core.Entities.Feeds;
 
 namespace Ansjon.UseCases.Communications.InterFaces
 {
