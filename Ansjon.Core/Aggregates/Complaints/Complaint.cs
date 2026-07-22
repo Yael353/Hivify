@@ -1,28 +1,32 @@
-﻿using Ansjon.Core.Enums;
-using Ansjon.Core.Exceptions;
+﻿using Ansjon.Core.Exceptions;
+using Ansjon.Core.SharedKernel;
 
 namespace Ansjon.Core.Aggregates.Complaints
 {
-    public class Complaint
+    public class Complaint : BaseEntity, IAggregateRoot
     {
-        private Complaint()
-        {
-        }
+        private Complaint() { }
 
-        public Complaint(string title, string description, Guid authorId)
+        private Complaint(string title, string description, Guid authorId)
         {
-            if (string.IsNullOrWhiteSpace(title))
-                throw new DomainException("Title is required.");
-            if (string.IsNullOrWhiteSpace(description))
-                throw new DomainException("Description is required.");
-
+            if (authorId == Guid.Empty)
+                throw new DomainException("Author is required.");
 
             ComplaintId = Guid.NewGuid();
-            Title = title.Trim();
-            Description = description.Trim();
             AuthorId = authorId;
             Status = ComplaintStatus.New;
             CreatedDate = DateTime.UtcNow;
+
+            SetTitle(title);
+            SetDescription(description);
+        }
+
+        public static Complaint Create(
+            string title,
+            string description,
+            Guid authorId)
+        {
+            return new Complaint(title, description, authorId);
         }
 
         public Guid ComplaintId { get; private set; }
@@ -38,14 +42,26 @@ namespace Ansjon.Core.Aggregates.Complaints
 
         public void UpdateDetails(string title, string description)
         {
+            SetTitle(title);
+            SetDescription(description);
+
+            UpdatedDate = DateTime.UtcNow;
+        }
+
+        private void SetTitle(string title)
+        {
             if (string.IsNullOrWhiteSpace(title))
                 throw new DomainException("Title is required.");
+
+            Title = title.Trim();
+        }
+
+        private void SetDescription(string description)
+        {
             if (string.IsNullOrWhiteSpace(description))
                 throw new DomainException("Description is required.");
 
-            Title = title.Trim();
             Description = description.Trim();
-            UpdatedDate = DateTime.UtcNow;
         }
 
         public void SetImage(string imageUrl)

@@ -30,11 +30,13 @@ namespace Ansjon.Core.Aggregates.Feeds
             return new Feed(authorId, title, content);
         }
 
+
         public void Update(string title, string content)
         {
             SetTitle(title);
             SetContent(content);
         }
+
 
         private void SetTitle(string title)
         {

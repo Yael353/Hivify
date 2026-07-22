@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Enums;
+﻿using Ansjon.Core.Aggregates.Complaints;
 using System.ComponentModel.DataAnnotations;
 
 namespace Ansjon.UseCases.Communications.DTOs.ComplaintsDto

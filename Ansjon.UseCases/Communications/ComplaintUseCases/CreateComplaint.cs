@@ -24,11 +24,11 @@ namespace Ansjon.UseCases.Communications.ComplaintUseCases
 
             await _validator.ValidateAndThrowAsync(input);
 
-            var complaint = new Complaint(
+            var complaint = Complaint.Create(
                 input.Title,
                 input.Description,
-                input.AuthorId
-            );
+                input.AuthorId);
+
 
             if (!string.IsNullOrEmpty(input.ImageUrl))
             {
