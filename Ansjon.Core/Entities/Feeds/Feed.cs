@@ -1,16 +1,14 @@
 ﻿using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
-
 namespace Ansjon.Core.Entities.Feeds
 {
+
     public class Feed : BaseEntity, IAggregateRoot
     {
-
         public string Title { get; private set; }
         public string Content { get; private set; }
         public Guid AuthorId { get; private set; }
         public DateTime CreatedDate { get; private set; }
-
 
         private Feed() { }
 
@@ -22,8 +20,9 @@ namespace Ansjon.Core.Entities.Feeds
             Id = Guid.NewGuid();
             CreatedDate = DateTime.UtcNow;
             AuthorId = authorId;
-            ChangeTitle(title);
-            ChangeContent(content);
+
+            SetTitle(title);
+            SetContent(content);
         }
 
         public static Feed CreateFeed(Guid authorId, string title, string content)
@@ -31,7 +30,13 @@ namespace Ansjon.Core.Entities.Feeds
             return new Feed(authorId, title, content);
         }
 
-        public void ChangeTitle(string title)
+        public void Update(string title, string content)
+        {
+            SetTitle(title);
+            SetContent(content);
+        }
+
+        private void SetTitle(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
                 throw new DomainException("Title is required.");
@@ -42,19 +47,15 @@ namespace Ansjon.Core.Entities.Feeds
             Title = title.Trim();
         }
 
-        public void ChangeContent(string content)
+        private void SetContent(string content)
         {
             if (string.IsNullOrWhiteSpace(content))
                 throw new DomainException("Content is required.");
+
             if (content.Length > 1000)
-                throw new DomainException("Title cannot exceed 200 characters.");
+                throw new DomainException("Content cannot exceed 1000 characters.");
+
             Content = content.Trim();
         }
     }
-
 }
-
-
-
-
-
