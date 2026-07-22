@@ -1,6 +1,6 @@
 ﻿using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
-namespace Ansjon.Core.Entities.Feeds
+namespace Ansjon.Core.Aggregates.Feeds
 {
 
     public class Feed : BaseEntity, IAggregateRoot
