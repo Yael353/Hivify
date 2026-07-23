@@ -11,15 +11,15 @@ namespace Ansjon.Core.Aggregates.Feeds
         public string Content { get; private set; }
         public AuthorID AuthorId { get; private set; }
         public DateTime CreatedDate { get; private set; }
-
+        public DateTime? DeletedAt { get; private set; }
         private Feed() { }  // Private constructor for EF Core
 
         private Feed(AuthorID authorId, string title, string content)
         {
             FeedId = new FeedID(Guid.NewGuid());
             CreatedDate = DateTime.UtcNow;
+            AuthorId = authorId;
 
-            SetAuthor(authorId);
             SetTitle(title);
             SetContent(content);
         }
@@ -34,11 +34,20 @@ namespace Ansjon.Core.Aggregates.Feeds
 
         public void Update(string title, string content)
         {
+            EnsureNotDeleted();
             SetTitle(title);
             SetContent(content);
         }
 
+        public void Delete()
+        {
+            EnsureNotDeleted();
 
+            DeletedAt = DateTime.UtcNow;
+        }
+
+
+        // Validation methods for the Feed aggregate
         private void SetTitle(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
@@ -61,10 +70,10 @@ namespace Ansjon.Core.Aggregates.Feeds
             Content = content.Trim();
         }
 
-        private void SetAuthor(AuthorID authorId)
+        private void EnsureNotDeleted()
         {
-            AuthorId = authorId;
+            if (DeletedAt != null)
+                throw new DomainException("Feed has already been deleted.");
         }
-
     }
 }
