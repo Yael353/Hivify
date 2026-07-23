@@ -1,13 +1,13 @@
 ﻿
+using Ansjon.UseCases.Communications.ComplaintUseCases;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Ansjon.UseCases.Communications.ComplaintUseCases
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    extension(IServiceCollection services)
     {
-        public static IServiceCollection AddComplaintServices(this IServiceCollection services)
+        public IServiceCollection AddComplaintServices()
         {
-
             services.AddScoped<CreateComplaint>();
             services.AddScoped<ViewComplaints>();
             services.AddScoped<UpdateComplaint>();
@@ -16,5 +16,4 @@ namespace Ansjon.UseCases.Communications.ComplaintUseCases
             return services;
         }
     }
-
 }

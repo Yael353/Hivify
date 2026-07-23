@@ -3,4 +3,6 @@
   <Project Path="Ansjon.Infrastructures/Ansjon.Infrastructures.csproj" Id="3e779152-bd0f-47e7-8acb-d3b0496a051c" />
   <Project Path="Ansjon.UseCases/Ansjon.UseCases.csproj" />
   <Project Path="Ansjon/Ansjon.csproj" />
+  <Project Path="AppHost1/AppHost1.csproj" Id="45500474-241b-44b2-a9c2-ba5b0d20f0a9" />
+  <Project Path="ServiceDefaults1/ServiceDefaults1.csproj" Id="760c590f-38e9-46c2-9034-d272fa343598" />
 </Solution>

@@ -5,7 +5,6 @@ using Ansjon.Infrastructures.Identity;
 using Ansjon.Infrastructures.Repositories.CommunicationRepos;
 using Ansjon.Infrastructures.Repositories.ComplaintRepos;
 using Ansjon.Infrastructures.SqlDatabase;
-using Ansjon.UseCases.Communications.ComplaintUseCases;
 using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
 using Ansjon.UseCases.Communications.FeedUseCases;
 using Ansjon.UseCases.Communications.InterFaces;
@@ -16,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.AddServiceDefaults();
 #region Presentation
 
 builder.Services.AddRazorComponents()
@@ -120,7 +119,7 @@ app.UseAntiforgery();
 #endregion
 
 #region Endpoints
-
+app.MapDefaultEndpoints();
 app.MapStaticAssets();
 
 app.MapRazorComponents<App>()

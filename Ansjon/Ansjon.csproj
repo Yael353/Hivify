@@ -11,6 +11,7 @@
     <ProjectReference Include="..\Ansjon.Core\Ansjon.Core.csproj" />
     <ProjectReference Include="..\Ansjon.Infrastructures\Ansjon.Infrastructures.csproj" />
     <ProjectReference Include="..\Ansjon.UseCases\Ansjon.UseCases.csproj" />
+    <ProjectReference Include="..\ServiceDefaults1\ServiceDefaults1.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MudBlazor" Version="9.5.0" />
