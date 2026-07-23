@@ -11,22 +11,21 @@ namespace Ansjon.Core.Aggregates.Feeds
         public Guid AuthorId { get; private set; }
         public DateTime CreatedDate { get; private set; }
 
-        private Feed() { }
+        private Feed() { }  // Private constructor for EF Core
 
-        private Feed(Guid authorId, string title, string content)
+        private Feed(AuthorId authorId, string title, string content)
         {
-            if (authorId == Guid.Empty)
-                throw new DomainException("Author is required.");
-
             FeedId = new FeedID(Guid.NewGuid());
             CreatedDate = DateTime.UtcNow;
-            AuthorId = authorId;
 
+            SetAuthor(authorId);
             SetTitle(title);
             SetContent(content);
         }
 
-        public static Feed CreateFeed(Guid authorId, string title, string content)
+
+
+        public static Feed CreateFeed(AuthorId authorId, string title, string content)
         {
             return new Feed(authorId, title, content);
         }
@@ -59,6 +58,13 @@ namespace Ansjon.Core.Aggregates.Feeds
                 throw new DomainException("Content cannot exceed 1000 characters.");
 
             Content = content.Trim();
+        }
+        private void SetAuthor(AuthorId authorId)
+        {
+            if (authorId == null)
+                throw new DomainException("Author is required.");
+
+            AuthorId = authorId.Value;
         }
     }
 }

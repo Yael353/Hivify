@@ -93,6 +93,10 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
 
     await IdentitySeeder.SeedAsync(services);
+
+    var db = services.GetRequiredService<ApplicationDbContext>();
+
+    await DatabaseSeeder.SeedAsync(db);
 }
 
 
