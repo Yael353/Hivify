@@ -5,7 +5,7 @@ namespace Ansjon.Core.Aggregates.Feeds
 
     public class Feed : BaseEntity, IAggregateRoot
     {
-        public ComplaintID FeedId { get; private set; }
+        public FeedID FeedId { get; private set; }
         public string Title { get; private set; }
         public string Content { get; private set; }
         public Guid AuthorId { get; private set; }
@@ -18,7 +18,7 @@ namespace Ansjon.Core.Aggregates.Feeds
             if (authorId == Guid.Empty)
                 throw new DomainException("Author is required.");
 
-            FeedId = new ComplaintID(Guid.NewGuid());
+            FeedId = new FeedID(Guid.NewGuid());
             CreatedDate = DateTime.UtcNow;
             AuthorId = authorId;
 
