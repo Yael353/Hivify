@@ -2,7 +2,7 @@
 
 namespace Ansjon.Core.Aggregates.Feeds
 {
-    public readonly record struct AuthorId(Guid Value) : IValue
+    public readonly record struct FeedID(Guid Value) : IValue
     {
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace Ansjon.UseCases.Communications.InterFaces
+﻿using Ansjon.Core.Aggregates.Feeds;
+
+namespace Ansjon.UseCases.Communications.InterFaces
 {
     public interface ICurrentUser
     {
-        Task<Guid> GetUserIdAsync();
+        Task<AuthorID> GetUserIdAsync();
 
 
     }

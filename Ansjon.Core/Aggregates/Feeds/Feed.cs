@@ -1,4 +1,5 @@
-﻿using Ansjon.Core.Exceptions;
+﻿
+using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
 namespace Ansjon.Core.Aggregates.Feeds
 {
@@ -8,12 +9,12 @@ namespace Ansjon.Core.Aggregates.Feeds
         public FeedID FeedId { get; private set; }
         public string Title { get; private set; }
         public string Content { get; private set; }
-        public Guid AuthorId { get; private set; }
+        public AuthorID AuthorId { get; private set; }
         public DateTime CreatedDate { get; private set; }
 
         private Feed() { }  // Private constructor for EF Core
 
-        private Feed(AuthorId authorId, string title, string content)
+        private Feed(AuthorID authorId, string title, string content)
         {
             FeedId = new FeedID(Guid.NewGuid());
             CreatedDate = DateTime.UtcNow;
@@ -25,7 +26,7 @@ namespace Ansjon.Core.Aggregates.Feeds
 
 
 
-        public static Feed CreateFeed(AuthorId authorId, string title, string content)
+        public static Feed CreateFeed(AuthorID authorId, string title, string content)
         {
             return new Feed(authorId, title, content);
         }
@@ -59,12 +60,12 @@ namespace Ansjon.Core.Aggregates.Feeds
 
             Content = content.Trim();
         }
-        private void SetAuthor(AuthorId authorId)
+        private void SetAuthor(AuthorID authorId)
         {
             if (authorId == null)
                 throw new DomainException("Author is required.");
 
-            AuthorId = authorId.Value;
+            AuthorId = authorId;
         }
     }
 }

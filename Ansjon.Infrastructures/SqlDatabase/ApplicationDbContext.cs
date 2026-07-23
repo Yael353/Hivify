@@ -28,5 +28,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasConversion(
                 v => v.Value,
                 v => new FeedID(v));
+
+        modelBuilder.Entity<Feed>()
+            .Property(f => f.AuthorId)
+            .HasConversion(
+                v => v.Value,
+                v => new AuthorID(v));
     }
 }
