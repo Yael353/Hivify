@@ -1,4 +1,4 @@
-﻿namespace Ansjon.Core.Enums
+﻿namespace Ansjon.Core.Aggregates.Complaints
 {
 
     public enum ComplaintStatus

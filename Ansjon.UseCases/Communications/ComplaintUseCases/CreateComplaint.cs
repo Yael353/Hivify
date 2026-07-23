@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Entities;
+﻿using Ansjon.Core.Aggregates.Complaints;
 using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
 using Ansjon.UseCases.Communications.InterFaces;
 using FluentValidation;
@@ -24,11 +24,11 @@ namespace Ansjon.UseCases.Communications.ComplaintUseCases
 
             await _validator.ValidateAndThrowAsync(input);
 
-            var complaint = new Complaint(
+            var complaint = Complaint.Create(
                 input.Title,
                 input.Description,
-                input.AuthorId
-            );
+                input.AuthorId);
+
 
             if (!string.IsNullOrEmpty(input.ImageUrl))
             {
@@ -37,7 +37,7 @@ namespace Ansjon.UseCases.Communications.ComplaintUseCases
 
             await _complaintRepo.CreateComplaintAsync(complaint);
 
-            return complaint.ComplaintId;
+            return complaint.ComplaintId.Value;
 
         }
     }

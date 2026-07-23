@@ -25,8 +25,8 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
                     $"Feed {id} not found"
                 );
             }
-            existing.ChangeTitle(input.Title);
-            existing.ChangeContent(input.Content);
+            existing.Update(input.Title, input.Content);
+
             await _communicationRepo.UpdateFeedAsync(existing);
         }
     }

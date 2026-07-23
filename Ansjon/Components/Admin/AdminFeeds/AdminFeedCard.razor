@@ -3,7 +3,7 @@
 @using Ansjon.UseCases.Communications.FeedUseCases
 @using MudBlazor
 @using Microsoft.AspNetCore.Authorization
-@using Ansjon.Core.Entities
+@using Ansjon.Core.Aggregates.Feeds
 @using Ansjon.UseCases.Communications.DTOs.FeedDtos
 
 @inject UpdateFeed UpdateFeedHandler
@@ -240,7 +240,7 @@
 
 
 			await UpdateFeedHandler.UpdateFeedAsync(
-					Feed.Id,
+					Feed.FeedId.Value,
 					_updateDto);
 
 
@@ -263,7 +263,7 @@
 			Logger.LogError(
 					ex,
 					"Error updating feed {Id}",
-					Feed.Id);
+					Feed.FeedId.Value);
 
 
 			Snackbar.Add(
@@ -287,7 +287,7 @@
 		{
 
 			await DeleteFeedHandler.DeleteFeedAsync(
-					Feed.Id);
+					Feed.FeedId.Value);
 
 			Snackbar.Add(
 					"Feed borttagen.",
@@ -302,7 +302,7 @@
 			Logger.LogError(
 					ex,
 					"Error deleting feed {Id}",
-					Feed.Id);
+					Feed.FeedId.Value);
 
 
 			Snackbar.Add(
