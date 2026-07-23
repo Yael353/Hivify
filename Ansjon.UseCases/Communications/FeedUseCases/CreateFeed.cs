@@ -23,7 +23,7 @@ public class CreateFeed
         ArgumentNullException.ThrowIfNull(input);
 
         await _validator.ValidateAndThrowAsync(input);
-        var authorId = await _currentUser.GetUserIdAsync();
+        AuthorID authorId = await _currentUser.GetUserIdAsync();
 
         var feed = Feed.CreateFeed(
         authorId,

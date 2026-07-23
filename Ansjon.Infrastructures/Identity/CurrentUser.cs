@@ -1,4 +1,5 @@
-﻿using Ansjon.UseCases.Communications.InterFaces;
+﻿using Ansjon.Core.Aggregates.Feeds;
+using Ansjon.UseCases.Communications.InterFaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
@@ -13,7 +14,7 @@ public class CurrentUser : ICurrentUser
         _authenticationStateProvider = authenticationStateProvider;
     }
 
-    public async Task<Guid> GetUserIdAsync()
+    public async Task<AuthorID> GetUserIdAsync()
     {
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
 
@@ -27,7 +28,7 @@ public class CurrentUser : ICurrentUser
         if (!Guid.TryParse(id, out var userId))
             throw new InvalidOperationException("User ID claim is invalid.");
 
-        return userId;
+        return new AuthorID(userId);
     }
 }
 

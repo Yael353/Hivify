@@ -12,13 +12,13 @@ public static class DatabaseSeeder
 
         context.Feeds.Add(
             Feed.CreateFeed(
-                Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                new AuthorID(Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")),
                 "Welcome to Ansjon",
                 "This is the first seeded feed."));
 
         context.Feeds.Add(
             Feed.CreateFeed(
-                Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+                new AuthorID(Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc")),
                 "Getting Started",
                 "Learn how to use the platform."));
 
