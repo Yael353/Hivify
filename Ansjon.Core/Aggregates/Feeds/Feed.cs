@@ -60,12 +60,11 @@ namespace Ansjon.Core.Aggregates.Feeds
 
             Content = content.Trim();
         }
+
         private void SetAuthor(AuthorID authorId)
         {
-            if (authorId == null)
-                throw new DomainException("Author is required.");
-
             AuthorId = authorId;
         }
+
     }
 }
