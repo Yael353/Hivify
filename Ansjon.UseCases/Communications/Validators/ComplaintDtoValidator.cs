@@ -1,8 +1,5 @@
 ﻿using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Ansjon.UseCases.Communications.Validators
 {

@@ -8,29 +8,21 @@ public class CurrentUser : ICurrentUser
 {
     private readonly AuthenticationStateProvider _authenticationStateProvider;
 
-
-    public CurrentUser(
-        AuthenticationStateProvider authenticationStateProvider)
+    public CurrentUser(AuthenticationStateProvider authenticationStateProvider)
     {
         _authenticationStateProvider = authenticationStateProvider;
     }
 
-
     public async Task<Guid> GetUserIdAsync()
     {
-        var authState =
-            await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
 
         var user = authState.User;
-
 
         if (user.Identity?.IsAuthenticated != true)
             throw new UnauthorizedAccessException();
 
-
-        var id =
-            user.FindFirstValue(ClaimTypes.NameIdentifier);
-
+        var id = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
         return Guid.Parse(id!);
     }
@@ -39,9 +31,7 @@ public class CurrentUser : ICurrentUser
 
     public async Task<bool> IsInRoleAsync(string role)
     {
-        var authState =
-            await _authenticationStateProvider.GetAuthenticationStateAsync();
-
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
 
         return authState.User.IsInRole(role);
     }
