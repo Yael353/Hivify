@@ -3,13 +3,13 @@ using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Communications.InterFaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ansjon.Infrastructures.Repositories.CommunicationRepos
+namespace Ansjon.Infrastructures.Repositories.FeedRepos
 {
-    public class CommunicationRepo : ICommunicationRepo
+    public class FeedRepo : IFeedRepo
     {
 
         private readonly ApplicationDbContext _context;
-        public CommunicationRepo(ApplicationDbContext context)
+        public FeedRepo(ApplicationDbContext context)
         {
             _context = context;
         }

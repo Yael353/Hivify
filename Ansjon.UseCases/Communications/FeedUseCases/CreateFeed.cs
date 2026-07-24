@@ -4,12 +4,12 @@ using FluentValidation;
 
 public class CreateFeed
 {
-    private readonly ICommunicationRepo _communicationRepo;
+    private readonly IFeedRepo _communicationRepo;
     private readonly ICurrentUser _currentUser;
     private readonly IValidator<CreateFeedDto> _validator;
 
     public CreateFeed(
-        ICommunicationRepo communicationRepo,
+        IFeedRepo communicationRepo,
         ICurrentUser currentUser,
         IValidator<CreateFeedDto> validator)
     {

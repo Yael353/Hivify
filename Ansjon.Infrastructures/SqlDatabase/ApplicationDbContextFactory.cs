@@ -3,8 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Ansjon.Infrastructures.SqlDatabase;
 
-public class ApplicationDbContextFactory
-    : IDesignTimeDbContextFactory<ApplicationDbContext>
+public class ApplicationDbContextFactor : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
     public ApplicationDbContext CreateDbContext(string[] args)
     {

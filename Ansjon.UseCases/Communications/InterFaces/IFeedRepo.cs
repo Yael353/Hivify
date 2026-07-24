@@ -2,7 +2,7 @@
 
 namespace Ansjon.UseCases.Communications.InterFaces
 {
-    public interface ICommunicationRepo
+    public interface IFeedRepo
     {
         Task CreateFeedAsync(Feed feed);
         Task<IEnumerable<Feed>> GetAllFeedsAsync();

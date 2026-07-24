@@ -5,8 +5,8 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
 {
     public class DeleteFeed
     {
-        private readonly ICommunicationRepo _communicationRepo;
-        public DeleteFeed(ICommunicationRepo communicationRepo)
+        private readonly IFeedRepo _communicationRepo;
+        public DeleteFeed(IFeedRepo communicationRepo)
         {
             _communicationRepo = communicationRepo;
         }
