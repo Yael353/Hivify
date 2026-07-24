@@ -1,7 +1,8 @@
 ﻿using Ansjon.Core.Aggregates.Feeds;
+using Ansjon.Infrastructures.SqlDatabase;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ansjon.Infrastructures.SqlDatabase;
+namespace Ansjon.Infrastructures.Data;
 
 public static class DatabaseSeeder
 {

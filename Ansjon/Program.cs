@@ -5,7 +5,6 @@ using Ansjon.Infrastructures.Identity;
 using Ansjon.Infrastructures.Repositories.CommunicationRepos;
 using Ansjon.Infrastructures.Repositories.ComplaintRepos;
 using Ansjon.Infrastructures.SqlDatabase;
-using Ansjon.UseCases.Communications.ComplaintUseCases;
 using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
 using Ansjon.UseCases.Communications.FeedUseCases;
 using Ansjon.UseCases.Communications.InterFaces;
@@ -16,31 +15,48 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
+#region Presentation
 
-// Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddMudServices();
+
+#endregion
+
+#region Authentication & Authorization
 
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddScoped<IdentityRedirectManager>();
 
 builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = IdentityConstants.ApplicationScheme;
-        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-    }).AddIdentityCookies();
-
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+})
+.AddIdentityCookies();
 
 builder.Services.AddAuthorization();
 
+#endregion
+
+#region Database
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var connectionString =
+    builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException(
+        "Connection string 'DefaultConnection' not found.");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+#endregion
+
+#region Identity
 
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
@@ -52,19 +68,35 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 .AddSignInManager()
 .AddDefaultTokenProviders();
 
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>,
+    IdentityNoOpEmailSender>();
 
-// Yas-odi 
+#endregion
+
+#region Infrastructure
+
 builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
 builder.Services.AddScoped<IComplaintRepo, ComplaintRepo>();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
-builder.Services.AddScoped<IValidator<CreateComplaintDto>, ComplaintDtoValidator>();
-builder.Services.AddScoped<IValidator<UpdateComplaintDto>, UpdateComplaintDtoValidator>();
+
+#endregion
+
+#region Application
+
 builder.Services.AddFeedServices();
 builder.Services.AddComplaintServices();
-builder.Services.AddMudServices();
+
+builder.Services.AddScoped<IValidator<CreateComplaintDto>,
+    ComplaintDtoValidator>();
+
+builder.Services.AddScoped<IValidator<UpdateComplaintDto>,
+    UpdateComplaintDtoValidator>();
+
+#endregion
 
 var app = builder.Build();
+
+#region Middleware
 
 if (app.Environment.IsDevelopment())
 {
@@ -73,20 +105,31 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+
+app.UseStatusCodePagesWithReExecute(
+    "/not-found",
+    createScopeForStatusCodePages: true);
+
 app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
-app.MapStaticAssets();
-app.MapRazorComponents<App>()
-.AddInteractiveServerRenderMode();
+#endregion
 
-// Add additional endpoints required by the Identity /Account Razor components.
+#region Endpoints
+app.MapDefaultEndpoints();
+app.MapStaticAssets();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
+
 app.MapAdditionalIdentityEndpoints();
+
+#endregion
+
+#region Database Seeding
 
 using (var scope = app.Services.CreateScope())
 {
@@ -99,5 +142,6 @@ using (var scope = app.Services.CreateScope())
     await DatabaseSeeder.SeedAsync(db);
 }
 
+#endregion
 
 app.Run();
