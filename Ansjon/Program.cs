@@ -2,8 +2,8 @@ using Ansjon.Components;
 using Ansjon.Components.Account;
 using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Identity;
-using Ansjon.Infrastructures.Repositories.CommunicationRepos;
 using Ansjon.Infrastructures.Repositories.ComplaintRepos;
+using Ansjon.Infrastructures.Repositories.FeedRepos;
 using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
 using Ansjon.UseCases.Communications.FeedUseCases;
@@ -75,7 +75,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>,
 
 #region Infrastructure
 
-builder.Services.AddScoped<ICommunicationRepo, CommunicationRepo>();
+builder.Services.AddScoped<IFeedRepo, FeedRepo>();
 builder.Services.AddScoped<IComplaintRepo, ComplaintRepo>();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
@@ -91,6 +91,11 @@ builder.Services.AddScoped<IValidator<CreateComplaintDto>,
 
 builder.Services.AddScoped<IValidator<UpdateComplaintDto>,
     UpdateComplaintDtoValidator>();
+
+#endregion
+
+#region AI Integration
+builder.Services.AddAIServices();
 
 #endregion
 

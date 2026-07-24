@@ -9,7 +9,7 @@ namespace Ansjon.Core.Aggregates.Complaints
         public ComplaintID ComplaintId { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
-        public Guid AuthorId { get; private set; }
+        public TenantID TenantId { get; private set; }
         public ComplaintStatus Status { get; private set; }
         public DateTime CreatedDate { get; private set; }
         public DateTime? UpdatedDate { get; private set; }
@@ -18,13 +18,12 @@ namespace Ansjon.Core.Aggregates.Complaints
         public string? AdminComment { get; private set; }
         private Complaint() { }
 
-        private Complaint(string title, string description, Guid authorId)
+        private Complaint(string title, string description, TenantID tenantId)
         {
-            if (authorId == Guid.Empty)
-                throw new DomainException("Author is required.");
+
 
             ComplaintId = new ComplaintID(Guid.NewGuid());
-            AuthorId = authorId;
+            TenantId = tenantId;
             Status = ComplaintStatus.New;
             CreatedDate = DateTime.UtcNow;
 
@@ -35,9 +34,9 @@ namespace Ansjon.Core.Aggregates.Complaints
         public static Complaint Create(
             string title,
             string description,
-            Guid authorId)
+            TenantID tenantId)
         {
-            return new Complaint(title, description, authorId);
+            return new Complaint(title, description, tenantId);
         }
 
 

@@ -13,18 +13,14 @@ else if (!Feeds.Any())
 else
 {
     <MudStack Spacing="3">
-
         @foreach (var feed in Feeds)
         {
             <UserFeedCard Feed="feed" />
         }
-
     </MudStack>
 }
 
 @code {
-
     [Parameter, EditorRequired]
     public IEnumerable<Feed>? Feeds { get; set; }
-
 }

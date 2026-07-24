@@ -18,7 +18,7 @@ namespace Ansjon.UseCases.Communications.ComplaintUseCases
             _validator = validator;
         }
 
-        public async Task<Guid> CreateComplaintAsync(CreateComplaintDto input)
+        public async Task<Guid> CreateComplaintAsync(CreateComplaintDto input, TenantID TenantId)
         {
             ArgumentNullException.ThrowIfNull(input);
 
@@ -27,7 +27,7 @@ namespace Ansjon.UseCases.Communications.ComplaintUseCases
             var complaint = Complaint.Create(
                 input.Title,
                 input.Description,
-                input.AuthorId);
+                TenantId);
 
 
             if (!string.IsNullOrEmpty(input.ImageUrl))

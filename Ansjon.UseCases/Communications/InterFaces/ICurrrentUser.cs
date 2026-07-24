@@ -1,11 +1,9 @@
-﻿using Ansjon.Core.Aggregates.Feeds;
-
-namespace Ansjon.UseCases.Communications.InterFaces
+﻿namespace Ansjon.UseCases.Communications.InterFaces
 {
     public interface ICurrentUser
     {
-        Task<AuthorID> GetUserIdAsync();
+        Task<Guid> GetUserIdAsync();
 
-
+        Task<bool> IsInRoleAsync(string role);
     }
 }

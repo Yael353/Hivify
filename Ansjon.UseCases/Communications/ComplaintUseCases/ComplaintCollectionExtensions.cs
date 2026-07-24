@@ -2,7 +2,7 @@
 using Ansjon.UseCases.Communications.ComplaintUseCases;
 using Microsoft.Extensions.DependencyInjection;
 
-public static class ServiceCollectionExtensions
+public static class ComplaintCollectionExtensions
 {
     extension(IServiceCollection services)
     {

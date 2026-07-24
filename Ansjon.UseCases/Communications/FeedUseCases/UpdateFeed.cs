@@ -6,9 +6,9 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
 {
     public class UpdateFeed
     {
-        private readonly ICommunicationRepo _communicationRepo;
+        private readonly IFeedRepo _communicationRepo;
         private readonly IValidator<UpdateFeedDto> _validator;
-        public UpdateFeed(ICommunicationRepo communicationRepo, IValidator<UpdateFeedDto> validator)
+        public UpdateFeed(IFeedRepo communicationRepo, IValidator<UpdateFeedDto> validator)
         {
             _communicationRepo = communicationRepo;
             _validator = validator;

@@ -22,9 +22,9 @@ namespace Ansjon.UseCases.Communications.ComplaintUseCases
             return await _complaintRepo.GetComplaintByIdAsync(id);
         }
 
-        public async Task<IEnumerable<Complaint>> GetComplaintsByAuthorAsync(Guid authorId)
+        public async Task<IEnumerable<Complaint>> GetComplaintsByAuthorAsync(TenantID tenantId)
         {
-            return await _complaintRepo.GetAllComplaintsByAuthorAsync(authorId);
+            return await _complaintRepo.GetAllComplaintsByAuthorAsync(tenantId);
         }
     }
 }

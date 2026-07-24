@@ -6,9 +6,9 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
 {
     public class ViewFeeds
     {
-        private readonly ICommunicationRepo _communicationRepo;
+        private readonly IFeedRepo _communicationRepo;
 
-        public ViewFeeds(ICommunicationRepo communicationRepo)
+        public ViewFeeds(IFeedRepo communicationRepo)
         {
             _communicationRepo = communicationRepo;
         }
