@@ -3,7 +3,7 @@ using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Communications.InterFaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ansjon.Infrastructures.Repositories.FeedRepos
+namespace Ansjon.Infrastructures.Repositories.FeedRepo
 {
     public class FeedRepo : IFeedRepo
     {

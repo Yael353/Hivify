@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="Ansjon.AI/Ansjon.AI.csproj" Id="41fa7d34-c31e-41c1-a055-1c3167b3de2f" />
+  <Project Path="Ansjon.AI/Ansjon.AI.csproj" />
   <Project Path="Ansjon.Core/Ansjon.Core.csproj" />
   <Project Path="Ansjon.Infrastructures/Ansjon.Infrastructures.csproj" Id="3e779152-bd0f-47e7-8acb-d3b0496a051c" />
   <Project Path="Ansjon.UseCases/Ansjon.UseCases.csproj" />

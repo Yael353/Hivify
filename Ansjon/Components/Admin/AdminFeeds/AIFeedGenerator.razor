@@ -1,0 +1,163 @@
+﻿@using Ansjon.UseCases.Communications.DTOs.FeedDtos
+@using Ansjon.UseCases.Communications.InterFaces
+@inject IFeedGenerator FeedGenerator
+@inject CreateFeed CreateFeedHandler
+@inject ISnackbar Snackbar
+
+
+<MudExpansionPanels>
+
+  <MudExpansionPanel Text="Skapa feed med AI"
+    Icon="@Icons.Material.Filled.AutoAwesome">
+
+
+    <MudStack Spacing="4" Class="pa-6">
+
+
+      <MudTextField Label="Beskriv vad feeden ska handla om"
+        Variant="Variant.Outlined"
+        Lines="5"
+        TextArea="true"
+        @bind-Value="_instruction" />
+
+
+      <MudButton Color="Color.Primary"
+        Variant="Variant.Filled"
+        StartIcon="@Icons.Material.Filled.AutoAwesome"
+        Disabled="_loading"
+        OnClick="GenerateAsync">
+
+
+        @(_loading ? "Genererar..." : "Generera feed")
+
+
+      </MudButton>
+
+
+
+      @if (_generated is not null)
+      {
+
+        <MudDivider />
+
+
+        <MudText Typo="Typo.h6">
+          Förhandsvisning
+        </MudText>
+
+
+        <MudCard Elevation="4">
+
+          <MudCardHeader>
+
+            <MudText Typo="Typo.h6">
+              @_generated.Title
+            </MudText>
+
+          </MudCardHeader>
+
+
+          <MudCardContent>
+
+            <MudText>
+              @_generated.Content
+            </MudText>
+
+          </MudCardContent>
+
+
+          <MudCardActions>
+
+            <MudButton Color="Color.Success"
+              Variant="Variant.Filled"
+              OnClick="PublishAsync">
+
+              Publicera
+
+            </MudButton>
+
+
+          </MudCardActions>
+
+
+        </MudCard>
+
+      }
+
+
+    </MudStack>
+
+
+  </MudExpansionPanel>
+
+</MudExpansionPanels>
+
+
+
+@code {
+
+  private string _instruction = "";
+
+  private bool _loading;
+
+
+  private CreateFeedDto? _generated;
+
+
+
+  private async Task GenerateAsync()
+  {
+
+    if (string.IsNullOrWhiteSpace(_instruction))
+      return;
+
+
+    try
+    {
+
+      _loading = true;
+
+
+      _generated =
+          await FeedGenerator.GenerateAsync(
+              _instruction);
+
+
+    }
+    finally
+    {
+      _loading = false;
+    }
+
+  }
+
+
+
+  private async Task PublishAsync()
+  {
+
+    if (_generated is null)
+      return;
+
+
+    var dto = new CreateFeedDto
+    {
+      Title = _generated.Title,
+      Content = _generated.Content
+    };
+
+
+    await CreateFeedHandler.CreateFeedAsync(dto);
+
+
+    Snackbar.Add(
+        "AI-feed publicerad!",
+        Severity.Success);
+
+
+    _generated = null;
+    _instruction = "";
+
+  }
+
+}

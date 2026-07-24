@@ -3,7 +3,7 @@ using Ansjon.Components.Account;
 using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Identity;
 using Ansjon.Infrastructures.Repositories.ComplaintRepos;
-using Ansjon.Infrastructures.Repositories.FeedRepos;
+using Ansjon.Infrastructures.Repositories.FeedRepo;
 using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
 using Ansjon.UseCases.Communications.FeedUseCases;
@@ -13,9 +13,11 @@ using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
+using ServiceDefaults;
+
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddServiceDefaults();
+
 #region Presentation
 
 builder.Services.AddRazorComponents()
@@ -95,9 +97,11 @@ builder.Services.AddScoped<IValidator<UpdateComplaintDto>,
 #endregion
 
 #region AI Integration
-builder.Services.AddAIServices();
-
+builder.Services.AddAnsjonAIServices();
 #endregion
+
+
+builder.AddServiceDefaults();
 
 var app = builder.Build();
 
