@@ -94,6 +94,11 @@ builder.Services.AddScoped<IValidator<UpdateComplaintDto>,
 
 #endregion
 
+#region AI Integration
+builder.Services.AddAIServices();
+
+#endregion
+
 var app = builder.Build();
 
 #region Middleware
