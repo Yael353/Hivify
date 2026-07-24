@@ -1,88 +1,145 @@
-﻿@using Ansjon.UseCases.Communications.ComplaintUseCases
+﻿@using Ansjon.Core.Aggregates.Complaints
+@using Ansjon.UseCases.Communications.ComplaintUseCases
 @using Ansjon.UseCases.Communications.DTOs.ComplaintsDto
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
+
 @inject CreateComplaint CreateComplaintHandler
 @inject AuthenticationStateProvider AuthProvider
 @inject ISnackbar Snackbar
 
 <MudGrid GutterSize="4" Class="complaint-form-grid">
   <MudItem xs="12" md="7">
-    <MudPaper Class="pa-4 pa-md-5 complaint-form__panel" Elevation="0" Variant="Variant.Outlined">
+    <MudPaper Class="pa-4 pa-md-5 complaint-form__panel"
+              Elevation="0"
+              Variant="Variant.Outlined">
       <MudStack Spacing="3">
-        <ComplaintFormFields NewComplaint="@NewComplaint" />
-
-        <ComplaintFileUpload ImageUrl="@NewComplaint.ImageUrl"
-                             OnFileSelected="@OnFileSelected"
-                             OnRemoveImage="@RemoveImage"
-                             IsSubmitting="@_isSubmitting" />
+        <ComplaintFormFields NewComplaint="NewComplaint" />
+        <ComplaintFileUpload ImageUrl="NewComplaint.ImageUrl"
+                             OnFileSelected="OnFileSelected"
+                             OnRemoveImage="RemoveImage"
+                             IsSubmitting="_isSubmitting" />
 
         <MudPaper Class="pa-4 complaint-form__submit-panel"
                   Elevation="0"
                   Variant="Variant.Outlined">
-          <MudStack Spacing="2">
-            <ComplaintSubmitButton IsSubmitting="@_isSubmitting" OnSubmit="@HandleSubmit" />
-          </MudStack>
+          <ComplaintSubmitButton IsSubmitting="_isSubmitting"
+                                 OnSubmit="HandleSubmit" />
         </MudPaper>
       </MudStack>
     </MudPaper>
   </MudItem>
 </MudGrid>
 
-@code {
-    private CreateComplaintDto NewComplaint = new();
-    private bool _isSubmitting = false;
+@code
+{
+  #region State
 
-    private async Task HandleSubmit()
+  private readonly CreateComplaintDto NewComplaint = new();
+
+  private bool _isSubmitting;
+
+  #endregion
+
+  #region Submit
+
+  private async Task HandleSubmit()
+  {
+    _isSubmitting = true;
+
+    try
     {
-        _isSubmitting = true;
+      var authState = await AuthProvider.GetAuthenticationStateAsync();
+      var user = authState.User;
 
-        try
-        {
-            var authState = await AuthProvider.GetAuthenticationStateAsync();
-            var userId = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+      if (!user.Identity?.IsAuthenticated ?? true)
+      {
+        Snackbar.Add("Du måste vara inloggad för att skicka in felanmälan.", Severity.Warning);
+        return;
+      }
 
-            if (string.IsNullOrEmpty(userId))
-            {
-                Snackbar.Add("Du måste vara inloggad för att skicka in felanmälan.", Severity.Warning);
-                _isSubmitting = false;
-                return;
-            }
+      var tenantIdClaim = user.FindFirst("TenantId")?.Value;
 
-            NewComplaint.AuthorId = Guid.Parse(userId);
+      if (string.IsNullOrWhiteSpace(tenantIdClaim))
+      {
+        Snackbar.Add("TenantId kunde inte hittas.", Severity.Error);
+        return;
+      }
 
-            await CreateComplaintHandler.CreateComplaintAsync(NewComplaint);
+      TenantID tenantId = new TenantID(Guid.Parse(tenantIdClaim));
+      
+      
+      await CreateComplaintHandler.CreateComplaintAsync(NewComplaint, tenantId);
 
-            Snackbar.Add("Felanmälan skickades!", Severity.Success);
+      Snackbar.Add("Felanmälan skickades!", Severity.Success);
 
-            NewComplaint = new CreateComplaintDto();
-        }
-        catch (Exception ex)
-        {
-            Snackbar.Add($"❌ Fel: {ex.Message}", Severity.Error);
-        }
-        finally
-        {
-            _isSubmitting = false;
-        }
+      
     }
-
-    private async Task OnFileSelected(IBrowserFile file)
+    catch (Exception ex)
     {
-        if (file is null) return;
-        using var stream = file.OpenReadStream(maxAllowedSize: 2 * 1024 * 1024);
-        using var memoryStream = new MemoryStream();
-        await stream.CopyToAsync(memoryStream);
-        var bytes = memoryStream.ToArray();
-        NewComplaint.ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(bytes)}";
-
-        Snackbar.Add("Bild tillagd!", Severity.Info);
+      Snackbar.Add($"Fel: {ex.Message}", Severity.Error);
     }
-
-    private Task RemoveImage()
+    finally
     {
-        NewComplaint.ImageUrl = null;
-        Snackbar.Add("Bild borttagen.", Severity.Info);
-        return Task.CompletedTask;
+      _isSubmitting = false;
     }
+  }
+  #endregion
+
+  #region File Upload
+
+  private async Task OnFileSelected(IBrowserFile file)
+  {
+    if (file is null)
+      return;
+
+    using var stream = file.OpenReadStream(2 * 1024 * 1024);
+    using var memory = new MemoryStream();
+
+    await stream.CopyToAsync(memory);
+
+    NewComplaint.ImageUrl =
+        $"data:{file.ContentType};base64,{Convert.ToBase64String(memory.ToArray())}";
+
+    Snackbar.Add("Bild tillagd!", Severity.Info);
+  }
+
+  private Task RemoveImage()
+  {
+    NewComplaint.ImageUrl = null;
+
+    Snackbar.Add(
+        "Bild borttagen.",
+        Severity.Info);
+
+    return Task.CompletedTask;
+  }
+
+  #endregion
+
+  #region Helpers
+
+  private async Task<bool> IsUserAuthenticated()
+  {
+    var authState = await AuthProvider.GetAuthenticationStateAsync();
+
+    if (authState.User.Identity?.IsAuthenticated == true)
+      return true;
+
+    Snackbar.Add(
+        "Du måste vara inloggad för att skicka in felanmälan.",
+        Severity.Warning);
+
+    return false;
+  }
+
+  private void ResetForm()
+  {
+    NewComplaint.Title = string.Empty;
+    NewComplaint.Description = string.Empty;
+    NewComplaint.ImageUrl = null;
+  }
+
+  #endregion
+
 }

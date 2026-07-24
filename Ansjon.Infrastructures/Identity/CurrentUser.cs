@@ -1,5 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Feeds;
-using Ansjon.UseCases.Communications.InterFaces;
+﻿using Ansjon.UseCases.Communications.InterFaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
@@ -9,26 +8,41 @@ public class CurrentUser : ICurrentUser
 {
     private readonly AuthenticationStateProvider _authenticationStateProvider;
 
-    public CurrentUser(AuthenticationStateProvider authenticationStateProvider)
+
+    public CurrentUser(
+        AuthenticationStateProvider authenticationStateProvider)
     {
         _authenticationStateProvider = authenticationStateProvider;
     }
 
-    public async Task<AuthorID> GetUserIdAsync()
+
+    public async Task<Guid> GetUserIdAsync()
     {
-        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var authState =
+            await _authenticationStateProvider.GetAuthenticationStateAsync();
 
         var user = authState.User;
 
+
         if (user.Identity?.IsAuthenticated != true)
-            throw new UnauthorizedAccessException("User is not authenticated.");
+            throw new UnauthorizedAccessException();
 
-        var id = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (!Guid.TryParse(id, out var userId))
-            throw new InvalidOperationException("User ID claim is invalid.");
+        var id =
+            user.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        return new AuthorID(userId);
+
+        return Guid.Parse(id!);
+    }
+
+
+
+    public async Task<bool> IsInRoleAsync(string role)
+    {
+        var authState =
+            await _authenticationStateProvider.GetAuthenticationStateAsync();
+
+
+        return authState.User.IsInRole(role);
     }
 }
-

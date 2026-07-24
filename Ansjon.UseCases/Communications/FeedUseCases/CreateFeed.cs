@@ -22,8 +22,22 @@ public class CreateFeed
     {
         ArgumentNullException.ThrowIfNull(input);
 
+
         await _validator.ValidateAndThrowAsync(input);
-        AuthorID authorId = await _currentUser.GetUserIdAsync();
+
+
+        if (!await _currentUser.IsInRoleAsync("Admin"))
+        {
+            throw new UnauthorizedAccessException(
+                "Only administrators can create feeds.");
+        }
+
+
+        var userId = await _currentUser.GetUserIdAsync();
+
+        var authorId = new AuthorID(userId);
+
+
 
         var feed = Feed.CreateFeed(
         authorId,

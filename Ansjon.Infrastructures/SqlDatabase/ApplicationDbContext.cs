@@ -19,8 +19,15 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<Complaint>()
             .Property(c => c.ComplaintId)
             .HasConversion(
-                v => v.Value,
-                v => new ComplaintID(v));
+                id => id.Value,
+                value => new ComplaintID(value));
+
+
+        modelBuilder.Entity<Complaint>()
+            .Property(c => c.TenantId)
+            .HasConversion(
+                id => id.Value,
+                value => new TenantID(value));
 
         modelBuilder.Entity<Feed>()
             .Property(f => f.FeedId)
@@ -34,5 +41,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasConversion(
                 v => v.Value,
                 v => new AuthorID(v));
+
+
     }
 }

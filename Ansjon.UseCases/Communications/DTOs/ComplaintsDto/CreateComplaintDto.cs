@@ -13,9 +13,5 @@ namespace Ansjon.UseCases.Communications.DTOs.ComplaintsDto
         public string Description { get; set; } = null!;
 
         public string? ImageUrl { get; set; }
-
-        [Required(ErrorMessage = "Användar-ID är obligatoriskt")]
-        public Guid AuthorId { get; set; }
-
     }
 }
