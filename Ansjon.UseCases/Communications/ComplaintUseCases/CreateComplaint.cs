@@ -37,7 +37,7 @@ namespace Ansjon.UseCases.Communications.ComplaintUseCases
 
             await _complaintRepo.CreateComplaintAsync(complaint);
 
-            return complaint.ComplaintId.Value;
+            return complaint.Id.Value;
 
         }
     }

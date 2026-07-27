@@ -1,4 +1,5 @@
-﻿using Ansjon.UseCases.Communications.DTOs.FeedDtos;
+﻿using Ansjon.Core.ValuesObjects;
+using Ansjon.UseCases.Communications.DTOs.FeedDtos;
 using Ansjon.UseCases.Communications.InterFaces;
 using FluentValidation;
 
@@ -25,7 +26,8 @@ namespace Ansjon.UseCases.Communications.FeedUseCases
                     $"Feed {id} not found"
                 );
             }
-            existing.Update(input.Title, input.Content);
+            existing.Update(new Title(input.Title),
+        new Description(input.Content));
 
             await _communicationRepo.UpdateFeedAsync(existing);
         }

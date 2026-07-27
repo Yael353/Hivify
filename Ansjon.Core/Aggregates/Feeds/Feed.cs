@@ -1,22 +1,22 @@
-﻿
-using Ansjon.Core.Exceptions;
+﻿using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
+using Ansjon.Core.ValuesObjects;
 namespace Ansjon.Core.Aggregates.Feeds
 {
 
-    public class Feed : BaseEntity, IAggregateRoot
+    public class Feed : BaseEntity<FeedID>, IAggregateRoot
     {
-        public FeedID FeedId { get; private set; }
-        public string Title { get; private set; }
-        public string Content { get; private set; }
+
+        public Title Title { get; private set; }
+        public Description Content { get; private set; }
         public AuthorID AuthorId { get; private set; }
         public DateTime CreatedDate { get; private set; }
         public DateTime? DeletedAt { get; private set; }
         private Feed() { }  // Private constructor for EF Core
 
-        private Feed(AuthorID authorId, string title, string content)
+        private Feed(FeedID id, AuthorID authorId, Title title, Description content)
+        : base(id)
         {
-            FeedId = new FeedID(Guid.NewGuid());
             CreatedDate = DateTime.UtcNow;
             AuthorId = authorId;
 
@@ -25,14 +25,13 @@ namespace Ansjon.Core.Aggregates.Feeds
         }
 
 
-
-        public static Feed CreateFeed(AuthorID authorId, string title, string content)
+        public static Feed CreateFeed(AuthorID authorId, Title title, Description content)
         {
-            return new Feed(authorId, title, content);
+            return new Feed(new FeedID(Guid.NewGuid()), authorId, title, content);
         }
 
 
-        public void Update(string title, string content)
+        public void Update(Title title, Description content)
         {
             EnsureNotDeleted();
             SetTitle(title);
@@ -48,27 +47,18 @@ namespace Ansjon.Core.Aggregates.Feeds
 
 
         // Validation methods for the Feed aggregate
-        private void SetTitle(string title)
+        private void SetTitle(Title title)
         {
-            if (string.IsNullOrWhiteSpace(title))
-                throw new DomainException("Title is required.");
-
-            if (title.Length > 200)
-                throw new DomainException("Title cannot exceed 200 characters.");
-
-            Title = title.Trim();
+            Title = title;
         }
 
-        private void SetContent(string content)
+        private void SetContent(Description content)
         {
-            if (string.IsNullOrWhiteSpace(content))
-                throw new DomainException("Content is required.");
-
-            if (content.Length > 1000)
-                throw new DomainException("Content cannot exceed 1000 characters.");
-
-            Content = content.Trim();
+            Content = content;
         }
+
+
+        // business rules
 
         private void EnsureNotDeleted()
         {

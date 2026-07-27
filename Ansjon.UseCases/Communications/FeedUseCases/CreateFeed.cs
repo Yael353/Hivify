@@ -1,4 +1,5 @@
 using Ansjon.Core.Aggregates.Feeds;
+using Ansjon.Core.ValuesObjects;
 using Ansjon.UseCases.Communications.InterFaces;
 using FluentValidation;
 
@@ -41,12 +42,12 @@ public class CreateFeed
 
         var feed = Feed.CreateFeed(
         authorId,
-        input.Title,
-        input.Content
+        new Title(input.Title),
+        new Description(input.Content)
         );
 
         await _communicationRepo.CreateFeedAsync(feed);
-        return feed.FeedId.Value;
+        return feed.Id.Value;
     }
 
 }
