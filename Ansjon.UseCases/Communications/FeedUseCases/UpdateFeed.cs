@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.AppValues;
+﻿using Ansjon.Core.ValuesObjects;
 using Ansjon.UseCases.Communications.DTOs.FeedDtos;
 using Ansjon.UseCases.Communications.InterFaces;
 using FluentValidation;

@@ -12,15 +12,17 @@
 
 	</MudPaper>
 	<AIFeedGenerator />
+	<MudDivider Class="my-6" />
+	<CreateFeedForm OnCreated="RefreshFeeds" />
 
 
 	<MudDivider Class="my-6" />
 
 	<AdminFeedList @ref="_feedList" />
 
-	<MudDivider Class="my-6" />
 
-	<CreateFeedForm OnCreated="RefreshFeeds" />
+
+
 
 </MudContainer>
 

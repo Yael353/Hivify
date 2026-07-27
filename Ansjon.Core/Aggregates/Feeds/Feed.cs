@@ -1,7 +1,6 @@
-﻿
-using Ansjon.Core.AppValues;
-using Ansjon.Core.Exceptions;
+﻿using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
+using Ansjon.Core.ValuesObjects;
 namespace Ansjon.Core.Aggregates.Feeds
 {
 

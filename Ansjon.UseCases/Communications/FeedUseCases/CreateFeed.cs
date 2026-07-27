@@ -1,5 +1,5 @@
 using Ansjon.Core.Aggregates.Feeds;
-using Ansjon.Core.AppValues;
+using Ansjon.Core.ValuesObjects;
 using Ansjon.UseCases.Communications.InterFaces;
 using FluentValidation;
 
