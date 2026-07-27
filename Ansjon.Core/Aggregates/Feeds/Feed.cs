@@ -59,7 +59,6 @@ namespace Ansjon.Core.Aggregates.Feeds
 
 
         // business rules
-
         private void EnsureNotDeleted()
         {
             if (DeletedAt != null)

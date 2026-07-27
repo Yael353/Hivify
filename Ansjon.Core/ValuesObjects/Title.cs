@@ -3,10 +3,9 @@ using Ansjon.Core.SharedKernel;
 
 namespace Ansjon.Core.ValuesObjects
 {
-    public sealed record Title : ValueObject<string>
+    public sealed record Title : BaseValue<string>
     {
-        public Title(string value)
-      : base(Validate(value))
+        public Title(string value) : base(Validate(value))
         {
         }
 

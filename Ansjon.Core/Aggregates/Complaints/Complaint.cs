@@ -34,9 +34,10 @@ namespace Ansjon.Core.Aggregates.Complaints
             string description,
             TenantID tenantId)
         {
-            return new Complaint(
-            new ComplaintID(Guid.NewGuid())
-            , title, description, tenantId);
+            return new Complaint(new ComplaintID(Guid.NewGuid()),
+             title,
+             description,
+             tenantId);
         }
 
 
