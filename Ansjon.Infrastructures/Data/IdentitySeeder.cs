@@ -1,7 +1,5 @@
-﻿using Ansjon.Core.Aggregates.Feeds;
-using Ansjon.Infrastructures.SqlDatabase;
+﻿using Ansjon.Infrastructures.SqlDatabase;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Ansjon.Infrastructures.Data;
@@ -44,24 +42,6 @@ public static class IdentitySeeder
         if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
         {
             await userManager.AddToRoleAsync(adminUser, "Admin");
-        }
-
-        // Seed feeds
-        if (!await dbContext.Feeds.AnyAsync())
-        {
-            dbContext.Feeds.Add(
-                Feed.CreateFeed(
-                    new AuthorID(adminUser.Id),
-                    "Welcome to Ansjon",
-                    "This is the first seeded feed."));
-
-            dbContext.Feeds.Add(
-                Feed.CreateFeed(
-                    new AuthorID(adminUser.Id),
-                    "Getting Started",
-                    "Learn how to use the platform."));
-
-            await dbContext.SaveChangesAsync();
         }
     }
 }

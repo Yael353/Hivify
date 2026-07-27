@@ -30,16 +30,16 @@
 
 
 				<MudTextField Label="Titel"
-											Variant="Variant.Outlined"
-											@bind-Value="_updateDto.Title"
-											Required="true" />
+					Variant="Variant.Outlined"
+					@bind-Value="_updateDto.Title"
+					Required="true" />
 
 
 				<MudTextField Label="Innehåll"
-											Variant="Variant.Outlined"
-											TextArea="true"
-											Lines="5"
-											@bind-Value="_updateDto.Content" />
+					Variant="Variant.Outlined"
+					TextArea="true"
+					Lines="5"
+					@bind-Value="_updateDto.Content" />
 
 
 			</MudStack>
@@ -56,10 +56,10 @@
 
 
 			<MudButton Color="Color.Success"
-								 Variant="Variant.Filled"
-								 StartIcon="@Icons.Material.Filled.Save"
-								 Disabled="_saving"
-								 OnClick="SaveAsync">
+				Variant="Variant.Filled"
+				StartIcon="@Icons.Material.Filled.Save"
+				Disabled="_saving"
+				OnClick="SaveAsync">
 
 
 				@(_saving ? "Sparar..." : "Spara")
@@ -70,10 +70,10 @@
 
 
 			<MudButton Color="Color.Secondary"
-								 Variant="Variant.Outlined"
-								 StartIcon="@Icons.Material.Filled.Close"
-								 Disabled="_saving"
-								 OnClick="Cancel">
+				Variant="Variant.Outlined"
+				StartIcon="@Icons.Material.Filled.Close"
+				Disabled="_saving"
+				OnClick="Cancel">
 
 
 				Avbryt
@@ -110,13 +110,13 @@
 
 
 				<MudIconButton Icon="@Icons.Material.Filled.Edit"
-											 Color="Color.Primary"
-											 OnClick="StartEdit" />
+					Color="Color.Primary"
+					OnClick="StartEdit" />
 
 
 				<MudIconButton Icon="@Icons.Material.Filled.Delete"
-											 Color="Color.Error"
-											 OnClick="DeleteAsync" />
+					Color="Color.Error"
+					OnClick="DeleteAsync" />
 
 
 			</CardHeaderActions>
@@ -134,7 +134,7 @@
 
 
 			<MudText Typo="Typo.body1"
-							 Style="white-space:pre-wrap;">
+				Style="white-space:pre-wrap;">
 
 
 				@Feed.Content
@@ -145,8 +145,8 @@
 
 
 			<MudText Typo="Typo.caption"
-							 Color="Color.Secondary"
-							 Class="mt-4">
+				Color="Color.Secondary"
+				Class="mt-4">
 
 
 				@Feed.CreatedDate.ToString("yyyy-MM-dd HH:mm")
@@ -195,10 +195,9 @@
 
 		_updateDto = new UpdateFeedDto
 		{
-			Title = Feed.Title,
-			Content = Feed.Content
+			Title = Feed.Title.Value,
+			Content = Feed.Content.Value
 		};
-
 
 		_editing = true;
 
@@ -240,7 +239,7 @@
 
 
 			await UpdateFeedHandler.UpdateFeedAsync(
-					Feed.FeedId.Value,
+					Feed.Id.Value,
 					_updateDto);
 
 
@@ -263,7 +262,7 @@
 			Logger.LogError(
 					ex,
 					"Error updating feed {Id}",
-					Feed.FeedId.Value);
+					Feed.Id.Value);
 
 
 			Snackbar.Add(
@@ -287,7 +286,7 @@
 		{
 
 			await DeleteFeedHandler.DeleteFeedAsync(
-					Feed.FeedId.Value);
+					Feed.Id.Value);
 
 			Snackbar.Add(
 					"Feed borttagen.",
@@ -302,7 +301,7 @@
 			Logger.LogError(
 					ex,
 					"Error deleting feed {Id}",
-					Feed.FeedId.Value);
+					Feed.Id.Value);
 
 
 			Snackbar.Add(

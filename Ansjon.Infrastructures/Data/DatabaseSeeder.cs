@@ -1,4 +1,5 @@
 ﻿using Ansjon.Core.Aggregates.Feeds;
+using Ansjon.Core.AppValues;
 using Ansjon.Infrastructures.SqlDatabase;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,14 +15,14 @@ public static class DatabaseSeeder
         context.Feeds.Add(
             Feed.CreateFeed(
                 new AuthorID(Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")),
-                "Welcome to Ansjon",
-                "This is the first seeded feed."));
+                new Title("Welcome to Ansjon"),
+                new Description("This is the first seeded feed.")));
 
         context.Feeds.Add(
             Feed.CreateFeed(
                 new AuthorID(Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc")),
-                "Getting Started",
-                "Learn how to use the platform."));
+                new Title("Getting Started"),
+                new Description("Learn how to use the platform.")));
 
         await context.SaveChangesAsync();
     }
