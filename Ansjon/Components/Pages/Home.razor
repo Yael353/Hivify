@@ -1,9 +1,12 @@
 ﻿@page "/"
+@attribute [Authorize]
+
 
 
 @using Ansjon.Components.User.UserFeeds
 @using Ansjon.UseCases.Communications.FeedUseCases
 @using Ansjon.Core.Aggregates.Feeds
+@using Microsoft.AspNetCore.Authorization
 @inject ViewFeeds ViewFeeds
 
 <PageTitle>Home</PageTitle>
