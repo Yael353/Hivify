@@ -3,10 +3,10 @@ using Ansjon.Core.SharedKernel;
 
 namespace Ansjon.Core.Aggregates.Complaints
 {
-    public class Complaint : BaseEntity, IAggregateRoot
+    public class Complaint : BaseEntity<ComplaintID>, IAggregateRoot
     {
 
-        public ComplaintID ComplaintId { get; private set; }
+
         public string Title { get; private set; }
         public string Description { get; private set; }
         public TenantID TenantId { get; private set; }
@@ -18,11 +18,9 @@ namespace Ansjon.Core.Aggregates.Complaints
         public string? AdminComment { get; private set; }
         private Complaint() { }
 
-        private Complaint(string title, string description, TenantID tenantId)
+        private Complaint(ComplaintID id, string title, string description, TenantID tenantId) : base(id)
         {
 
-
-            ComplaintId = new ComplaintID(Guid.NewGuid());
             TenantId = tenantId;
             Status = ComplaintStatus.New;
             CreatedDate = DateTime.UtcNow;
@@ -36,7 +34,9 @@ namespace Ansjon.Core.Aggregates.Complaints
             string description,
             TenantID tenantId)
         {
-            return new Complaint(title, description, tenantId);
+            return new Complaint(
+            new ComplaintID(Guid.NewGuid())
+            , title, description, tenantId);
         }
 
 
