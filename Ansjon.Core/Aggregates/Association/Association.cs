@@ -5,9 +5,11 @@ using Ansjon.Core.SharedKernel;
 public class Association : BaseEntity<AssociationID>, IAggregateRoot
 {
     public string Name { get; private set; }
-    public List<StaffMember> Members { get; private set; } = new List<StaffMember>();
+    private List<StaffMember> Members { get; set; } = new List<StaffMember>();
 
-    private Association()
+
+
+    private Association() // For EF Core
     {
     }
 
@@ -28,5 +30,10 @@ public class Association : BaseEntity<AssociationID>, IAggregateRoot
 
         return StaffMember.Create(fullName, role);
 
+    }
+
+    public IReadOnlyCollection<StaffMember> GetMembers()
+    {
+        return Members.AsReadOnly();
     }
 }

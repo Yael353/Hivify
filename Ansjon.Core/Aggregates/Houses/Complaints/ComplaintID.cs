@@ -2,7 +2,7 @@
 
 namespace Ansjon.Core.Aggregates.Houses.Complaints
 {
-    public readonly record struct ComplaintID(Guid Value) : IValue
+    public readonly record struct ComplaintID(Guid Value) : IEntity
     {
     }
 }

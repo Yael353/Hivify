@@ -1,4 +1,5 @@
 ﻿using Ansjon.Core.Aggregates.Houses.Complaints;
+using Ansjon.Core.Aggregates.Houses.Tenants;
 using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
 using Ansjon.UseCases.Communications.InterFaces;
 using FluentValidation;

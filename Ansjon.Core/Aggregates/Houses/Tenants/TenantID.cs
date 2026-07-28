@@ -1,9 +1,9 @@
 ﻿using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
 
-namespace Ansjon.Core.Aggregates.Houses.Complaints;
+namespace Ansjon.Core.Aggregates.Houses.Tenants;
 
-public readonly record struct TenantID : IValue
+public readonly record struct TenantID : IEntity
 {
     public Guid Value { get; }
 
