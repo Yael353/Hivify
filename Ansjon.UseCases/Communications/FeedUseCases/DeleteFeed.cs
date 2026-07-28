@@ -1,19 +1,48 @@
-﻿
+﻿using Ansjon.Core.Aggregates.Association;
 using Ansjon.UseCases.Communications.InterFaces;
 
-namespace Ansjon.UseCases.Communications.FeedUseCases
+namespace Ansjon.UseCases.Communications.FeedUseCases;
+
+public class DeleteFeed
 {
-    public class DeleteFeed
+    private readonly IFeedRepo _communicationRepo;
+    private readonly ICurrentUser _currentUser;
+
+    public DeleteFeed(
+        IFeedRepo communicationRepo,
+        ICurrentUser currentUser)
     {
-        private readonly IFeedRepo _communicationRepo;
-        public DeleteFeed(IFeedRepo communicationRepo)
+        _communicationRepo = communicationRepo;
+        _currentUser = currentUser;
+    }
+
+    public async Task DeleteFeedAsync(Guid feedId)
+    {
+        // Application layer authorization
+        if (!await _currentUser.IsInRoleAsync("Admin"))
         {
-            _communicationRepo = communicationRepo;
+            throw new UnauthorizedAccessException(
+                "Only administrators can delete feeds.");
         }
 
-        public async Task DeleteFeedAsync(Guid feedId)
+
+        var feed = await _communicationRepo.GetByIdAsync(feedId);
+
+        if (feed == null)
         {
-            await _communicationRepo.DeleteFeedByIdAsync(feedId);
+            throw new KeyNotFoundException(
+                $"Feed {feedId} not found.");
         }
+
+
+        // Get role for domain validation
+        var role = StaffRole.Admin;
+
+
+        // Domain layer authorization + business rules
+        feed.Delete(role);
+
+
+        await _communicationRepo.UpdateFeedAsync(feed);
     }
 }

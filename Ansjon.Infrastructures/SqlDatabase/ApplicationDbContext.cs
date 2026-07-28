@@ -1,3 +1,4 @@
+using Ansjon.Core.Aggregates.Association;
 using Ansjon.Core.Aggregates.Complaints;
 using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.ValuesObjects;
@@ -41,7 +42,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .Property(f => f.AuthorId)
             .HasConversion(
                 id => id.Value,
-                value => new AuthorID(value));
+                value => new StaffMemberID(value));
 
         modelBuilder.Entity<Feed>()
             .Property(f => f.Title)
