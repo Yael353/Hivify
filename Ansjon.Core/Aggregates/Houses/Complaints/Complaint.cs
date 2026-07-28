@@ -1,7 +1,7 @@
 ﻿using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
 
-namespace Ansjon.Core.Aggregates.Complaints
+namespace Ansjon.Core.Aggregates.Houses.Complaints
 {
     public class Complaint : BaseEntity<ComplaintID>, IAggregateRoot
     {

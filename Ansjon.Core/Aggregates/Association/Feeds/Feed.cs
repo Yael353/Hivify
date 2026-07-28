@@ -1,8 +1,8 @@
-﻿using Ansjon.Core.Aggregates.Association;
+﻿using Ansjon.Core.Aggregates.Association.Members;
 using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
 using Ansjon.Core.ValuesObjects;
-namespace Ansjon.Core.Aggregates.Feeds
+namespace Ansjon.Core.Aggregates.Association.Feeds
 {
 
     public class Feed : BaseEntity<FeedID>, IAggregateRoot

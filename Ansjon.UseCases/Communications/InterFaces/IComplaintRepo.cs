@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Complaints;
+﻿using Ansjon.Core.Aggregates.Houses.Complaints;
 
 namespace Ansjon.UseCases.Communications.InterFaces
 {

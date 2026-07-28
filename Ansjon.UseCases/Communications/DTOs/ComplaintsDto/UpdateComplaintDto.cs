@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Complaints;
+﻿using Ansjon.Core.Aggregates.Houses.Complaints;
 using System.ComponentModel.DataAnnotations;
 
 namespace Ansjon.UseCases.Communications.DTOs.ComplaintsDto

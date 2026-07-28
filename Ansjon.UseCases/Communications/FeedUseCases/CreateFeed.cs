@@ -1,5 +1,5 @@
-using Ansjon.Core.Aggregates.Association;
-using Ansjon.Core.Aggregates.Feeds;
+using Ansjon.Core.Aggregates.Association.Feeds;
+using Ansjon.Core.Aggregates.Association.Members;
 using Ansjon.Core.ValuesObjects;
 using Ansjon.UseCases.Communications.InterFaces;
 using FluentValidation;
@@ -21,7 +21,9 @@ public class CreateFeed
     }
 
     public async Task<Guid> CreateFeedAsync(CreateFeedDto input)
+
     {
+
         ArgumentNullException.ThrowIfNull(input);
 
         await _validator.ValidateAndThrowAsync(input);
@@ -44,4 +46,5 @@ public class CreateFeed
 
         return feed.Id.Value;
     }
+
 }

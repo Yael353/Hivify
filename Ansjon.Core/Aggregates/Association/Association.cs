@@ -1,52 +1,32 @@
 ﻿using Ansjon.Core.Aggregates.Association;
-using Ansjon.Core.Aggregates.Houses;
-using Ansjon.Core.Exceptions;
+using Ansjon.Core.Aggregates.Association.Members;
 using Ansjon.Core.SharedKernel;
 
 public class Association : BaseEntity<AssociationID>, IAggregateRoot
 {
     public string Name { get; private set; }
-
-    private readonly List<House> _houses = new();
-    public IReadOnlyCollection<House> Houses => _houses.AsReadOnly();
-
-    private readonly List<StaffMember> _staffMembers = new();
-    public IReadOnlyCollection<StaffMember> StaffMembers => _staffMembers.AsReadOnly();
+    public List<StaffMember> Members { get; private set; } = new List<StaffMember>();
 
     private Association()
     {
     }
+
 
     private Association(AssociationID id, string name) : base(id)
     {
         Name = name;
     }
 
+
     public static Association Create(string name)
     {
         return new Association(new AssociationID(Guid.NewGuid()), name);
     }
 
-    public void AddHouse(House house)
+    public static StaffMember CreateMember(string fullName, StaffRole role)
     {
-        if (_houses.Any(h => h.Id == house.Id))
-            throw new DomainException("House already belongs to this association.");
 
-        _houses.Add(house);
-    }
+        return StaffMember.Create(fullName, role);
 
-    public void RemoveHouse(HouseID houseId)
-    {
-        var house = _houses.FirstOrDefault(h => h.Id == houseId);
-
-        if (house is null)
-            throw new DomainException("House not found.");
-
-        _houses.Remove(house);
-    }
-
-    public void AddStaffMember(StaffMember member)
-    {
-        _staffMembers.Add(member);
     }
 }
