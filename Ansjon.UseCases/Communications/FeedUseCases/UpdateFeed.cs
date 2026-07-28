@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Association;
+﻿using Ansjon.Core.Aggregates.Association.Members;
 using Ansjon.Core.ValuesObjects;
 using Ansjon.UseCases.Communications.DTOs.FeedDtos;
 using Ansjon.UseCases.Communications.InterFaces;

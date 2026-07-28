@@ -1,8 +1,8 @@
-﻿using Ansjon.Core.Aggregates.Association;
+﻿using Ansjon.Core.Aggregates.Association.Members;
 using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
 using Ansjon.Core.ValuesObjects;
-namespace Ansjon.Core.Aggregates.Feeds
+namespace Ansjon.Core.Aggregates.Association.Feeds
 {
 
     public class Feed : BaseEntity<FeedID>, IAggregateRoot
@@ -34,11 +34,7 @@ namespace Ansjon.Core.Aggregates.Feeds
         {
             EnsureAdmin(role);
 
-            return new Feed(
-                new FeedID(Guid.NewGuid()),
-                authorId,
-                title,
-                content);
+            return new Feed(new FeedID(Guid.NewGuid()), authorId, title, content);
         }
 
 
