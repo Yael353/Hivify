@@ -2,7 +2,7 @@
 
 namespace Ansjon.Core.Aggregates.Association
 {
-    public readonly record struct AssociationID(Guid Value) : IValue
+    public readonly record struct AssociationID(Guid Value) : IEntity
     {
     }
 }

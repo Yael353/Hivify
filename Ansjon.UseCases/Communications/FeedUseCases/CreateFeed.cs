@@ -1,3 +1,4 @@
+using Ansjon.Core.Aggregates.Association;
 using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.ValuesObjects;
 using Ansjon.UseCases.Communications.InterFaces;
@@ -23,9 +24,7 @@ public class CreateFeed
     {
         ArgumentNullException.ThrowIfNull(input);
 
-
         await _validator.ValidateAndThrowAsync(input);
-
 
         if (!await _currentUser.IsInRoleAsync("Admin"))
         {
@@ -33,21 +32,16 @@ public class CreateFeed
                 "Only administrators can create feeds.");
         }
 
-
         var userId = await _currentUser.GetUserIdAsync();
 
-        var authorId = new AuthorID(userId);
-
-
-
         var feed = Feed.CreateFeed(
-        authorId,
-        new Title(input.Title),
-        new Description(input.Content)
-        );
+            new StaffMemberID(userId),
+            StaffRole.Admin,
+            new Title(input.Title),
+            new Description(input.Content));
 
         await _communicationRepo.CreateFeedAsync(feed);
+
         return feed.Id.Value;
     }
-
 }
