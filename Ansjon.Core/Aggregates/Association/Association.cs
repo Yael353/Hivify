@@ -17,20 +17,14 @@ public class Association : BaseEntity<AssociationID>, IAggregateRoot
     {
     }
 
-    private Association(
-        AssociationID id,
-        string name)
-        : base(id)
+    private Association(AssociationID id, string name) : base(id)
     {
         Name = name;
     }
 
-    public static Association Create(
-        string name)
+    public static Association Create(string name)
     {
-        return new Association(
-            new AssociationID(Guid.NewGuid()),
-            name);
+        return new Association(new AssociationID(Guid.NewGuid()), name);
     }
 
     public void AddHouse(House house)

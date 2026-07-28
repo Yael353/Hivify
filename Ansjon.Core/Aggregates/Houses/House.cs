@@ -29,8 +29,6 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
         HouseNumber = houseNumber;
         PostalCode = postalCode;
 
-
-
     }
 
     public static House Create(

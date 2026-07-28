@@ -34,11 +34,7 @@ namespace Ansjon.Core.Aggregates.Feeds
         {
             EnsureAdmin(role);
 
-            return new Feed(
-                new FeedID(Guid.NewGuid()),
-                authorId,
-                title,
-                content);
+            return new Feed(new FeedID(Guid.NewGuid()), authorId, title, content);
         }
 
 
