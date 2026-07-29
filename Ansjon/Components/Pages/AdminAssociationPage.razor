@@ -1,0 +1,23 @@
+﻿@page "/admin/association"
+@attribute [Authorize(Roles = "Admin")]
+
+@using Ansjon.Components.Admin.Association
+@using Microsoft.AspNetCore.Authorization
+
+<PageTitle>Hantera förening</PageTitle>
+
+<AuthorizeView Roles="Admin">
+  <Authorized>
+
+    <AdminAssociation />
+
+  </Authorized>
+
+  <NotAuthorized>
+
+    <MudAlert Severity="Severity.Error">
+      Du har inte behörighet att visa denna sida.
+    </MudAlert>
+
+  </NotAuthorized>
+</AuthorizeView>
