@@ -9,18 +9,24 @@ public class AssociationEntity : BaseEntity<AssociationID>, IAggregateRoot
 
     private readonly List<StaffMember> _members = [];
 
-    public IReadOnlyCollection<StaffMember> StaffMembers => _members.AsReadOnly();
+    public IReadOnlyCollection<StaffMember> StaffMembers
+        => _members.AsReadOnly();
+
 
     private AssociationEntity()
     {
-        // For EF Core
+        // EF Core
     }
 
-    private AssociationEntity(AssociationID id, string name)
+
+    private AssociationEntity(
+        AssociationID id,
+        string name)
         : base(id)
     {
         Name = name;
     }
+
 
     public static AssociationEntity Create(string name)
     {
@@ -29,17 +35,18 @@ public class AssociationEntity : BaseEntity<AssociationID>, IAggregateRoot
             name);
     }
 
-    public StaffMember CreateMember(string fullName, StaffRole role)
+
+    public StaffMember CreateMember(
+        string fullName,
+        StaffRole role)
     {
-        var member = StaffMember.Create(fullName, role);
+        var member = StaffMember.Create(
+            Id,
+            fullName,
+            role);
 
         _members.Add(member);
 
         return member;
-    }
-
-    public IReadOnlyCollection<StaffMember> GetMembers()
-    {
-        return _members.AsReadOnly();
     }
 }
