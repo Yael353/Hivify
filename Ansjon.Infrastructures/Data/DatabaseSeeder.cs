@@ -1,5 +1,5 @@
-﻿using Ansjon.Core.Aggregates.Association;
-using Ansjon.Core.Aggregates.Association.Staff;
+﻿using Ansjon.Core.Aggregates.Associations;
+using Ansjon.Core.Aggregates.Associations.Staff;
 using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.Aggregates.Houses;
 using Ansjon.Core.ValuesObjects;
@@ -33,11 +33,11 @@ public static class DatabaseSeeder
 
 
         // Seed Association
-        Association? association = null;
+        AssociationEntity? association = null;
 
         if (!await context.Associations.AnyAsync())
         {
-            association = Association.Create(
+            association = AssociationEntity.Create(
                 "Ansjon Housing Association");
 
             context.Associations.Add(association);

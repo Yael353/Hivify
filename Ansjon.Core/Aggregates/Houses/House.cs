@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Association;
+﻿using Ansjon.Core.Aggregates.Associations;
 using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
 

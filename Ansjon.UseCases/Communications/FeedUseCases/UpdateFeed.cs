@@ -1,7 +1,8 @@
-﻿using Ansjon.Core.Aggregates.Association.Staff;
+﻿using Ansjon.Core.Aggregates.Associations.Staff;
 using Ansjon.Core.ValuesObjects;
+using Ansjon.UseCases.Abstractions.Presistence;
+using Ansjon.UseCases.Abstractions.Services;
 using Ansjon.UseCases.Communications.DTOs.FeedDtos;
-using Ansjon.UseCases.Communications.InterFaces;
 using FluentValidation;
 
 namespace Ansjon.UseCases.Communications.FeedUseCases;

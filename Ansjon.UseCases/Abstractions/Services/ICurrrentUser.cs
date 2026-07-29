@@ -1,4 +1,4 @@
-﻿namespace Ansjon.UseCases.Communications.InterFaces
+﻿namespace Ansjon.UseCases.Abstractions.Services
 {
     public interface ICurrentUser
     {

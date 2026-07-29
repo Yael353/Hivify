@@ -1,7 +1,7 @@
 ﻿using Ansjon.Core.Aggregates.Complaints;
 using Ansjon.Core.Aggregates.Houses.Tenants;
 using Ansjon.Infrastructures.SqlDatabase;
-using Ansjon.UseCases.Communications.InterFaces;
+using Ansjon.UseCases.Abstractions.Presistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ansjon.Infrastructures.Repositories.ComplaintRepos

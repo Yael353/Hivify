@@ -1,4 +1,4 @@
-﻿namespace Ansjon.Core.Aggregates.Association.Staff
+﻿namespace Ansjon.Core.Aggregates.Associations.Staff
 {
     public enum StaffRole
     {

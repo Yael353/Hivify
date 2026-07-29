@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Association.Staff;
+﻿using Ansjon.Core.Aggregates.Associations.Staff;
 using Ansjon.Core.SharedKernel;
 
 public class StaffMember : BaseEntity<StaffMemberID>

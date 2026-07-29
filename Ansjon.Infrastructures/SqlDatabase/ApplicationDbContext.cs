@@ -1,5 +1,5 @@
-using Ansjon.Core.Aggregates.Association;
-using Ansjon.Core.Aggregates.Association.Staff;
+using Ansjon.Core.Aggregates.Associations;
+using Ansjon.Core.Aggregates.Associations.Staff;
 using Ansjon.Core.Aggregates.Complaints;
 using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.Aggregates.Houses;
@@ -15,7 +15,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<House> Houses { get; set; }
-    public DbSet<Association> Associations { get; set; }
+    public DbSet<AssociationEntity> Associations { get; set; }
     public DbSet<StaffMember> StaffMembers { get; set; }
     public DbSet<Feed> Feeds => Set<Feed>();
     public DbSet<Complaint> Complaints => Set<Complaint>();
@@ -84,7 +84,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         // Association
         // =====================
 
-        modelBuilder.Entity<Association>()
+        modelBuilder.Entity<AssociationEntity>()
             .Property(a => a.Id)
             .HasConversion(
                 id => id.Value,
@@ -124,7 +124,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         // House -> Association relationship
         modelBuilder.Entity<House>()
-            .HasOne<Association>()
+            .HasOne<AssociationEntity>()
             .WithMany()
             .HasForeignKey(h => h.AssociationId)
             .OnDelete(DeleteBehavior.Restrict);

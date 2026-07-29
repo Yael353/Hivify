@@ -1,5 +1,6 @@
-﻿using Ansjon.Core.Aggregates.Association.Staff;
-using Ansjon.UseCases.Communications.InterFaces;
+﻿using Ansjon.Core.Aggregates.Associations.Staff;
+using Ansjon.UseCases.Abstractions.Presistence;
+using Ansjon.UseCases.Abstractions.Services;
 
 namespace Ansjon.UseCases.Communications.FeedUseCases;
 

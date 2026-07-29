@@ -2,7 +2,7 @@
 
 using Ansjon.AI.Agents;
 using Ansjon.AI.Services;
-using Ansjon.UseCases.Communications.InterFaces;
+using Ansjon.UseCases.Abstractions.Services;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using OllamaSharp;
