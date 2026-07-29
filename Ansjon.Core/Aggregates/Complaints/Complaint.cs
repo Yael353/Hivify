@@ -2,9 +2,9 @@
 using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
 
-namespace Ansjon.Core.Aggregates.Houses.Complaints
+namespace Ansjon.Core.Aggregates.Complaints
 {
-    public class Complaint : BaseEntity<ComplaintID>
+    public class Complaint : BaseEntity<ComplaintID>, IAggregateRoot
     {
 
         public string Title { get; private set; }

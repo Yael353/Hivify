@@ -3,7 +3,7 @@ using Ansjon.Core.SharedKernel;
 
 namespace Ansjon.Core.Aggregates.Houses.Tenants;
 
-public readonly record struct TenantID : IEntity
+public readonly record struct TenantID : IValue
 {
     public Guid Value { get; }
 

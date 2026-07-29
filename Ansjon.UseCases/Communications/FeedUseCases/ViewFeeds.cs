@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Association.Feeds;
+﻿using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.UseCases.Communications.InterFaces;
 
 
