@@ -1,6 +1,5 @@
 ﻿using Ansjon.Core.Aggregates.Feeds;
-using Ansjon.UseCases.Communications.InterFaces;
-
+using Ansjon.UseCases.Abstractions.Presistence;
 
 namespace Ansjon.UseCases.Communications.FeedUseCases
 {

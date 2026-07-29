@@ -1,5 +1,5 @@
-﻿using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
-using Ansjon.UseCases.Communications.InterFaces;
+﻿using Ansjon.UseCases.Abstractions.Presistence;
+using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
 using FluentValidation;
 
 namespace Ansjon.UseCases.Communications.ComplaintUseCases

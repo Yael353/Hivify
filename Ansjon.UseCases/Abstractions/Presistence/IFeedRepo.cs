@@ -1,6 +1,6 @@
 ﻿using Ansjon.Core.Aggregates.Feeds;
 
-namespace Ansjon.UseCases.Communications.InterFaces
+namespace Ansjon.UseCases.Abstractions.Presistence
 {
     public interface IFeedRepo
     {

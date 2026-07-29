@@ -1,6 +1,6 @@
 ﻿using Ansjon.Core.Aggregates.Complaints;
 using Ansjon.Core.Aggregates.Houses.Tenants;
-using Ansjon.UseCases.Communications.InterFaces;
+using Ansjon.UseCases.Abstractions.Presistence;
 
 namespace Ansjon.UseCases.Communications.ComplaintUseCases
 {

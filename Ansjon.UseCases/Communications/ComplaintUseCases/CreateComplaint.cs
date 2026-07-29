@@ -1,7 +1,7 @@
 ﻿using Ansjon.Core.Aggregates.Complaints;
 using Ansjon.Core.Aggregates.Houses.Tenants;
+using Ansjon.UseCases.Abstractions.Presistence;
 using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
-using Ansjon.UseCases.Communications.InterFaces;
 using FluentValidation;
 
 namespace Ansjon.UseCases.Communications.ComplaintUseCases

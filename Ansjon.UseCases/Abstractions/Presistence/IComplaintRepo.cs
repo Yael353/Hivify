@@ -1,7 +1,7 @@
 ﻿using Ansjon.Core.Aggregates.Complaints;
 using Ansjon.Core.Aggregates.Houses.Tenants;
 
-namespace Ansjon.UseCases.Communications.InterFaces
+namespace Ansjon.UseCases.Abstractions.Presistence
 {
     public interface IComplaintRepo
     {

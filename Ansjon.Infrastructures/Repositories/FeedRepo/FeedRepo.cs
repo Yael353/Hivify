@@ -1,6 +1,6 @@
 ﻿using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Infrastructures.SqlDatabase;
-using Ansjon.UseCases.Communications.InterFaces;
+using Ansjon.UseCases.Abstractions.Presistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ansjon.Infrastructures.Repositories.FeedRepo

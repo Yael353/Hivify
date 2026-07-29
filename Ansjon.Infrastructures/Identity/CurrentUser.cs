@@ -1,4 +1,4 @@
-﻿using Ansjon.UseCases.Communications.InterFaces;
+﻿using Ansjon.UseCases.Abstractions.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
