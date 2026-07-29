@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Association.Members;
+﻿using Ansjon.Core.Aggregates.Association.Staff;
 using Ansjon.UseCases.Communications.InterFaces;
 
 namespace Ansjon.UseCases.Communications.FeedUseCases;

@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Association.Members;
+﻿using Ansjon.Core.Aggregates.Association.Staff;
 using Ansjon.Core.SharedKernel;
 
 namespace Ansjon.Core.Aggregates.Association;
