@@ -1,12 +1,20 @@
 using Ansjon.Components;
 using Ansjon.Components.Account;
+using Ansjon.Core.Aggregates.Associations.Staff;
+using Ansjon.Infrastructures.ContextProviders;
 using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Identity;
+using Ansjon.Infrastructures.Repositories.AssociationRepo;
 using Ansjon.Infrastructures.Repositories.ComplaintRepos;
 using Ansjon.Infrastructures.Repositories.FeedRepo;
 using Ansjon.Infrastructures.SqlDatabase;
+using Ansjon.UseCases.Abstractions.Context;
+using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
 using Ansjon.UseCases.Abstractions.Services;
+using Ansjon.UseCases.Association.Commands;
+using Ansjon.UseCases.Association.Messaging;
+using Ansjon.UseCases.Associations.Commands;
 using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
 using Ansjon.UseCases.Communications.FeedUseCases;
 using Ansjon.UseCases.Communications.Validators;
@@ -21,7 +29,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 #region Presentation
 
-builder.Services.AddRazorComponents()
+builder.Services
+    .AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
@@ -95,6 +104,15 @@ builder.Services.AddScoped<IValidator<CreateComplaintDto>,
 builder.Services.AddScoped<IValidator<UpdateComplaintDto>,
     UpdateComplaintDtoValidator>();
 
+builder.Services.AddScoped<
+    ICommandHandler<AddStaffMemberCommand, StaffMemberID>,
+    AddStaffMemberCommandHandler>();
+builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
+
+builder.Services.AddScoped<ISender, Sender>();
+builder.Services.AddScoped<
+    ICurrentAssociationProvider,
+    CurrentAssociationProvider>();
 #endregion
 
 #region AI Integration

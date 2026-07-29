@@ -79,7 +79,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasMaxLength(1000);
 
 
-
         // =====================
         // Association
         // =====================
@@ -89,6 +88,15 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasConversion(
                 id => id.Value,
                 value => new AssociationID(value));
+
+
+        // Association -> StaffMembers relationship
+
+        modelBuilder.Entity<AssociationEntity>()
+            .HasMany(a => a.StaffMembers)
+            .WithOne()
+            .HasForeignKey(s => s.AssociationId)
+            .OnDelete(DeleteBehavior.Cascade);
 
 
 
@@ -102,6 +110,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 id => id.Value,
                 value => new StaffMemberID(value));
 
+
+        modelBuilder.Entity<StaffMember>()
+            .Property(s => s.AssociationId)
+            .HasConversion(
+                id => id.Value,
+                value => new AssociationID(value));
 
 
         // =====================

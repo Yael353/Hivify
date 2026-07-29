@@ -1,0 +1,21 @@
+﻿@using Ansjon.UseCases.Association.DTOs
+<h3>StaffMembersList</h3>
+<MudGrid>
+
+    @foreach(var member in Members)
+    {
+        <MudItem xs="12" md="6">
+
+            <StaffMemberCard Member="member"/>
+
+        </MudItem>
+    }
+
+</MudGrid>
+
+@code{
+
+    [Parameter]
+    public List<StaffMemberDto> Members { get; set; } = [];
+
+}

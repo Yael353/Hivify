@@ -1,0 +1,79 @@
+﻿@using Ansjon.Core.Aggregates.Associations
+@using MudBlazor
+
+@inject IDialogService DialogService
+
+<h3>AdminAssociation</h3>
+
+<MudPaper Class="pa-4">
+
+  <MudStack Row="true" Justify="Justify.SpaceBetween">
+
+    <MudText Typo="Typo.h5">
+      Styrelsemedlemmar
+    </MudText>
+
+    <MudButton Variant="Variant.Filled"
+      Color="Color.Primary"
+      StartIcon="@Icons.Material.Filled.Add"
+      OnClick="OpenDialog">
+
+      Lägg till medlem
+
+    </MudButton>
+    <MudButton OnClick="Test">
+      Test
+    </MudButton>
+  </MudStack>
+
+  <MudDivider Class="my-4" />
+
+  <StaffMembersList />
+
+</MudPaper>
+
+@code {
+
+  [Parameter]
+  public AssociationID AssociationId { get; set; }
+
+  private void Test()
+  {
+    Console.WriteLine("Test");
+  }
+  private async Task OpenDialog()
+  {
+    Console.WriteLine("Opening dialog");
+    var parameters = new DialogParameters
+        {
+            { "AssociationId", AssociationId }
+        };
+
+    var options = new DialogOptions
+    {
+      CloseOnEscapeKey = true,
+      MaxWidth = MaxWidth.Small,
+      FullWidth = true
+    };
+
+    try
+    {
+      Console.WriteLine("Before");
+
+      var dialog = await DialogService.ShowAsync<StaffMemberDialog>("Test");
+
+      Console.WriteLine("After");
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine(ex);
+    }
+
+    // var result = await dialog.Result;
+
+    // if (!result.Canceled)
+    // {
+    //   Reload members
+    // }
+  }
+}
