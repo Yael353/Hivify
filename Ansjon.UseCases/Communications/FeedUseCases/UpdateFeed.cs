@@ -1,7 +1,7 @@
 ﻿using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.ValuesObjects;
+using Ansjon.UseCases.Abstractions.Context;
 using Ansjon.UseCases.Abstractions.Presistence;
-using Ansjon.UseCases.Abstractions.Services;
 using Ansjon.UseCases.Communications.DTOs.FeedDtos;
 using FluentValidation;
 
