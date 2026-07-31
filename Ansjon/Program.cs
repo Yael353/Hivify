@@ -87,7 +87,6 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>,
 builder.Services.AddScoped<IFeedRepo, FeedRepo>();
 builder.Services.AddScoped<IComplaintRepo, ComplaintRepo>();
 builder.Services.AddScoped<ICurrentUser, CurrentUserProvider>();
-
 #endregion
 
 #region Application
