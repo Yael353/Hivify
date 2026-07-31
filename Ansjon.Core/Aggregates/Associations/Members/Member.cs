@@ -1,26 +1,26 @@
 ﻿using Ansjon.Core.Aggregates.Associations;
-using Ansjon.Core.Aggregates.Associations.Staff;
+using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.SharedKernel;
 
-public class StaffMember : BaseEntity<StaffMemberID>
+public class Member : BaseEntity<MemberID>
 {
     public AssociationID AssociationId { get; private set; }
 
     public string FullName { get; private set; }
 
-    public StaffRole Role { get; private set; }
+    public MemberRole Role { get; private set; }
 
 
-    private StaffMember()
+    private Member()
     {
     }
 
 
-    private StaffMember(
-        StaffMemberID id,
+    private Member(
+        MemberID id,
         AssociationID associationId,
         string fullName,
-        StaffRole role)
+        MemberRole role)
         : base(id)
     {
         AssociationId = associationId;
@@ -29,13 +29,13 @@ public class StaffMember : BaseEntity<StaffMemberID>
     }
 
 
-    public static StaffMember Create(
+    public static Member Create(
         AssociationID associationId,
         string fullName,
-        StaffRole role)
+        MemberRole role)
     {
-        return new StaffMember(
-            new StaffMemberID(Guid.NewGuid()),
+        return new Member(
+            new MemberID(Guid.NewGuid()),
             associationId,
             fullName,
             role);

@@ -1,5 +1,5 @@
 ﻿using Ansjon.Core.Aggregates.Associations;
-using Ansjon.Core.Aggregates.Associations.Staff;
+using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.Aggregates.Houses;
 using Ansjon.Core.ValuesObjects;
@@ -17,27 +17,27 @@ public static class DatabaseSeeder
         {
             context.Feeds.Add(
                 Feed.CreateFeed(
-                    new StaffMemberID(Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")),
-                    StaffRole.Admin,
+                    new MemberID(Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")),
+                    MemberRole.GeneralMember,
                     new Title("Welcome to Ansjon"),
                     new Description("This is the first seeded feed.")));
 
 
             context.Feeds.Add(
                 Feed.CreateFeed(
-                    new StaffMemberID(Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc")),
-                    StaffRole.Admin,
+                    new MemberID(Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc")),
+                    MemberRole.GeneralMember,
                     new Title("Getting Started"),
                     new Description("Learn how to use the platform.")));
         }
 
 
         // Seed Association
-        AssociationEntity? association = null;
+        Association? association = null;
 
         if (!await context.Associations.AnyAsync())
         {
-            association = AssociationEntity.Create(
+            association = Association.Create(
                 "Ansjon Housing Association");
 
             context.Associations.Add(association);

@@ -16,7 +16,7 @@ namespace Ansjon.Infrastructures.Repositories.AssociationRepo
 
 
 
-        public async Task<AssociationEntity?> GetByIdAsync(
+        public async Task<Association?> GetByIdAsync(
             AssociationID id,
             CancellationToken cancellationToken = default)
         {
@@ -27,7 +27,7 @@ namespace Ansjon.Infrastructures.Repositories.AssociationRepo
         }
 
         public async Task AddAsync(
-            AssociationEntity association,
+            Association association,
             CancellationToken cancellationToken = default)
         {
             await _dbContext.Associations.AddAsync(association, cancellationToken);

@@ -1,5 +1,5 @@
 using Ansjon.Core.Aggregates.Associations;
-using Ansjon.Core.Aggregates.Associations.Staff;
+using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.Aggregates.Complaints;
 using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.Aggregates.Houses;
@@ -15,8 +15,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<House> Houses { get; set; }
-    public DbSet<AssociationEntity> Associations { get; set; }
-    public DbSet<StaffMember> StaffMembers { get; set; }
+    public DbSet<Association> Associations { get; set; }
+    public DbSet<Member> StaffMembers { get; set; }
     public DbSet<Feed> Feeds => Set<Feed>();
     public DbSet<Complaint> Complaints => Set<Complaint>();
 
@@ -60,7 +60,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .Property(f => f.AuthorId)
             .HasConversion(
                 id => id.Value,
-                value => new StaffMemberID(value));
+                value => new MemberID(value));
 
 
         modelBuilder.Entity<Feed>()
@@ -83,7 +83,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         // Association
         // =====================
 
-        modelBuilder.Entity<AssociationEntity>()
+        modelBuilder.Entity<Association>()
             .Property(a => a.Id)
             .HasConversion(
                 id => id.Value,
@@ -92,7 +92,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         // Association -> StaffMembers relationship
 
-        modelBuilder.Entity<AssociationEntity>()
+        modelBuilder.Entity<Association>()
             .HasMany(a => a.StaffMembers)
             .WithOne()
             .HasForeignKey(s => s.AssociationId)
@@ -104,14 +104,14 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         // StaffMember
         // =====================
 
-        modelBuilder.Entity<StaffMember>()
+        modelBuilder.Entity<Member>()
             .Property(s => s.Id)
             .HasConversion(
                 id => id.Value,
-                value => new StaffMemberID(value));
+                value => new MemberID(value));
 
 
-        modelBuilder.Entity<StaffMember>()
+        modelBuilder.Entity<Member>()
             .Property(s => s.AssociationId)
             .HasConversion(
                 id => id.Value,
@@ -138,7 +138,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         // House -> Association relationship
         modelBuilder.Entity<House>()
-            .HasOne<AssociationEntity>()
+            .HasOne<Association>()
             .WithMany()
             .HasForeignKey(h => h.AssociationId)
             .OnDelete(DeleteBehavior.Restrict);

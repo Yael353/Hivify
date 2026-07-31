@@ -4,12 +4,12 @@ namespace Ansjon.UseCases.Abstractions.Presistence;
 
 public interface IAssociationRepository
 {
-    Task<AssociationEntity?> GetByIdAsync(
+    Task<Core.Aggregates.Associations.Association?> GetByIdAsync(
         AssociationID id,
         CancellationToken cancellationToken);
 
     Task AddAsync(
-        AssociationEntity association,
+        Core.Aggregates.Associations.Association association,
         CancellationToken cancellationToken);
 
     Task SaveChangesAsync(

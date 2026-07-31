@@ -1,11 +1,10 @@
-﻿using Ansjon.Core.Aggregates.Associations.Staff;
+﻿using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
-using Ansjon.UseCases.Association.Commands;
 
-namespace Ansjon.UseCases.Associations.Commands;
+namespace Ansjon.UseCases.Association.Commands;
 
-public sealed class AddStaffMemberCommandHandler : ICommandHandler<AddStaffMemberCommand, StaffMemberID>
+public sealed class AddStaffMemberCommandHandler : ICommandHandler<AddStaffMemberCommand, MemberID>
 {
     private readonly IAssociationRepository _associationRepository;
 
@@ -14,7 +13,7 @@ public sealed class AddStaffMemberCommandHandler : ICommandHandler<AddStaffMembe
         _associationRepository = associationRepository;
     }
 
-    public async Task<StaffMemberID> Handle(AddStaffMemberCommand command, CancellationToken cancellationToken)
+    public async Task<MemberID> Handle(AddStaffMemberCommand command, CancellationToken cancellationToken)
     {
         var association = await _associationRepository.GetByIdAsync(command.AssociationId, cancellationToken);
 

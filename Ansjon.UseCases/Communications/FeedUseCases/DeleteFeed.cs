@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Associations.Staff;
+﻿using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.UseCases.Abstractions.Presistence;
 using Ansjon.UseCases.Abstractions.Services;
 
@@ -37,7 +37,7 @@ public class DeleteFeed
 
 
         // Get role for domain validation
-        var role = StaffRole.Admin;
+        var role = MemberRole.GeneralMember;
 
 
         // Domain layer authorization + business rules
