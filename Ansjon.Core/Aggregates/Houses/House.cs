@@ -1,4 +1,5 @@
 ﻿using Ansjon.Core.Aggregates.Associations;
+using Ansjon.Core.Aggregates.Houses.Tenants;
 using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
 
@@ -15,6 +16,8 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
 
     public DateTime CreatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
+
+    public List<TenantID> TenantIds { get; private set; } = new();
 
 
     private House()
@@ -52,6 +55,8 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
             postalCode);
     }
 
+    
+
 
     public void Update(
         Address address,
@@ -78,6 +83,22 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
     {
         if (DeletedAt != null)
             throw new DomainException(
-                "House has been deleted.");
+                "Huset har blivit borttaget.");
+    }
+
+    public void AddTenant(TenantID tenantId)
+    {
+        EnsureNotDeleted();
+        if (!TenantIds.Contains(tenantId))
+        {
+            TenantIds.Add(tenantId);
+        }
+    }
+
+
+    public void RemoveTenant(TenantID tenantId)
+    {
+        EnsureNotDeleted();
+        TenantIds.Remove(tenantId);
     }
 }
