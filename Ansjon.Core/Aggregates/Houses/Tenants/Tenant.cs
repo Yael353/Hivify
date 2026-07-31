@@ -45,16 +45,6 @@ namespace Ansjon.Core.Aggregates.Houses.Tenants
             return new Tenant(new TenantID(Guid.NewGuid()), new Name(firstName), new Name(lastName), new Email(email), new PhoneNumber(phoneNumber));
         }
 
-        //public void MoveToHouse(HouseID newHouseId)
-        //{
-        //    if (DeletedAt != null)
-        //        throw new DomainException("Borttagen boende kan inte flyttas.");
-        //    if (newHouseId == null)
-        //        throw new DomainException("Nytt hus-ID är obligatoriskt.");
-
-        //    HouseId = newHouseId;
-        //}
-
         public void Delete()
         {
             if (DeletedAt != null)
