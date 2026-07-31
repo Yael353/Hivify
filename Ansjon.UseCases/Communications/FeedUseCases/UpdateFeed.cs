@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Associations.Staff;
+﻿using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.ValuesObjects;
 using Ansjon.UseCases.Abstractions.Presistence;
 using Ansjon.UseCases.Abstractions.Services;
@@ -45,7 +45,7 @@ public class UpdateFeed
         }
 
 
-        var role = StaffRole.Admin;
+        var role = MemberRole.GeneralMember;
 
 
         // Domain layer business rule check

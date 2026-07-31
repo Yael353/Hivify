@@ -1,5 +1,5 @@
 ﻿@using Ansjon.Core.Aggregates.Associations
-@using Ansjon.Core.Aggregates.Associations.Staff
+@using Ansjon.Core.Aggregates.Associations.Members
 @using Ansjon.UseCases.Abstractions.Context
 @using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Association.Commands
@@ -17,11 +17,11 @@
       <MudTextField Label="Namn"
         @bind-Value="_model.FullName" />
 
-      <MudSelect T="StaffRole"
+      <MudSelect T="MemberRole"
         Label="Roll"
         @bind-Value="_model.Role">
 
-        @foreach (var role in Enum.GetValues<StaffRole>())
+        @foreach (var role in Enum.GetValues<MemberRole>())
         {
           <MudSelectItem Value="@role">@role</MudSelectItem>
         }
@@ -89,6 +89,6 @@
   {
     public string FullName { get; set; } = string.Empty;
 
-    public StaffRole Role { get; set; } = StaffRole.Member;
+    public MemberRole Role { get; set; }
   }
 }

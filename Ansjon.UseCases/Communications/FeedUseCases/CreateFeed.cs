@@ -1,4 +1,4 @@
-using Ansjon.Core.Aggregates.Associations.Staff;
+using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.ValuesObjects;
 using Ansjon.UseCases.Abstractions.Presistence;
@@ -38,8 +38,8 @@ public class CreateFeed
         var userId = await _currentUser.GetUserIdAsync();
 
         var feed = Feed.CreateFeed(
-            new StaffMemberID(userId),
-            StaffRole.Admin,
+            new MemberID(userId),
+            MemberRole.GeneralMember,
             new Title(input.Title),
             new Description(input.Content));
 

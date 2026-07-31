@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Associations.Staff;
+﻿using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
 using Ansjon.Core.ValuesObjects;
@@ -10,12 +10,12 @@ namespace Ansjon.Core.Aggregates.Feeds
 
         public Title Title { get; private set; }
         public Description Content { get; private set; }
-        public StaffMemberID AuthorId { get; private set; }
+        public MemberID AuthorId { get; private set; }
         public DateTime CreatedDate { get; private set; }
         public DateTime? DeletedAt { get; private set; }
         private Feed() { }  // Private constructor for EF Core
 
-        private Feed(FeedID id, StaffMemberID authorId, Title title, Description content)
+        private Feed(FeedID id, MemberID authorId, Title title, Description content)
         : base(id)
         {
             CreatedDate = DateTime.UtcNow;
@@ -27,8 +27,8 @@ namespace Ansjon.Core.Aggregates.Feeds
 
 
         public static Feed CreateFeed(
-          StaffMemberID authorId,
-          StaffRole role,
+          MemberID authorId,
+          MemberRole role,
           Title title,
           Description content)
         {
@@ -38,7 +38,7 @@ namespace Ansjon.Core.Aggregates.Feeds
         }
 
 
-        public void Update(Title title, Description content, StaffRole role)
+        public void Update(Title title, Description content, MemberRole role)
         {
             EnsureAdmin(role);
             EnsureNotDeleted();
@@ -46,7 +46,7 @@ namespace Ansjon.Core.Aggregates.Feeds
             SetContent(content);
         }
 
-        public void Delete(StaffRole role)
+        public void Delete(MemberRole role)
         {
             EnsureAdmin(role);
             EnsureNotDeleted();
@@ -75,9 +75,9 @@ namespace Ansjon.Core.Aggregates.Feeds
             if (DeletedAt != null)
                 throw new DomainException("Feed has already been deleted.");
         }
-        private static void EnsureAdmin(StaffRole role)
+        private static void EnsureAdmin(MemberRole role)
         {
-            if (role != StaffRole.Admin)
+            if (role != MemberRole.GeneralMember)
                 throw new DomainException(
                     "Only administrators can manage feeds.");
         }

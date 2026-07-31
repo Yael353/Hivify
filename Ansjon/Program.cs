@@ -1,9 +1,8 @@
 using Ansjon.Components;
 using Ansjon.Components.Account;
-using Ansjon.Core.Aggregates.Associations.Staff;
+using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Infrastructures.ContextProviders;
 using Ansjon.Infrastructures.Data;
-using Ansjon.Infrastructures.Identity;
 using Ansjon.Infrastructures.Repositories.AssociationRepo;
 using Ansjon.Infrastructures.Repositories.ComplaintRepos;
 using Ansjon.Infrastructures.Repositories.FeedRepo;
@@ -11,10 +10,8 @@ using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Abstractions.Context;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
-using Ansjon.UseCases.Abstractions.Services;
 using Ansjon.UseCases.Association.Commands;
 using Ansjon.UseCases.Association.Messaging;
-using Ansjon.UseCases.Associations.Commands;
 using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
 using Ansjon.UseCases.Communications.FeedUseCases;
 using Ansjon.UseCases.Communications.Validators;
@@ -89,7 +86,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>,
 
 builder.Services.AddScoped<IFeedRepo, FeedRepo>();
 builder.Services.AddScoped<IComplaintRepo, ComplaintRepo>();
-builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+builder.Services.AddScoped<ICurrentUser, CurrentUserProvider>();
 
 #endregion
 
@@ -105,7 +102,7 @@ builder.Services.AddScoped<IValidator<UpdateComplaintDto>,
     UpdateComplaintDtoValidator>();
 
 builder.Services.AddScoped<
-    ICommandHandler<AddStaffMemberCommand, StaffMemberID>,
+    ICommandHandler<AddStaffMemberCommand, MemberID>,
     AddStaffMemberCommandHandler>();
 builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
 
