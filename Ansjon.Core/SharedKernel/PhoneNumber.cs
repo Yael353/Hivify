@@ -1,7 +1,6 @@
 ﻿using Ansjon.Core.Exceptions;
-using Ansjon.Core.SharedKernel;
 
-namespace Ansjon.Core.Aggregates.Houses.Tenants
+namespace Ansjon.Core.SharedKernel
 {
     public sealed record PhoneNumber : BaseValue<string>
     {

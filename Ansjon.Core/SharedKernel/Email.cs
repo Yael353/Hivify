@@ -1,7 +1,6 @@
-﻿using Ansjon.Core.SharedKernel;
-using Ansjon.Core.Exceptions;
+﻿using Ansjon.Core.Exceptions;
 
-namespace Ansjon.Core.Aggregates.Houses.Tenants
+namespace Ansjon.Core.SharedKernel
 {
     public sealed record Email : BaseValue<string>
     {
