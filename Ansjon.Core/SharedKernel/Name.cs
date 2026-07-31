@@ -8,7 +8,7 @@ namespace Ansjon.Core.SharedKernel
         {
         }
 
-        private static string Validate(string value)
+        internal static string Validate(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new DomainException("Namn är obligatoriskt.");

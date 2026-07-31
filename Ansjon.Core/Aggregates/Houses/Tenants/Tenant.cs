@@ -29,20 +29,9 @@ namespace Ansjon.Core.Aggregates.Houses.Tenants
             CreatedAt = DateTime.UtcNow;
         }
 
-        public static Tenant Create(string firstName, string lastName, string email, string phoneNumber, HouseID houseId)
+        public static Tenant Create(Name firstName, Name lastName, Email email, PhoneNumber phoneNumber, HouseID houseId)
         {
-            if (string.IsNullOrWhiteSpace(firstName))
-                throw new DomainException("Förnamn är obligatoriskt.");
-            if (string.IsNullOrWhiteSpace(lastName))
-                throw new DomainException("Efternamn är obligatoriskt.");
-            if (string.IsNullOrWhiteSpace(email))
-                throw new DomainException("Email är obligatoriskt.");
-            if (string.IsNullOrWhiteSpace(phoneNumber))
-                throw new DomainException("Telefonnummer är obligatoriskt.");
-            if (houseId == null)
-                throw new DomainException("House ID är obligatoriskt.");
-
-            return new Tenant(new TenantID(Guid.NewGuid()), new Name(firstName), new Name(lastName), new Email(email), new PhoneNumber(phoneNumber));
+          return new Tenant(new TenantID(Guid.NewGuid()), firstName, lastName, email, phoneNumber);
         }
 
         public void Delete()
