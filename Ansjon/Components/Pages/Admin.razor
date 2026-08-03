@@ -1,12 +1,12 @@
 ﻿@page "/admin/feeds"
 @attribute [Authorize(Roles = "Admin")]
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "Admin")]
 
 @using Ansjon.Components.Admin.AdminFeeds
 @using Microsoft.AspNetCore.Authorization
 
-@rendermode InteractiveServer
 
-@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Hantera feeds</PageTitle>
 

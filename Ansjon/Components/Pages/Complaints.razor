@@ -1,8 +1,9 @@
 ﻿@page "/complaints"
 @attribute [Authorize(Roles = "User")]
+@attribute [Authorize]
+
 
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize]
 @using Ansjon.Components.User.UserComplaints
 
 <PageTitle>Felanmälan</PageTitle>
