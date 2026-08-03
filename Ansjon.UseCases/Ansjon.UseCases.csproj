@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Houses\**" />
     <Compile Remove="House\**" />
+    <EmbeddedResource Remove="Houses\**" />
     <EmbeddedResource Remove="House\**" />
+    <None Remove="Houses\**" />
     <None Remove="House\**" />
   </ItemGroup>
 
@@ -21,9 +24,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ansjon.Core\Ansjon.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Houses\DTOs\" />
   </ItemGroup>
 </Project>
