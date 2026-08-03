@@ -1,7 +1,6 @@
 ﻿using Ansjon.Core.Exceptions;
-using Ansjon.Core.SharedKernel;
 
-namespace Ansjon.Core.Aggregates.Houses.Tenants
+namespace Ansjon.Core.SharedKernel
 {
     public sealed record Name : BaseValue<string>
     {
@@ -9,7 +8,7 @@ namespace Ansjon.Core.Aggregates.Houses.Tenants
         {
         }
 
-        private static string Validate(string value)
+        internal static string Validate(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new DomainException("Namn är obligatoriskt.");
