@@ -17,6 +17,7 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
     public DateTime? DeletedAt { get; private set; }
 
 
+
     private House()
     {
     }
@@ -53,6 +54,8 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
     }
 
 
+
+
     public void Update(
         Address address,
         HouseNumber houseNumber,
@@ -78,6 +81,6 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
     {
         if (DeletedAt != null)
             throw new DomainException(
-                "House has been deleted.");
+                "Huset har blivit borttaget.");
     }
 }
