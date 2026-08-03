@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ansjon.Core\Ansjon.Core.csproj" />
     <ProjectReference Include="..\Ansjon.UseCases\Ansjon.UseCases.csproj" />
   </ItemGroup>
 

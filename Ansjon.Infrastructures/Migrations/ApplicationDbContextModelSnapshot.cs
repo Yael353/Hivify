@@ -4,7 +4,6 @@ using Ansjon.Infrastructures.SqlDatabase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ansjon.Infrastructures.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260728125437_rearrange-domain")]
-    partial class rearrangedomain
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,21 +22,18 @@ namespace Ansjon.Infrastructures.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Ansjon.Core.Aggregates.Association.StaffMember", b =>
+            modelBuilder.Entity("Ansjon.Core.Aggregates.Associations.Association", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.ToTable("StaffMembers");
+                    b.ToTable("Associations");
                 });
 
             modelBuilder.Entity("Ansjon.Core.Aggregates.Complaints.Complaint", b =>
@@ -131,6 +125,24 @@ namespace Ansjon.Infrastructures.Migrations
                     b.ToTable("Houses");
                 });
 
+            modelBuilder.Entity("Ansjon.Core.Aggregates.Houses.Tenants.Tenant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedAt");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletedAt");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tenant");
+                });
+
             modelBuilder.Entity("Ansjon.Infrastructures.SqlDatabase.ApplicationUser", b =>
                 {
                     b.Property<Guid>("Id")
@@ -197,18 +209,26 @@ namespace Ansjon.Infrastructures.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Association", b =>
+            modelBuilder.Entity("Member", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<Guid>("AssociationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Associations");
+                    b.HasIndex("AssociationId");
+
+                    b.ToTable("StaffMembers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -344,7 +364,7 @@ namespace Ansjon.Infrastructures.Migrations
 
             modelBuilder.Entity("Ansjon.Core.Aggregates.Houses.House", b =>
                 {
-                    b.HasOne("Association", null)
+                    b.HasOne("Ansjon.Core.Aggregates.Associations.Association", null)
                         .WithMany()
                         .HasForeignKey("AssociationId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -417,6 +437,105 @@ namespace Ansjon.Infrastructures.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Ansjon.Core.Aggregates.Houses.Tenants.Tenant", b =>
+                {
+                    b.OwnsOne("Ansjon.Core.SharedKernel.Name", "FirstName", b1 =>
+                        {
+                            b1.Property<Guid>("TenantId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
+                                .HasColumnName("FirstName");
+
+                            b1.HasKey("TenantId");
+
+                            b1.ToTable("Tenant");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TenantId");
+                        });
+
+                    b.OwnsOne("Ansjon.Core.SharedKernel.Name", "LastName", b1 =>
+                        {
+                            b1.Property<Guid>("TenantId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
+                                .HasColumnName("LastName");
+
+                            b1.HasKey("TenantId");
+
+                            b1.ToTable("Tenant");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TenantId");
+                        });
+
+                    b.OwnsOne("Ansjon.Core.SharedKernel.Email", "Email", b1 =>
+                        {
+                            b1.Property<Guid>("TenantId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("nvarchar(200)")
+                                .HasColumnName("Email");
+
+                            b1.HasKey("TenantId");
+
+                            b1.ToTable("Tenant");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TenantId");
+                        });
+
+                    b.OwnsOne("Ansjon.Core.SharedKernel.PhoneNumber", "PhoneNumber", b1 =>
+                        {
+                            b1.Property<Guid>("TenantId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("nvarchar(20)")
+                                .HasColumnName("PhoneNumber");
+
+                            b1.HasKey("TenantId");
+
+                            b1.ToTable("Tenant");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TenantId");
+                        });
+
+                    b.Navigation("Email")
+                        .IsRequired();
+
+                    b.Navigation("FirstName")
+                        .IsRequired();
+
+                    b.Navigation("LastName")
+                        .IsRequired();
+
+                    b.Navigation("PhoneNumber")
+                        .IsRequired();
+                });
+            modelBuilder.Entity("Member", b =>
+                {
+                    b.HasOne("Ansjon.Core.Aggregates.Associations.Association", null)
+                        .WithMany("StaffMembers")
+                        .HasForeignKey("AssociationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -466,6 +585,11 @@ namespace Ansjon.Infrastructures.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Ansjon.Core.Aggregates.Associations.Association", b =>
+                {
+                    b.Navigation("StaffMembers");
                 });
 #pragma warning restore 612, 618
         }

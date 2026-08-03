@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace Ansjon.Infrastructures.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class augg : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,13 +51,25 @@ namespace Ansjon.Infrastructures.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Associations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Associations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Complaints",
                 columns: table => new
                 {
-                    ComplaintId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AuthorId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -69,7 +79,7 @@ namespace Ansjon.Infrastructures.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Complaints", x => x.ComplaintId);
+                    table.PrimaryKey("PK_Complaints", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,10 +87,11 @@ namespace Ansjon.Infrastructures.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -193,13 +204,47 @@ namespace Ansjon.Infrastructures.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Feeds",
-                columns: new[] { "Id", "AuthorId", "Content", "CreatedDate", "Title" },
-                values: new object[,]
+            migrationBuilder.CreateTable(
+                name: "Houses",
+                columns: table => new
                 {
-                    { new Guid("11111111-1111-1111-1111-111111111111"), new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), "This is the first seeded feed.", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Welcome to Ansjon" },
-                    { new Guid("22222222-2222-2222-2222-222222222222"), new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"), "Learn how to use the platform.", new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Utc), "Getting Started" }
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AssociationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    HouseNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Houses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Houses_Associations_AssociationId",
+                        column: x => x.AssociationId,
+                        principalTable: "Associations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StaffMembers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AssociationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StaffMembers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StaffMembers_Associations_AssociationId",
+                        column: x => x.AssociationId,
+                        principalTable: "Associations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -240,6 +285,16 @@ namespace Ansjon.Infrastructures.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Houses_AssociationId",
+                table: "Houses",
+                column: "AssociationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StaffMembers_AssociationId",
+                table: "StaffMembers",
+                column: "AssociationId");
         }
 
         /// <inheritdoc />
@@ -267,10 +322,19 @@ namespace Ansjon.Infrastructures.Migrations
                 name: "Feeds");
 
             migrationBuilder.DropTable(
+                name: "Houses");
+
+            migrationBuilder.DropTable(
+                name: "StaffMembers");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Associations");
         }
     }
 }

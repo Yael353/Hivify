@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ansjon.Infrastructures.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260701150231_complaints")]
-    partial class complaints
+    [Migration("20260803090946_augg")]
+    partial class augg
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,17 +25,27 @@ namespace Ansjon.Infrastructures.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Ansjon.Core.Entities.Complaints.Complaint", b =>
+            modelBuilder.Entity("Ansjon.Core.Aggregates.Associations.Association", b =>
                 {
-                    b.Property<Guid>("ComplaintId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Associations");
+                });
+
+            modelBuilder.Entity("Ansjon.Core.Aggregates.Complaints.Complaint", b =>
+                {
+                    b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdminComment")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -53,6 +63,9 @@ namespace Ansjon.Infrastructures.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -60,15 +73,14 @@ namespace Ansjon.Infrastructures.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("ComplaintId");
+                    b.HasKey("Id");
 
                     b.ToTable("Complaints");
                 });
 
-            modelBuilder.Entity("Ansjon.Core.Entities.Feed.Feed", b =>
+            modelBuilder.Entity("Ansjon.Core.Aggregates.Feeds.Feed", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("AuthorId")
@@ -76,36 +88,44 @@ namespace Ansjon.Infrastructures.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Feeds");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            AuthorId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                            Content = "This is the first seeded feed.",
-                            CreatedDate = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "Welcome to Ansjon"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
-                            AuthorId = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
-                            Content = "Learn how to use the platform.",
-                            CreatedDate = new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "Getting Started"
-                        });
+            modelBuilder.Entity("Ansjon.Core.Aggregates.Houses.House", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AssociationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssociationId");
+
+                    b.ToTable("Houses");
                 });
 
             modelBuilder.Entity("Ansjon.Infrastructures.SqlDatabase.ApplicationUser", b =>
@@ -172,6 +192,28 @@ namespace Ansjon.Infrastructures.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Member", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AssociationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssociationId");
+
+                    b.ToTable("StaffMembers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -305,6 +347,90 @@ namespace Ansjon.Infrastructures.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Ansjon.Core.Aggregates.Houses.House", b =>
+                {
+                    b.HasOne("Ansjon.Core.Aggregates.Associations.Association", null)
+                        .WithMany()
+                        .HasForeignKey("AssociationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.OwnsOne("Ansjon.Core.Aggregates.Houses.Address", "Address", b1 =>
+                        {
+                            b1.Property<Guid>("HouseId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("nvarchar(200)")
+                                .HasColumnName("Address");
+
+                            b1.HasKey("HouseId");
+
+                            b1.ToTable("Houses");
+
+                            b1.WithOwner()
+                                .HasForeignKey("HouseId");
+                        });
+
+                    b.OwnsOne("Ansjon.Core.Aggregates.Houses.HouseNumber", "HouseNumber", b1 =>
+                        {
+                            b1.Property<Guid>("HouseId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("nvarchar(20)")
+                                .HasColumnName("HouseNumber");
+
+                            b1.HasKey("HouseId");
+
+                            b1.ToTable("Houses");
+
+                            b1.WithOwner()
+                                .HasForeignKey("HouseId");
+                        });
+
+                    b.OwnsOne("Ansjon.Core.Aggregates.Houses.PostalCode", "PostalCode", b1 =>
+                        {
+                            b1.Property<Guid>("HouseId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("nvarchar(20)")
+                                .HasColumnName("PostalCode");
+
+                            b1.HasKey("HouseId");
+
+                            b1.ToTable("Houses");
+
+                            b1.WithOwner()
+                                .HasForeignKey("HouseId");
+                        });
+
+                    b.Navigation("Address")
+                        .IsRequired();
+
+                    b.Navigation("HouseNumber")
+                        .IsRequired();
+
+                    b.Navigation("PostalCode")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Member", b =>
+                {
+                    b.HasOne("Ansjon.Core.Aggregates.Associations.Association", null)
+                        .WithMany("StaffMembers")
+                        .HasForeignKey("AssociationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -354,6 +480,11 @@ namespace Ansjon.Infrastructures.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Ansjon.Core.Aggregates.Associations.Association", b =>
+                {
+                    b.Navigation("StaffMembers");
                 });
 #pragma warning restore 612, 618
         }

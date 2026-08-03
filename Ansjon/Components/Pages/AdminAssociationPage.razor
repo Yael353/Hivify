@@ -1,8 +1,10 @@
 ﻿@page "/admin/association"
 @attribute [Authorize(Roles = "Admin")]
+@rendermode InteractiveServer
 
 @using Ansjon.Components.Admin.Association
 @using Microsoft.AspNetCore.Authorization
+
 
 <PageTitle>Hantera förening</PageTitle>
 

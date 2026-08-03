@@ -20,6 +20,7 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
     public List<TenantID> TenantIds { get; private set; } = new();
 
 
+
     private House()
     {
     }
@@ -58,6 +59,8 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
     
 
 
+
+
     public void Update(
         Address address,
         HouseNumber houseNumber,
@@ -83,7 +86,7 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
     {
         if (DeletedAt != null)
             throw new DomainException(
-                "Huset har blivit borttaget.");
+                "The house has been deleted.");
     }
 
     public void AddTenant(TenantID tenantId)
