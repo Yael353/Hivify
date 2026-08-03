@@ -8,17 +8,17 @@ namespace Ansjon.Core.Aggregates.Houses;
 public class House : BaseEntity<HouseID>, IAggregateRoot
 {
     public AssociationID AssociationId { get; private set; }
-
     public Address Address { get; private set; }
-
     public HouseNumber HouseNumber { get; private set; }
     public PostalCode PostalCode { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
 
-    public List<TenantID> TenantIds { get; private set; } = new();
+    private readonly List<Tenant> _tenants = [];
 
+    public IReadOnlyCollection<Tenant> Tenants
+    => _tenants.AsReadOnly();
 
 
     private House()
@@ -56,10 +56,6 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
             postalCode);
     }
 
-    
-
-
-
 
     public void Update(
         Address address,
@@ -77,7 +73,6 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
     public void Delete()
     {
         EnsureNotDeleted();
-
         DeletedAt = DateTime.UtcNow;
     }
 
@@ -89,19 +84,25 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
                 "The house has been deleted.");
     }
 
-    public void AddTenant(TenantID tenantId)
+    public Tenant AddTenant(
+       Name firstName,
+       Name lastName,
+       Email email,
+       PhoneNumber phoneNumber)
     {
         EnsureNotDeleted();
-        if (!TenantIds.Contains(tenantId))
-        {
-            TenantIds.Add(tenantId);
-        }
+
+        var tenant = Tenant.Create(
+            new TenantID(Guid.NewGuid()),
+            firstName,
+            lastName,
+            email,
+            phoneNumber);
+
+        _tenants.Add(tenant);
+
+        return tenant;
     }
 
 
-    public void RemoveTenant(TenantID tenantId)
-    {
-        EnsureNotDeleted();
-        TenantIds.Remove(tenantId);
-    }
 }

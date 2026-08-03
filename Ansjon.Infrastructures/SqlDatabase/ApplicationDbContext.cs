@@ -4,7 +4,6 @@ using Ansjon.Core.Aggregates.Complaints;
 using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.Aggregates.Houses;
 using Ansjon.Core.Aggregates.Houses.Tenants;
-using Ansjon.Core.SharedKernel;
 using Ansjon.Core.ValuesObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -243,11 +242,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasColumnName("DeletedAt");
 
 
-        modelBuilder.Entity<House>(entity =>
-        {
-
-            entity.Ignore(h => h.TenantIds);
-
-        });
     }
 }
