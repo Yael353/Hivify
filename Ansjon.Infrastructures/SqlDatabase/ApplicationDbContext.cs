@@ -183,65 +183,56 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 });
 
         // =====================
-        // Tenant Value Objects
+        // Tenant – Aggregate Root
         // =====================
 
-        // FirstName
+        // 1. ID – primärnyckel
         modelBuilder.Entity<Tenant>()
             .Property(h => h.Id)
             .HasConversion(
                 id => id.Value,
                 value => new TenantID(value));
 
-        modelBuilder.Entity<Tenant>()
-            .OwnsOne(
-                t => t.FirstName,
-                firstName =>
-                {
-                    firstName.Property(f => f.Value)
-                        .HasColumnName("FirstName")
-                        .HasMaxLength(100)
-                        .IsRequired();
-                });
 
-        // LastName
-        modelBuilder.Entity<Tenant>()
-            .OwnsOne(
-                t => t.LastName,
-                lastName =>
-                {
-                    lastName.Property(l => l.Value)
-                        .HasColumnName("LastName")
-                        .HasMaxLength(100)
-                        .IsRequired();
-                });
 
-        // Email
+        // 3. Value Objects – OwnsOne
         modelBuilder.Entity<Tenant>()
-            .OwnsOne(
-                t => t.Email,
-                email =>
-                {
-                    email.Property(e => e.Value)
-                        .HasColumnName("Email")
-                        .HasMaxLength(200)
-                        .IsRequired();
-                });
+            .OwnsOne(t => t.FirstName, firstName =>
+            {
+                firstName.Property(f => f.Value)
+                    .HasColumnName("FirstName")
+                    .HasMaxLength(100)
+                    .IsRequired();
+            });
 
         modelBuilder.Entity<Tenant>()
-            .OwnsOne(
-                t => t.PhoneNumber,
-                phoneNumber =>
-                {
-                    phoneNumber.Property(p => p.Value)
-                        .HasColumnName("PhoneNumber")
-                        .HasMaxLength(20)
-                        .IsRequired();
-                });
-       
+            .OwnsOne(t => t.LastName, lastName =>
+            {
+                lastName.Property(l => l.Value)
+                    .HasColumnName("LastName")
+                    .HasMaxLength(100)
+                    .IsRequired();
+            });
 
-    
+        modelBuilder.Entity<Tenant>()
+            .OwnsOne(t => t.Email, email =>
+            {
+                email.Property(e => e.Value)
+                    .HasColumnName("Email")
+                    .HasMaxLength(200)
+                    .IsRequired();
+            });
 
+        modelBuilder.Entity<Tenant>()
+            .OwnsOne(t => t.PhoneNumber, phoneNumber =>
+            {
+                phoneNumber.Property(p => p.Value)
+                    .HasColumnName("PhoneNumber")
+                    .HasMaxLength(20)
+                    .IsRequired();
+            });
+
+        // 4. Vanliga properties
         modelBuilder.Entity<Tenant>()
             .Property(t => t.CreatedAt)
             .HasColumnName("CreatedAt")
@@ -252,5 +243,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasColumnName("DeletedAt");
 
 
+        modelBuilder.Entity<House>(entity =>
+        {
+
+            entity.Ignore(h => h.TenantIds);
+
+        });
     }
 }
