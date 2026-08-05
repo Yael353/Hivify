@@ -1,11 +1,43 @@
 ﻿@page "/complaints"
 @attribute [Authorize]
 
-@using Microsoft.AspNetCore.Authorization
 @using Ansjon.Components.User.UserComplaints
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@inject NavigationManager NavigationManager
 
-<PageTitle>Felanmälan</PageTitle>
+<PageTitle>Ärendehantering</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="complaints-page">
-        <ComplaintsForm />
+    
+    <div class="complaints-header text-center mb-5">
+        <MudText Typo="Typo.h3" Color="Color.Primary" Class="font-weight-bold mb-3">
+            Anmälan av Ärenden
+        </MudText>
+        <MudText Typo="Typo.body1" Color="Color.Dark" Class="mx-auto" Style="max-width: 600px; line-height: 1.7;">
+            För vår gemensamma trivsel kan du här tipsa om saker som behöver ses över.
+        </MudText>
+        <MudDivider Class="my-4" Style="max-width: 80px; margin-left: auto; margin-right: auto;" />
+    </div>
+
+    <ComplaintsForm />
+
+    
 </MudContainer>
+
+<style>
+    .complaints-page {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+    }
+
+    .complaints-header {
+        animation: fadeDown 0.5s ease-out;
+    }
+
+    .complaints-footer {
+        animation: fadeUp 0.6s ease-out;
+    }
+
+    
+</style>

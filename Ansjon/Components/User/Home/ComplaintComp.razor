@@ -1,0 +1,26 @@
+﻿@using MudBlazor
+@inject NavigationManager NavigationManager
+
+<MudPaper Class="pa-5" Elevation="0" Style="border-radius: 20px; border: 1px solid #e9edf2; background: none; transition: all 0.2s ease;">
+
+    <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold mb-1">
+       Något som behöver åtgärdas?
+    </MudText>
+
+    <MudText Typo="Typo.body2" Color="Color.Dark" Class="mb-4" Style="line-height: 1.6;">
+        Meddela oss genom att klicka på knappen nedan.
+    </MudText>
+
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               Size="Size.Medium"
+               FullWidth="true"
+               OnClick="@(() => NavigationManager.NavigateTo("/complaints"))"
+               Style="border-radius: 40px; font-weight: 500; text-transform: none; padding: 12px 0;">
+        Gå till Ärendehantering →
+    </MudButton>
+
+    <MudDivider Class="my-4" Style="opacity: 0.4;" />
+
+  
+</MudPaper>
