@@ -1,0 +1,40 @@
+﻿@page "/kontakt"
+@attribute [Authorize]
+
+@using Ansjon.Components.User.Staff
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+<PageTitle>Kontakt</PageTitle>
+
+<div class="kontakt-page">
+    <MudText Typo="Typo.h4" Color="Color.Primary" Class="font-weight-bold mb-2">
+        Kontakt
+    </MudText>
+    <MudText Typo="Typo.body2" Color="Color.Dark" Class="mb-4">
+        Här hittar du kontaktuppgifter till styrelsen samt kommiteansvariga 
+    </MudText>
+
+    <MudDivider Class="mb-4" />
+
+    <BoardSection />
+
+    <CommitteeSection />
+
+    <MudPaper Class="pa-4 mt-4" Elevation="0" Variant="Variant.Outlined" Style="border-radius: 12px; border-color: #e9edf2;">
+        <MudText Typo="Typo.body2" Color="Color.Tertiary">
+            <strong>Allmänna frågor:</strong> <a href="mailto:info@ansjon.se">info@ansjon.se</a>
+        </MudText>
+        <MudText Typo="Typo.body2" Color="Color.Tertiary">
+            <strong>Ärendehantering:</strong> <a href="/complaints">Gå till ärendehantering</a>
+        </MudText>
+    </MudPaper>
+</div>
+
+<style>
+    .kontakt-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 16px 48px 16px;
+    }
+</style>

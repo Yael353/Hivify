@@ -4,143 +4,229 @@
 @using Ansjon.UseCases.Communications.DTOs.ComplaintsDto
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
 
 @inject CreateComplaint CreateComplaintHandler
 @inject AuthenticationStateProvider AuthProvider
 @inject ISnackbar Snackbar
 
-<MudGrid GutterSize="4" Class="complaint-form-grid">
-  <MudItem xs="12" md="7">
-    <MudPaper Class="pa-4 pa-md-5 complaint-form__panel"
-              Elevation="0"
-              Variant="Variant.Outlined">
-      <MudStack Spacing="3">
-        <ComplaintFormFields NewComplaint="NewComplaint" />
-        <ComplaintFileUpload ImageUrl="NewComplaint.ImageUrl"
-                             OnFileSelected="OnFileSelected"
-                             OnRemoveImage="RemoveImage"
-                             IsSubmitting="_isSubmitting" />
+<div class="complaint-form-wrapper">
+    <MudPaper Class="pa-6" Elevation="2" Style="border-radius: 16px; border: 1px solid #e9edf2;">
+        <MudStack Spacing="4">
+            <!-- Rubrik -->
+            <div>
+                <MudText Typo="Typo.h5" Color="Color.Primary" Class="font-weight-bold">
+                    Anmäl ett ärende
+                </MudText>
+                <MudText Typo="Typo.body2" Color="Color.Dark">
+                    Berätta vad som inte fungerar så hjälper vi dig.
+                </MudText>
+            </div>
 
-        <MudPaper Class="pa-4 complaint-form__submit-panel"
-                  Elevation="0"
-                  Variant="Variant.Outlined">
-          <ComplaintSubmitButton IsSubmitting="_isSubmitting"
-                                 OnSubmit="HandleSubmit" />
-        </MudPaper>
-      </MudStack>
+            <MudDivider />
+
+            <!-- Formulärfält -->
+            <MudTextField @bind-Value="NewComplaint.Title"
+                          Label="Titel"
+                          Placeholder="Ange en kort rubrik..."
+                          Variant="Variant.Outlined"
+                          Required="true"
+                          RequiredError="Titel är obligatorisk"
+                          Immediate="true"
+                          Class="mb-2" />
+
+            <MudTextField @bind-Value="NewComplaint.Description"
+                          Label="Beskrivning"
+                          Placeholder="Beskriv problemet i detalj..."
+                          Variant="Variant.Outlined"
+                          Lines="5"
+                          Required="true"
+                          RequiredError="Beskrivning är obligatorisk"
+                          Immediate="true"
+                          Class="mb-2" />
+
+            <!-- Filuppladdning -->
+            <div class="file-upload-area mb-2">
+                <MudText Typo="Typo.body2" Color="Color.Tertiary" Class="mb-1">
+                    Bifoga bild (valfritt)
+                </MudText>
+                <InputFile OnChange="@OnFileSelected" accept="image/*" />
+
+                @if (!string.IsNullOrEmpty(NewComplaint.ImageUrl))
+                {
+                    <MudChip T="string" Color="Color.Success" Size="Size.Small" Class="mt-2">
+                        Bild tillagd
+                    </MudChip>
+                }
+            </div>
+
+            <!-- Miniatyr av bilden -->
+            @if (!string.IsNullOrEmpty(NewComplaint.ImageUrl))
+            {
+                <div class="image-preview mt-3">
+                    <img src="@NewComplaint.ImageUrl"
+                         alt="Bifogad bild"
+                         style="max-height: 80px; width: auto; border-radius: 8px; object-fit: cover; border: 1px solid #e9edf2;" />
+
+                    <MudButton Variant="Variant.Text"
+                               Color="Color.Error"
+                               Size="Size.Small"
+                               OnClick="@(() => RemoveImage())"
+                               Class="mt-1">
+                        Ta bort bild
+                    </MudButton>
+                </div>
+            }
+
+            <MudDivider />
+
+            <!-- Skicka-knapp -->
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       FullWidth="true"
+                       Disabled="@_isSubmitting"
+                       OnClick="@(() => HandleSubmit())"
+                       Class="submit-btn">
+                @if (_isSubmitting)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                    @:Skickar...
+                }
+                else
+                {
+                    @:Skicka felanmälan
+                }
+            </MudButton>
+        </MudStack>
     </MudPaper>
-  </MudItem>
-</MudGrid>
+</div>
+
+<style>
+    .complaint-form-wrapper {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .file-upload-area {
+        padding: 8px 0;
+    }
+
+    .image-preview {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .submit-btn {
+        transition: all 0.2s ease;
+    }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3);
+        }
+</style>
 
 @code
 {
-  #region State
+    #region State
 
-  private readonly CreateComplaintDto NewComplaint = new();
+    private readonly CreateComplaintDto NewComplaint = new();
+    private bool _isSubmitting;
 
-  private bool _isSubmitting;
+    #endregion
 
-  #endregion
+    #region Submit
 
-  #region Submit
-
-  private async Task HandleSubmit()
-  {
-    _isSubmitting = true;
-
-    try
+    private async Task HandleSubmit()
     {
-      var authState = await AuthProvider.GetAuthenticationStateAsync();
-      var user = authState.User;
+        _isSubmitting = true;
 
-      if (!user.Identity?.IsAuthenticated ?? true)
-      {
-        Snackbar.Add("Du måste vara inloggad för att skicka in felanmälan.", Severity.Warning);
-        return;
-      }
+        try
+        {
+            var authState = await AuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
 
-      var tenantIdClaim = user.FindFirst("TenantId")?.Value;
+            if (!user.Identity?.IsAuthenticated ?? true)
+            {
+                Snackbar.Add("Du måste vara inloggad för att skicka in felanmälan.", Severity.Warning);
+                return;
+            }
 
-      if (string.IsNullOrWhiteSpace(tenantIdClaim))
-      {
-        Snackbar.Add("TenantId kunde inte hittas.", Severity.Error);
-        return;
-      }
+            var tenantIdClaim = user.FindFirst("TenantId")?.Value;
 
-      TenantID tenantId = new TenantID(Guid.Parse(tenantIdClaim));
-      
-      
-      await CreateComplaintHandler.CreateComplaintAsync(NewComplaint, tenantId);
+            if (string.IsNullOrWhiteSpace(tenantIdClaim))
+            {
+                Snackbar.Add("Boende kunde inte hittas.", Severity.Error);
+                return;
+            }
 
-      Snackbar.Add("Felanmälan skickades!", Severity.Success);
+            var tenantId = new TenantID(Guid.Parse(tenantIdClaim));
 
-      
+            await CreateComplaintHandler.CreateComplaintAsync(NewComplaint, tenantId);
+
+            Snackbar.Add("Felanmälan skickades!", Severity.Success);
+
+            ResetForm();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Fel: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
     }
-    catch (Exception ex)
+
+    #endregion
+
+    #region File Upload
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
     {
-      Snackbar.Add($"Fel: {ex.Message}", Severity.Error);
+        var file = e.File;
+        if (file is null)
+            return;
+
+        try
+        {
+            using var stream = file.OpenReadStream(2 * 1024 * 1024);
+            using var memory = new MemoryStream();
+            await stream.CopyToAsync(memory);
+
+            NewComplaint.ImageUrl =
+                $"data:{file.ContentType};base64,{Convert.ToBase64String(memory.ToArray())}";
+
+            Snackbar.Add("Bild tillagd.", Severity.Info);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Kunde inte ladda bild: {ex.Message}", Severity.Error);
+        }
     }
-    finally
+
+    private Task RemoveImage()
     {
-      _isSubmitting = false;
+        NewComplaint.ImageUrl = null;
+        Snackbar.Add("Bild borttagen.", Severity.Info);
+        StateHasChanged();
+        return Task.CompletedTask;
     }
-  }
-  #endregion
 
-  #region File Upload
+    #endregion
 
-  private async Task OnFileSelected(IBrowserFile file)
-  {
-    if (file is null)
-      return;
+    #region Helpers
 
-    using var stream = file.OpenReadStream(2 * 1024 * 1024);
-    using var memory = new MemoryStream();
+    private void ResetForm()
+    {
+        NewComplaint.Title = string.Empty;
+        NewComplaint.Description = string.Empty;
+        NewComplaint.ImageUrl = null;
+    }
 
-    await stream.CopyToAsync(memory);
-
-    NewComplaint.ImageUrl =
-        $"data:{file.ContentType};base64,{Convert.ToBase64String(memory.ToArray())}";
-
-    Snackbar.Add("Bild tillagd!", Severity.Info);
-  }
-
-  private Task RemoveImage()
-  {
-    NewComplaint.ImageUrl = null;
-
-    Snackbar.Add(
-        "Bild borttagen.",
-        Severity.Info);
-
-    return Task.CompletedTask;
-  }
-
-  #endregion
-
-  #region Helpers
-
-  private async Task<bool> IsUserAuthenticated()
-  {
-    var authState = await AuthProvider.GetAuthenticationStateAsync();
-
-    if (authState.User.Identity?.IsAuthenticated == true)
-      return true;
-
-    Snackbar.Add(
-        "Du måste vara inloggad för att skicka in felanmälan.",
-        Severity.Warning);
-
-    return false;
-  }
-
-  private void ResetForm()
-  {
-    NewComplaint.Title = string.Empty;
-    NewComplaint.Description = string.Empty;
-    NewComplaint.ImageUrl = null;
-  }
-
-  #endregion
+    #endregion
 
 }

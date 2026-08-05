@@ -1,31 +1,89 @@
 ﻿@page "/"
 @attribute [Authorize]
 
-
-
 @using Ansjon.Components.User.UserFeeds
+@using Ansjon.Components.User.Home
 @using Ansjon.Core.Aggregates.Feeds
 @using Ansjon.UseCases.Communications.FeedUseCases
 @using Microsoft.AspNetCore.Authorization
 @inject ViewFeeds ViewFeeds
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Hem</PageTitle>
 
-<MudText Typo="Typo.h4" GutterBottom="true">
-    Senaste feeds
-</MudText>
+<div class="container py-4">
 
-<MudDivider Class="mb-4" />
+    <!-- Hero -->
+    <div class="mb-5">
+        <UserHero />
+    </div>
 
-<UserFeedList Feeds="_feeds" />
+    <!-- Senaste nytt -->
+    <section class="card shadow-sm border-0 rounded-4 mb-5">
+        <div class="card-body p-4 p-md-5">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 class="fw-bold text-dark mb-0">Senaste nytt</h5>
+                <span class="text-muted small">@(_feeds?.Count() ?? 0) inlägg</span>
+            </div>
+            <hr class="my-3" />
+            <UserFeedList Feeds="_feeds" />
+        </div>
+    </section>
+
+    <!-- Ärendehantering -->
+    <section class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4 p-md-5">
+            <div class="d-flex align-items-baseline justify-content-between mb-2 flex-wrap gap-2">
+                <h5 class="fw-bold text-dark mb-0">Ärendehantering</h5>
+                <span class="text-muted small">Något som inte fungerar?</span>
+            </div>
+            <hr class="my-3" />
+            <ComplaintComp />
+        </div>
+    </section>
+
+</div>
 
 @code {
-
     private IEnumerable<Feed>? _feeds;
 
     protected override async Task OnInitializedAsync()
     {
         _feeds = await ViewFeeds.GetAllFeedsAsync();
     }
-
 }
+
+<style>
+    .container {
+        max-width: 1200px;
+    }
+
+    .card {
+        background: #ffffff;
+        border-radius: 20px !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+        transition: box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            box-shadow: 0 6px 28px rgba(0, 0, 0, 0.06) !important;
+        }
+
+    hr {
+        border: 0;
+        height: 1px;
+        background: #e9edf2;
+        opacity: 1;
+    }
+
+    /* Animation */
+    .card {
+        animation: fadeUp 0.4s ease-out;
+    }
+
+    
+    }
+
+    /* Responsivt */
+    
+    }
+</style>
