@@ -1,12 +1,28 @@
 <ul class="navbar-nav me-auto align-items-lg-center">
-		<li class="nav-item">
-				<NavLink class="nav-link px-lg-3" href="" Match="NavLinkMatch.All">
-						Home
-				</NavLink>
-		</li>
-		<li class="nav-item">
-				<NavLink class="nav-link px-lg-3" href="/complaints" Match="NavLinkMatch.All">
-						Felanmälan
-				</NavLink>
-		</li>
+  <li class="nav-item">
+    <NavLink class="nav-link px-lg-3" href="" Match="NavLinkMatch.All">
+      Home
+    </NavLink>
+  </li>
+
+  <AuthorizeView>
+    <Authorized Context="authState">
+      @if (!authState.User.IsInRole("Admin"))
+      {
+        <li class="nav-item">
+          <NavLink class="nav-link px-lg-3" href="/complaints">
+            Felanmälan
+          </NavLink>
+        </li>
+      }
+    </Authorized>
+
+    <NotAuthorized>
+      <li class="nav-item">
+        <NavLink class="nav-link px-lg-3" href="/complaints">
+          Felanmälan
+        </NavLink>
+      </li>
+    </NotAuthorized>
+  </AuthorizeView>
 </ul>
