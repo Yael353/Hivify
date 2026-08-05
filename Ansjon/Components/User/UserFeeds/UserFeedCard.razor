@@ -1,39 +1,33 @@
 ﻿@using Ansjon.Core.Aggregates.Feeds
-@using MudBlazor
 
-<MudCard Elevation="3" Class="mb-4">
-    <MudCardHeader>
-        <CardHeaderContent>
-            <MudText Typo="Typo.h4">
-                @Feed.Title.Value
-            </MudText>
-        </CardHeaderContent>
-    </MudCardHeader>
-    <MudDivider />
-    <MudCardContent Class="pa-6">
-        <MudText Typo="Typo.body1"
-                 Style="white-space: pre-wrap;">
-      @Feed.Content.Value
-        </MudText>
-        <MudStack Row="true"
-                  AlignItems="AlignItems.Center"
-                  Spacing="1"
-                  Class="mt-4">
-            <MudIcon Icon="@Icons.Material.Filled.Schedule"
-                     Size="Size.Small"
-                     Color="Color.Secondary" />
+<div class="card feed-card mb-4 shadow-sm" style="border-radius: 12px; border-left: 4px solid #3f51b5; transition: all 0.2s ease;">
+    <div class="card-header bg-transparent border-0 pb-0">
+        <h5 class="card-title text-dark fw-bold mb-0">
+            @Feed.Title.Value
+        </h5>
+    </div>
 
-            <MudText Typo="Typo.caption"
-                     Color="Color.Secondary">
-                @Feed.CreatedDate.ToString("yyyy-MM-dd HH:mm")
-            </MudText>
-        </MudStack>
-    </MudCardContent>
-</MudCard>
+    <div class="card-body pt-2">
+        <p class="card-text text-primary" style="white-space: pre-wrap; line-height: 1.6;">
+            @Feed.Content.Value
+        </p>
+
+        <div class="d-flex align-items-center mt-3">
+            <small class="text-secondary">
+                @Feed.CreatedDate.ToString("dd MMM yyyy, HH:mm")
+            </small>
+        </div>
+    </div>
+</div>
+
+<style>
+    .feed-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.10) !important;
+    }
+</style>
 
 @code {
-
     [Parameter, EditorRequired]
     public Feed Feed { get; set; } = default!;
-
 }

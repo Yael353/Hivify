@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using Ansjon.Components.User.Footer
+@inherits LayoutComponentBase
 
 <MudThemeProvider />
 <MudPopoverProvider />
@@ -13,8 +14,18 @@
             <NavMenu />
         </header>
 
+
+
         <article class="content px-4 mt-4">
             @Body
         </article>
+
+        <section class="home-section__subtitle home-section--cta">
+           
+        <hr class="home-section__divider" />
+        <div class="home-section__body">
+            <Footer />
+        </div>
+    </section>
     </main>
 </div>
