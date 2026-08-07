@@ -1,6 +1,6 @@
 ﻿namespace Ansjon.UseCases.Houses.DTOs;
 
-public sealed record HouseMemberDto(
+public sealed record HouseTenantDto(
     Guid Id,
     string FirstName,
     string LastName,

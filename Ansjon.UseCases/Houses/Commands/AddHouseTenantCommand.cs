@@ -4,7 +4,7 @@ using Ansjon.UseCases.Abstractions.Messaging;
 
 namespace Ansjon.UseCases.Houses.Commands;
 
-public sealed record AddHouseMemberCommand(
+public sealed record AddHouseTenantCommand(
     HouseID HouseId,
     string FirstName,
     string LastName,

@@ -6,16 +6,16 @@ using Ansjon.UseCases.Abstractions.Presistence;
 
 namespace Ansjon.UseCases.Houses.Commands;
 
-public sealed class AddHouseMemberCommandHandler : ICommandHandler<AddHouseMemberCommand, TenantID>
+public sealed class AddHouseTenantCommandHandler : ICommandHandler<AddHouseTenantCommand, TenantID>
 {
     private readonly IHouseRepo _houseRepo;
 
-    public AddHouseMemberCommandHandler(IHouseRepo houseRepo)
+    public AddHouseTenantCommandHandler(IHouseRepo houseRepo)
     {
         _houseRepo = houseRepo;
     }
 
-    public async Task<TenantID> Handle(AddHouseMemberCommand command, CancellationToken cancellationToken)
+    public async Task<TenantID> Handle(AddHouseTenantCommand command, CancellationToken cancellationToken)
     {
         var house = await _houseRepo.GetByIdAsync(command.HouseId, cancellationToken);
         if (house is null)

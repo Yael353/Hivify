@@ -6,5 +6,5 @@ public sealed record HouseDetailsDto(
     string HouseNumber,
     string PostalCode,
     DateTime CreatedAt,
-    IReadOnlyCollection<HouseMemberDto> Members
+    IReadOnlyCollection<HouseDto> Tenants
 );

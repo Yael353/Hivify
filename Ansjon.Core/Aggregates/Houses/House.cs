@@ -29,13 +29,11 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
 
     private House(
         HouseID id,
-        AssociationID associationId,
         Address address,
         HouseNumber houseNumber,
         PostalCode postalCode)
         : base(id)
     {
-        AssociationId = associationId;
         Address = address;
         HouseNumber = houseNumber;
         PostalCode = postalCode;
@@ -44,14 +42,12 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
 
 
     public static House Create(
-        AssociationID associationId,
         Address address,
         HouseNumber houseNumber,
         PostalCode postalCode)
     {
         return new House(
             new HouseID(Guid.NewGuid()),
-            associationId,
             address,
             houseNumber,
             postalCode);
