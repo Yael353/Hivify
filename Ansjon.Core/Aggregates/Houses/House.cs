@@ -1,4 +1,5 @@
 ﻿using Ansjon.Core.Aggregates.Associations;
+using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.Aggregates.Houses.Tenants;
 using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
@@ -29,13 +30,11 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
 
     private House(
         HouseID id,
-        AssociationID associationId,
         Address address,
         HouseNumber houseNumber,
         PostalCode postalCode)
         : base(id)
     {
-        AssociationId = associationId;
         Address = address;
         HouseNumber = houseNumber;
         PostalCode = postalCode;
@@ -44,14 +43,12 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
 
 
     public static House Create(
-        AssociationID associationId,
         Address address,
         HouseNumber houseNumber,
         PostalCode postalCode)
     {
         return new House(
             new HouseID(Guid.NewGuid()),
-            associationId,
             address,
             houseNumber,
             postalCode);
@@ -105,5 +102,21 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
         return tenant;
     }
 
+    public void RemoveTenant(TenantID tenantId)
+    {
+        EnsureNotDeleted();
 
+        var tenant = _tenants.FirstOrDefault(t => t.Id == tenantId);
+        if (tenant == null)
+            throw new DomainException("Boende kunde inte hittas i detta hus.");
+
+        _tenants.Remove(tenant);
+    }
+
+    public Tenant? GetTenant(TenantID tenantId)
+    {
+        return _tenants.FirstOrDefault(t => t.Id == tenantId);
+    }
+
+    
 }
