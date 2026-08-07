@@ -1,7 +1,8 @@
 ﻿using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
-using Ansjon.Core.ValuesObjects;
+using Ansjon.Core.SharedKernel.ValuesObjects;
+
 namespace Ansjon.Core.Aggregates.Feeds
 {
 

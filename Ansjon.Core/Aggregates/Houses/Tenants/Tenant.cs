@@ -1,5 +1,6 @@
 ﻿using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
+using Ansjon.Core.SharedKernel.ValuesObjects;
 
 namespace Ansjon.Core.Aggregates.Houses.Tenants
 {
