@@ -1,7 +1,7 @@
 ﻿using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
 
-namespace Ansjon.Core.ValuesObjects
+namespace Ansjon.Core.SharedKernel.ValuesObjects
 {
     public sealed record Title : BaseValue<string>
     {

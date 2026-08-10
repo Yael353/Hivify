@@ -2,7 +2,7 @@
 using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.Aggregates.Houses;
-using Ansjon.Core.ValuesObjects;
+using Ansjon.Core.SharedKernel.ValuesObjects;
 using Ansjon.Infrastructures.SqlDatabase;
 using Microsoft.EntityFrameworkCore;
 

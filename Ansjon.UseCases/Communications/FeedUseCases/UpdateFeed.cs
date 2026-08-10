@@ -1,5 +1,5 @@
 ﻿using Ansjon.Core.Aggregates.Associations.Members;
-using Ansjon.Core.ValuesObjects;
+using Ansjon.Core.SharedKernel.ValuesObjects;
 using Ansjon.UseCases.Abstractions.Context;
 using Ansjon.UseCases.Abstractions.Presistence;
 using Ansjon.UseCases.Communications.DTOs.FeedDtos;

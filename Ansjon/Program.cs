@@ -96,10 +96,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUserProvider>();
 builder.Services.AddScoped<ICommandHandler<AddHouseCommand, HouseID>, AddHouseCommandHandler>();
 builder.Services.AddScoped<ICommandHandler<AddHouseTenantCommand, TenantID>, AddHouseTenantCommandHandler>();
-builder.Services.AddScoped<IHouseRepo, HouseRepo>();
-
-
-
+builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
 
 #endregion
 
@@ -117,7 +114,6 @@ builder.Services.AddScoped<IValidator<UpdateComplaintDto>,
 builder.Services.AddScoped<
     ICommandHandler<AddStaffMemberCommand, MemberID>,
     AddStaffMemberCommandHandler>();
-builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
 
 builder.Services.AddScoped<ISender, Sender>();
 builder.Services.AddScoped<
