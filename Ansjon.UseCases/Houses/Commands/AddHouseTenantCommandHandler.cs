@@ -21,16 +21,11 @@ public sealed class AddHouseTenantCommandHandler : ICommandHandler<AddHouseTenan
         if (house is null)
             throw new InvalidOperationException("House was not found.");
 
-        var firstName = new Name(command.FirstName);
-        var lastName = new Name(command.LastName);
-        var email = new Email(command.Email);
-        var phoneNumber = new PhoneNumber(command.PhoneNumber);
-
         var tenant = house.AddTenant(
-            firstName,
-            lastName,
-            email,
-            phoneNumber);
+             new Name(command.FirstName),
+             new Name(command.LastName),
+             new Email(command.Email),
+             new PhoneNumber(command.PhoneNumber));
 
         await _houseRepo.SaveChangesAsync(cancellationToken);
 

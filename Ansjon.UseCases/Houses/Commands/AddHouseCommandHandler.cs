@@ -19,14 +19,10 @@ public sealed class AddHouseCommandHandler : ICommandHandler<AddHouseCommand, Ho
     {
         
 
-        var address = new Address(command.Address);
-        var houseNumber = new HouseNumber(command.HouseNumber);
-        var postalCode = new PostalCode(command.PostalCode);
-
         var house = House.Create(
-            address,
-            houseNumber,
-            postalCode);
+             new Address(command.Address),
+             new HouseNumber(command.HouseNumber),
+             new PostalCode(command.PostalCode));
 
         await _houseRepo.AddAsync(house, cancellationToken);
         await _houseRepo.SaveChangesAsync(cancellationToken);
