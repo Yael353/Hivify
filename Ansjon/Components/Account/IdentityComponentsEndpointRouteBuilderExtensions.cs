@@ -1,6 +1,6 @@
 using Ansjon.Components.Account.Pages;
 using Ansjon.Components.Account.Pages.Manage;
-using Ansjon.Infrastructures.SqlDatabase;
+using Ansjon.Infrastructures.Identity;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
