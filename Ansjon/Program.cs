@@ -3,6 +3,7 @@ using Ansjon.Components.Account;
 using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.Aggregates.Houses;
 using Ansjon.Core.Aggregates.Houses.Tenants;
+using Ansjon.Infrastructure.Repositories.HouseRepo;
 using Ansjon.Infrastructures.ContextProviders;
 using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Repositories.AssociationRepo;
