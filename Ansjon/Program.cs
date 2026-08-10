@@ -3,6 +3,7 @@ using Ansjon.Components.Account;
 using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.Aggregates.Houses;
 using Ansjon.Core.Aggregates.Houses.Tenants;
+using Ansjon.Infrastructure.Repositories.HouseRepo;
 using Ansjon.Infrastructures.ContextProviders;
 using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Repositories.AssociationRepo;
@@ -95,6 +96,11 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUserProvider>();
 builder.Services.AddScoped<ICommandHandler<AddHouseCommand, HouseID>, AddHouseCommandHandler>();
 builder.Services.AddScoped<ICommandHandler<AddHouseTenantCommand, TenantID>, AddHouseTenantCommandHandler>();
+builder.Services.AddScoped<IHouseRepo, HouseRepo>();
+
+
+
+
 #endregion
 
 #region Application
