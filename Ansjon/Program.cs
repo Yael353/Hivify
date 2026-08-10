@@ -94,7 +94,7 @@ builder.Services.AddScoped<IComplaintRepo, ComplaintRepo>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUserProvider>();
 builder.Services.AddScoped<ICommandHandler<AddHouseCommand, HouseID>, AddHouseCommandHandler>();
-builder.Services.AddScoped<ICommandHandler<AddHouseMemberCommand, TenantID>, AddHouseTenantCommandHandler>();
+builder.Services.AddScoped<ICommandHandler<AddHouseTenantCommand, TenantID>, AddHouseTenantCommandHandler>();
 #endregion
 
 #region Application

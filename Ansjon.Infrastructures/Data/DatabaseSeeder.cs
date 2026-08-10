@@ -52,14 +52,14 @@ public static class DatabaseSeeder
         if (!await context.Houses.AnyAsync())
         {
             var house1 = House.Create(
-                association.Id,
+                
                 new Address("Main Street"),
                 new HouseNumber("10"),
                 new PostalCode("21120"));
 
 
             var house2 = House.Create(
-                association.Id,
+                
                 new Address("Park Avenue"),
                 new HouseNumber("25"),
                 new PostalCode("21130"));
