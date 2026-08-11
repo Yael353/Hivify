@@ -1,0 +1,34 @@
+﻿<MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+
+  <div>
+
+    <MudText Typo="Typo.h4">
+      User Management
+    </MudText>
+
+    <MudText Typo="Typo.body2"
+      Color="Color.Secondary">
+
+      Manage registered users.
+
+    </MudText>
+
+  </div>
+
+  <MudButton Variant="Variant.Outlined"
+    StartIcon="@Icons.Material.Filled.Refresh"
+    OnClick="OnRefresh"
+    Disabled="Loading">
+
+    Refresh
+
+  </MudButton>
+
+</MudStack>
+
+@code {
+
+  [Parameter]
+  public EventCallback OnRefresh { get; set; }
+
+}

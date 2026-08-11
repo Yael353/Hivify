@@ -1,24 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-Ansjon-9b759ee0-52b2-4de2-ad84-2a671de9bf57</UserSecretsId>
-    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ansjon.AI\Ansjon.AI.csproj" />
-    <ProjectReference Include="..\Ansjon.Core\Ansjon.Core.csproj" />
-    <ProjectReference Include="..\Ansjon.Infrastructures\Ansjon.Infrastructures.csproj" />
-    <ProjectReference Include="..\Ansjon.UseCases\Ansjon.UseCases.csproj" />
-    <ProjectReference Include="..\ServiceDefaults1\ServiceDefaults.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="MudBlazor" Version="9.5.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Components\Admin\AdminTabs\AdminDocumentsMgmt\" />
-    <Folder Include="Components\Admin\AdminTabs\AdminComplaintsMgmt\" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<UserSecretsId>aspnet-Ansjon-9b759ee0-52b2-4de2-ad84-2a671de9bf57</UserSecretsId>
+
+		<BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Ansjon.AI\Ansjon.AI.csproj" />
+		<ProjectReference Include="..\Ansjon.Core\Ansjon.Core.csproj" />
+		<ProjectReference Include="..\Ansjon.Infrastructures\Ansjon.Infrastructures.csproj" />
+		<ProjectReference Include="..\Ansjon.UseCases\Ansjon.UseCases.csproj" />
+		<ProjectReference Include="..\ServiceDefaults1\ServiceDefaults.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MudBlazor" Version="9.5.0" />
+	</ItemGroup>
+
 </Project>

@@ -1,0 +1,79 @@
+﻿@using Ansjon.UseCases.Admin.DTOs
+
+<MudPaper>
+
+  <MudTable T="UserListItem"
+    Items="Users"
+    Hover="true"
+    Dense="true"
+    Striped="true"
+    Bordered="true">
+
+    <HeaderContent>
+
+      <MudTh>
+        User
+      </MudTh>
+
+      <MudTh>
+        Email
+      </MudTh>
+
+      <MudTh>
+        Email Confirmed
+      </MudTh>
+
+      <MudTh>
+        User ID
+      </MudTh>
+
+      <MudTh Align="Align.Right">
+        Actions
+      </MudTh>
+
+    </HeaderContent>
+
+    <RowTemplate>
+
+      <UserTableRow User="context" />
+
+    </RowTemplate>
+
+    <NoRecordsContent>
+
+      <MudStack AlignItems="AlignItems.Center"
+        Justify="Justify.Center"
+        Class="pa-8"
+        Spacing="2">
+
+        <MudIcon Icon="@Icons.Material.Filled.PeopleOutline"
+          Size="Size.Large"
+          Color="Color.Secondary" />
+
+        <MudText Typo="Typo.h6">
+          No users found
+        </MudText>
+
+        <MudText Typo="Typo.body2"
+          Color="Color.Secondary">
+
+          No users match your search.
+
+        </MudText>
+
+      </MudStack>
+
+    </NoRecordsContent>
+
+ 
+
+  </MudTable>
+
+</MudPaper>
+
+@code {
+
+  [Parameter]
+  public IReadOnlyList<UserListItem> Users { get; set; } = [];
+
+}
