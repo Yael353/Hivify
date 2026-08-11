@@ -14,6 +14,7 @@ using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Abstractions.Context;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
+using Ansjon.UseCases.Admin.UserManagment;
 using Ansjon.UseCases.Association.Commands;
 using Ansjon.UseCases.Association.Messaging;
 using Ansjon.UseCases.Communications.DTOs.ComplaintsDto;
@@ -81,6 +82,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddSignInManager()
 .AddDefaultTokenProviders();
+builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>,
     IdentityNoOpEmailSender>();
@@ -99,6 +101,7 @@ builder.Services.AddScoped<ICommandHandler<AddHouseCommand, HouseID>, AddHouseCo
 builder.Services.AddScoped<ICommandHandler<AddHouseTenantCommand, TenantID>, AddHouseTenantCommandHandler>();
 builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
 builder.Services.AddScoped<IHouseRepo, HouseRepo>();
+
 
 #endregion
 

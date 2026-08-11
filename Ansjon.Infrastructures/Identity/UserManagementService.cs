@@ -9,7 +9,8 @@ namespace Ansjon.Infrastructures.Identity
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserManagementService(UserManager<ApplicationUser> userManager)
+        public UserManagementService(
+            UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
@@ -17,16 +18,23 @@ namespace Ansjon.Infrastructures.Identity
         public async Task<IReadOnlyList<UserListItem>> GetUsersAsync(
             CancellationToken cancellationToken = default)
         {
-            return await _userManager.Users
-                .AsNoTracking()
-                .Select(x => new UserListItem(
-                    x.Id,
-                    x.UserName,
-                    x.Email,
-                    x.EmailConfirmed))
-                .ToListAsync(cancellationToken);
-        }
+            Console.WriteLine("UserManagementService: entered");
 
+            var users = await _userManager.Users
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+
+            Console.WriteLine(
+                $"UserManagementService: found {users.Count} users");
+
+            return users
+                .Select(user => new UserListItem(
+                    user.Id,
+                    user.UserName,
+                    user.Email,
+                    user.EmailConfirmed))
+                .ToList();
+        }
 
     }
 }
