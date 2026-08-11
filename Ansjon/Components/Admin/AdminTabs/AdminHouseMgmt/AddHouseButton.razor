@@ -1,0 +1,55 @@
+﻿@using MudBlazor
+
+<MudPaper Class="pa-4" Elevation="2" Style="border-radius: 12px;">
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               StartIcon="@Icons.Material.Filled.Add"
+               OnClick="@(() => IsAdding = true)"
+               FullWidth="true">
+        Lägg till nytt hus
+    </MudButton>
+
+    @if (IsAdding)
+    {
+        <MudPaper Class="pa-4 mt-4" Elevation="1" Style="border-radius: 12px; border: 1px solid #e9edf2;">
+            <MudText Typo="Typo.body1" Color="Color.Primary" Class="font-weight-bold mb-3">
+                Nytt hus
+            </MudText>
+
+            <MudStack Spacing="3">
+                <MudTextField Label="Adress" @bind-Value="_newAddress" Variant="Variant.Outlined" />
+                <MudTextField Label="Husnummer" @bind-Value="_newHouseNumber" Variant="Variant.Outlined" />
+                <MudTextField Label="Postnummer" @bind-Value="_newPostalCode" Variant="Variant.Outlined" />
+
+                <MudStack Row="true" Spacing="2" Justify="Justify.FlexEnd">
+                    <MudButton Color="Color.Default" Variant="Variant.Outlined" OnClick="@(() => IsAdding = false)">
+                        Avbryt
+                    </MudButton>
+                    <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="@SaveHouse">
+                        Spara
+                    </MudButton>
+                </MudStack>
+            </MudStack>
+        </MudPaper>
+    }
+</MudPaper>
+
+@code {
+    private bool IsAdding { get; set; }
+    private string _newAddress = string.Empty;
+    private string _newHouseNumber = string.Empty;
+    private string _newPostalCode = string.Empty;
+
+    [Parameter]
+    public EventCallback OnHouseAdded { get; set; }
+
+    private async Task SaveHouse()
+    {
+        await OnHouseAdded.InvokeAsync();
+        IsAdding = false;
+
+        _newAddress = string.Empty;
+        _newHouseNumber = string.Empty;
+        _newPostalCode = string.Empty;
+    }
+}
