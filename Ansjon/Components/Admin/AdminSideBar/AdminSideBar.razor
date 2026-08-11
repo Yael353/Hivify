@@ -1,5 +1,6 @@
 ﻿@using Ansjon.Components.Admin.AdminTabs.AdminFeedsMgmt;
 @using Ansjon.Components.Admin.AdminTabs.AdminHouseMgmt
+@using Ansjon.Components.Admin.AdminTabs.AdminUserMgmt
 @using MudBlazor
 
 <MudGrid>
@@ -72,7 +73,7 @@
                     <AdminComplaints />
                     break;
                 case "users":
-                    <AdminUsers />
+                    <UsersList />
                     break;
                 case "documents":
                     <AdminDocuments />

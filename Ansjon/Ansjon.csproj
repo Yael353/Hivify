@@ -20,6 +20,5 @@
   <ItemGroup>
     <Folder Include="Components\Admin\AdminTabs\AdminDocumentsMgmt\" />
     <Folder Include="Components\Admin\AdminTabs\AdminComplaintsMgmt\" />
-    <Folder Include="Components\Admin\AdminTabs\AdminUserMgmt\" />
   </ItemGroup>
 </Project>
