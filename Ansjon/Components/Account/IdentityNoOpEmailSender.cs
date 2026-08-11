@@ -1,4 +1,4 @@
-using Ansjon.Infrastructures.SqlDatabase;
+using Ansjon.Infrastructures.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 

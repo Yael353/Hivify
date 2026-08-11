@@ -1,4 +1,5 @@
-﻿using Ansjon.Infrastructures.SqlDatabase;
+﻿using Ansjon.Infrastructures.Identity;
+using Ansjon.Infrastructures.SqlDatabase;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 

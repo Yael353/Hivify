@@ -1,9 +1,10 @@
 ﻿@page "/Account/Login"
 
 @using System.ComponentModel.DataAnnotations
+@using Ansjon.Infrastructures.Identity
+@using Ansjon.Infrastructures.SqlDatabase;
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
-@using Ansjon.Infrastructures.SqlDatabase;
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager

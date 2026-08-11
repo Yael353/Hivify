@@ -1,0 +1,366 @@
+﻿@using Ansjon.UseCases.Admin.DTOs
+@using Ansjon.UseCases.Admin.UserManagment
+
+@inject IUserManagementService UserManagementService
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
+
+  <MudStack Spacing="3">
+
+    <!-- Header -->
+    <MudStack Row="true"
+      AlignItems="AlignItems.Center"
+      Justify="Justify.SpaceBetween">
+
+      <div>
+        <MudText Typo="Typo.h4">
+          User Management
+        </MudText>
+
+        <MudText Typo="Typo.body2"
+          Color="Color.Secondary">
+          Manage registered users.
+        </MudText>
+      </div>
+
+      <MudButton Variant="Variant.Outlined"
+        StartIcon="@Icons.Material.Filled.Refresh"
+        OnClick="LoadUsersAsync"
+        Disabled="_loading">
+
+        Refresh
+
+      </MudButton>
+
+    </MudStack>
+
+    <!-- Search -->
+    <MudTextField @bind-Value="_searchText"
+      Placeholder="Search users..."
+      Adornment="Adornment.Start"
+      AdornmentIcon="@Icons.Material.Filled.Search"
+      Immediate="true"
+      Clearable="true"
+      Variant="Variant.Outlined"
+      FullWidth="true" />
+
+    <!-- Error -->
+    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+      <MudAlert Severity="Severity.Error"
+        Variant="Variant.Outlined"
+        ShowCloseIcon="true">
+
+        @_errorMessage
+
+      </MudAlert>
+    }
+
+    <!-- Loading -->
+    @if (_loading)
+    {
+      <MudPaper Class="pa-6">
+
+        <MudStack AlignItems="AlignItems.Center"
+          Justify="Justify.Center"
+          Spacing="2">
+
+          <MudProgressCircular Indeterminate="true"
+            Size="Size.Large" />
+
+          <MudText Color="Color.Secondary">
+            Loading users...
+          </MudText>
+
+        </MudStack>
+
+      </MudPaper>
+    }
+    else
+    {
+      <!-- Users -->
+      <MudPaper>
+
+        <MudTable T="UserListItem"
+          Items="_filteredUsers"
+          Hover="true"
+          Dense="true"
+          Striped="true"
+          Bordered="true">
+
+          <HeaderContent>
+
+            <MudTh>
+              User
+            </MudTh>
+
+            <MudTh>
+              Email
+            </MudTh>
+
+            <MudTh>
+              Email Confirmed
+            </MudTh>
+
+            <MudTh>
+              User ID
+            </MudTh>
+
+            <MudTh Align="Align.Right">
+              Actions
+            </MudTh>
+
+          </HeaderContent>
+
+          <RowTemplate>
+
+            <!-- User -->
+            <MudTd DataLabel="User">
+
+              <MudStack Row="true"
+                AlignItems="AlignItems.Center"
+                Spacing="2">
+
+                <MudAvatar Color="Color.Primary"
+                  Size="Size.Medium">
+
+                  @GetInitials(
+                      context.UserName,
+                      context.Email)
+
+                </MudAvatar>
+
+                <MudStack Spacing="0">
+
+                  <MudText Typo="Typo.body1">
+                    @(context.UserName ?? "No username")
+                  </MudText>
+
+                  <MudText Typo="Typo.caption"
+                    Color="Color.Secondary">
+
+                    @(context.Email ?? "No email")
+
+                  </MudText>
+
+                </MudStack>
+
+              </MudStack>
+
+            </MudTd>
+
+            <!-- Email -->
+            <MudTd DataLabel="Email">
+
+              @(context.Email ?? "—")
+
+            </MudTd>
+
+            <!-- Email confirmed -->
+            <MudTd DataLabel="Email Confirmed">
+
+              @if (context.EmailConfirmed)
+              {
+                <MudChip T="string"
+                  Size="Size.Small"
+                  Color="Color.Success"
+                  Variant="Variant.Outlined"
+                  Icon="@Icons.Material.Filled.Check">
+
+                  Confirmed
+
+                </MudChip>
+              }
+              else
+              {
+                <MudChip T="string"
+                  Size="Size.Small"
+                  Color="Color.Warning"
+                  Variant="Variant.Outlined"
+                  Icon="@Icons.Material.Filled.Warning">
+
+                  Not confirmed
+
+                </MudChip>
+              }
+
+            </MudTd>
+
+            <!-- User ID -->
+            <MudTd DataLabel="User ID">
+
+              <MudText Typo="Typo.caption">
+                @context.UserId
+              </MudText>
+
+            </MudTd>
+
+            <!-- Actions -->
+            <MudTd DataLabel="Actions"
+              Align="Align.Right">
+
+              <MudButton Variant="Variant.Outlined"
+                Size="Size.Small"
+                StartIcon="@Icons.Material.Filled.ManageAccounts"
+                Href="@($"/admin/usermanagement/{context.UserId}")">
+
+                Manage
+
+              </MudButton>
+
+            </MudTd>
+
+          </RowTemplate>
+
+          <!-- No users -->
+          <NoRecordsContent>
+
+            <MudStack AlignItems="AlignItems.Center"
+              Justify="Justify.Center"
+              Class="pa-8"
+              Spacing="2">
+
+              <MudIcon Icon="@Icons.Material.Filled.PeopleOutline"
+                Size="Size.Large"
+                Color="Color.Secondary" />
+
+              <MudText Typo="Typo.h6">
+                No users found
+              </MudText>
+
+              <MudText Typo="Typo.body2"
+                Color="Color.Secondary">
+
+                No users match your search.
+
+              </MudText>
+
+            </MudStack>
+
+          </NoRecordsContent>
+
+          <PagerContent>
+            <MudTablePager />
+          </PagerContent>
+
+        </MudTable>
+
+      </MudPaper>
+    }
+
+    <!-- Count -->
+    @if (!_loading)
+    {
+      <MudText Typo="Typo.caption"
+        Color="Color.Secondary">
+
+        Showing @_filteredUsers.Count
+        of @_users.Count users
+
+      </MudText>
+    }
+
+  </MudStack>
+
+</MudContainer>
+
+@code {
+
+  private IReadOnlyList<UserListItem> _users = [];
+
+  private string _searchText = string.Empty;
+
+  private bool _loading;
+
+  private string? _errorMessage;
+
+  private IReadOnlyList<UserListItem> _filteredUsers =>
+      string.IsNullOrWhiteSpace(_searchText)
+          ? _users
+          : _users
+              .Where(UserMatchesSearch)
+              .ToList();
+
+  protected override async Task OnInitializedAsync()
+  {
+    await LoadUsersAsync();
+  }
+
+  private async Task LoadUsersAsync()
+  {
+    if (_loading)
+      return;
+
+    _loading = true;
+    _errorMessage = null;
+
+    try
+    {
+      _users = await UserManagementService
+          .GetUsersAsync();
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine(
+          "Error loading users:");
+
+      Console.WriteLine(ex);
+
+      _errorMessage =
+          $"Unable to load users: {ex.Message}";
+    }
+    finally
+    {
+      _loading = false;
+    }
+  }
+
+  private bool UserMatchesSearch(UserListItem user)
+  {
+    if (string.IsNullOrWhiteSpace(_searchText))
+      return true;
+
+    return
+        (user.UserName?.Contains(
+            _searchText,
+            StringComparison.OrdinalIgnoreCase) ?? false)
+        ||
+        (user.Email?.Contains(
+            _searchText,
+            StringComparison.OrdinalIgnoreCase) ?? false)
+        ||
+        user.UserId
+            .ToString()
+            .Contains(
+                _searchText,
+                StringComparison.OrdinalIgnoreCase);
+  }
+
+  private static string GetInitials(
+      string? userName,
+      string? email)
+  {
+    var value = userName;
+
+    if (string.IsNullOrWhiteSpace(value))
+      value = email;
+
+    if (string.IsNullOrWhiteSpace(value))
+      return "?";
+
+    var parts = value.Split(
+        ' ',
+        StringSplitOptions.RemoveEmptyEntries);
+
+    if (parts.Length >= 2)
+    {
+      return string.Concat(
+              parts[0][0],
+              parts[1][0])
+          .ToUpperInvariant();
+    }
+
+    return value[..1].ToUpperInvariant();
+  }
+
+}
