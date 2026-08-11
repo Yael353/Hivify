@@ -1,4 +1,7 @@
-﻿<MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+﻿
+<MudStack Row="true"
+  AlignItems="AlignItems.Center"
+  Justify="Justify.SpaceBetween">
 
   <div>
 
@@ -17,8 +20,7 @@
 
   <MudButton Variant="Variant.Outlined"
     StartIcon="@Icons.Material.Filled.Refresh"
-    OnClick="OnRefresh"
-    Disabled="Loading">
+    OnClick="OnRefresh">
 
     Refresh
 
@@ -32,3 +34,4 @@
   public EventCallback OnRefresh { get; set; }
 
 }
+
