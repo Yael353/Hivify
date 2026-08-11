@@ -5,6 +5,7 @@ using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.Aggregates.Houses;
 using Ansjon.Core.Aggregates.Houses.Tenants;
 using Ansjon.Core.SharedKernel.ValuesObjects;
+using Ansjon.Infrastructures.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

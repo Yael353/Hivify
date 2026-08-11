@@ -4,7 +4,7 @@ using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Abstractions.Presistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ansjon.Infrastructure.Repositories.HouseRepo;
+namespace Ansjon.Infrastructures.Repositories.HouseRepo;
 
 public class HouseRepo : IHouseRepo
 {

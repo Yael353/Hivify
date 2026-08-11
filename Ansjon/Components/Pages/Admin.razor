@@ -3,6 +3,7 @@
 @rendermode InteractiveServer
 
 @using Ansjon.Components.Admin.AdminFeeds
+@using Ansjon.Components.Admin.UserManagment
 @using Microsoft.AspNetCore.Authorization
 
 
@@ -14,6 +15,7 @@
     <Authorized>
 
         <AdminFeed />
+    
 
     </Authorized>
 
@@ -25,4 +27,7 @@
 
     </NotAuthorized>
 
+
 </AuthorizeView>
+
+
