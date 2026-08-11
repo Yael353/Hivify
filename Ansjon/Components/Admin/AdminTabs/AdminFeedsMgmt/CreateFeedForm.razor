@@ -5,7 +5,6 @@
 @inject ISnackbar Snackbar
 @inject ILogger<CreateFeedForm> Logger
 
-
 <MudExpansionPanels>
     <MudExpansionPanel Text="Skapa ny feed" Icon="@Icons.Material.Filled.AddCircle">
         <MudPaper Class="pa-6 mt-4" Elevation="0">
@@ -22,6 +21,7 @@
                     <MudTextField Label="Innehåll"
                                   @bind-Value="_feed.Content"
                                   Variant="Variant.Outlined"
+                                  AdornmentColor="Color.Secondary"
                                   Required="true"
                                   RequiredError="Innehåll är obligatoriskt"
                                   TextArea="true"
@@ -29,9 +29,7 @@
                                   MaxLength="5000"
                                   Counter="5000" />
 
-
                     <MudDivider />
-
 
                     <MudButton Variant="Variant.Filled"
                                Color="Color.Primary"
@@ -39,12 +37,9 @@
                                StartIcon="@Icons.Material.Filled.Add"
                                Disabled="_submitting"
                                OnClick="CreateAsync">
-
-
-                     <LoadingButtonContent IsLoading="_submitting"
-                          Text="Skapa feed"
-                          LoadingText="Sparar..." />
-
+                        <LoadingButtonContent IsLoading="_submitting"
+                                              Text="Skapa feed"
+                                              LoadingText="Sparar..." />
                     </MudButton>
                 </MudStack>
             </MudForm>
@@ -52,69 +47,43 @@
     </MudExpansionPanel>
 </MudExpansionPanels>
 
-
-
 @code {
-
     [Parameter]
     public EventCallback OnCreated { get; set; }
 
     private MudForm? _form;
-
     private readonly CreateFeedDto _feed = new();
-
     private bool _submitting;
 
     private async Task CreateAsync()
     {
-        if (_submitting || _form is null)
-            return;
-
+        if (_submitting || _form is null) return;
 
         await _form.ValidateAsync();
-
-
-        if (!_form.IsValid)
-            return;
-
+        if (!_form.IsValid) return;
 
         try
         {
             _submitting = true;
-
             _feed.Title = _feed.Title.Trim();
-
             _feed.Content = _feed.Content.Trim();
 
             await CreateFeedHandler.CreateFeedAsync(_feed);
 
-            Snackbar.Add(
-                "Feed skapades!",
-                Severity.Success);
-
+            Snackbar.Add("Feed skapades!", Severity.Success);
             _feed.Title = "";
-
             _feed.Content = "";
-
             await _form.ResetAsync();
-
             await OnCreated.InvokeAsync();
-
         }
         catch (Exception ex)
         {
-            Logger.LogError(
-                ex,
-                "Error creating feed");
-
-            Snackbar.Add(
-                "Kunde inte skapa feed.",
-                Severity.Error);
+            Logger.LogError(ex, "Error creating feed");
+            Snackbar.Add("Kunde inte skapa feed.", Severity.Error);
         }
         finally
         {
             _submitting = false;
         }
     }
-
 }

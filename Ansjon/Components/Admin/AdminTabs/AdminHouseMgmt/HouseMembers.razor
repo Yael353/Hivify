@@ -1,0 +1,44 @@
+﻿@using MudBlazor
+
+@if (_members.Any())
+{
+    <MudText Typo="Typo.body2" Color="Color.Tertiary" Class="mb-2">
+        Boende i detta hus:
+    </MudText>
+    <MudStack Spacing="1">
+        @foreach (var member in _members)
+        {
+            <MudPaper Class="pa-2" Elevation="0" Style="border-radius: 6px; background: #f8faff;">
+                <MudText Typo="Typo.body2">
+                    @member.FullName
+                </MudText>
+                <MudText Typo="Typo.caption" Color="Color.Tertiary">
+                    @member.Email
+                </MudText>
+            </MudPaper>
+        }
+    </MudStack>
+}
+else
+{
+    <MudText Color="Color.Tertiary" Class="text-center pa-4">
+        Inga boende registrerade i detta hus ännu.
+    </MudText>
+}
+
+@code {
+    [Parameter]
+    public Guid HouseId { get; set; }
+
+    private List<MemberDto> _members = new()
+    {
+        new() { FullName = "Anna Karlsson", Email = "anna@example.com" },
+        new() { FullName = "Björn Lindgren", Email = "bjorn@example.com" }
+    };
+
+    private class MemberDto
+    {
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+    }
+}

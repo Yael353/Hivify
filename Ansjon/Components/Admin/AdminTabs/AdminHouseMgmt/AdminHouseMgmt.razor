@@ -1,0 +1,84 @@
+﻿@using Ansjon.UseCases.Houses.DTOs
+@using MudBlazor
+
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="font-weight-bold mb-3">
+    Hantera hus
+</MudText>
+<MudText Typo="Typo.body2" Color="Color.Tertiary" Class="mb-4">
+    Här kan du se alla hus, lägga till nya och hantera boende.
+</MudText>
+
+<MudDivider Class="mb-4" />
+
+<MudGrid>
+    <!-- Hela listan -->
+    <MudItem xs="12">
+        <MudPaper Class="pa-4" Elevation="2" Style="border-radius: 12px;">
+            <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="font-weight-semibold mb-3">
+                Alla hus
+            </MudText>
+            <AdminHouseList OnHouseSelected="SelectHouse" />
+        </MudPaper>
+    </MudItem>
+
+    <!-- Detaljer för valt hus -->
+    <MudItem xs="12" md="6">
+        <MudPaper Class="pa-4" Elevation="2" Style="border-radius: 12px; min-height: 200px;">
+            @if (_selectedHouse is null)
+            {
+                <MudText Color="Color.Tertiary" Class="text-center pa-6">
+                    Välj ett hus för att visa detaljer.
+                </MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold">
+                    @_selectedHouse.Address
+                </MudText>
+                <MudText Typo="Typo.body2" Color="Color.Tertiary">
+                    @_selectedHouse.HouseNumber, @_selectedHouse.PostalCode
+                </MudText>
+                <MudText Typo="Typo.caption" Color="Color.Tertiary" Class="mt-2">
+                    Skapad: @_selectedHouse.CreatedAt.ToString("yyyy-MM-dd HH:mm")
+                </MudText>
+            }
+        </MudPaper>
+    </MudItem>
+
+    <!-- Boende i valt hus -->
+    <MudItem xs="12" md="6">
+        <MudPaper Class="pa-4" Elevation="2" Style="border-radius: 12px; min-height: 200px;">
+            @if (_selectedHouse is null)
+            {
+                <MudText Color="Color.Tertiary" Class="text-center pa-6">
+                    Välj ett hus för att se boende.
+                </MudText>
+            }
+            else
+            {
+                <AdminHouseMembers HouseId="@_selectedHouse.Id" />
+            }
+        </MudPaper>
+    </MudItem>
+
+    <!-- Knapp för att lägga till hus -->
+    <MudItem xs="12">
+        <AdminAddHouseButton OnHouseAdded="RefreshHouses" />
+    </MudItem>
+</MudGrid>
+
+@code {
+    private HouseDto? _selectedHouse;
+
+    private void SelectHouse(HouseDto house)
+    {
+        _selectedHouse = house;
+    }
+
+    private async Task RefreshHouses()
+    {
+        // Här kan du senare ladda om listan
+        await Task.CompletedTask;
+    }
+}
