@@ -1,7 +1,7 @@
 ﻿using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.UseCases.Abstractions.Presistence;
 
-namespace Ansjon.UseCases.Communications.FeedUseCases
+namespace Ansjon.UseCases.Admin.Queries
 {
     public class ViewFeeds
     {

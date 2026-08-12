@@ -2,10 +2,10 @@
 using Ansjon.Core.SharedKernel.ValuesObjects;
 using Ansjon.UseCases.Abstractions.Context;
 using Ansjon.UseCases.Abstractions.Presistence;
-using Ansjon.UseCases.Communications.DTOs.FeedDtos;
+using Ansjon.UseCases.Admin.DTOs.FeedDtos;
 using FluentValidation;
 
-namespace Ansjon.UseCases.Communications.FeedUseCases;
+namespace Ansjon.UseCases.Admin.Commands;
 
 public class UpdateFeed
 {

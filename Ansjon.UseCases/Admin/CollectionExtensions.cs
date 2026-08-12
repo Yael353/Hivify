@@ -1,8 +1,10 @@
-﻿using Ansjon.UseCases.Communications.Validators;
+﻿using Ansjon.UseCases.Admin.Commands;
+using Ansjon.UseCases.Admin.Queries;
+using Ansjon.UseCases.Communications.Validators;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Ansjon.UseCases.Communications.FeedUseCases;
+namespace Ansjon.UseCases.Admin;
 
 
 public static class ServiceCollectionExtensions

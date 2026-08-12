@@ -1,13 +1,12 @@
 ﻿@attribute [Authorize(Roles = "Admin")]
 
-@using Ansjon.UseCases.Communications.FeedUseCases
-@using MudBlazor
-@using Microsoft.AspNetCore.Authorization
-@using Ansjon.Core.Aggregates.Feeds
-@using Ansjon.UseCases.Communications.DTOs.FeedDtos
 
-@inject UpdateFeed UpdateFeedHandler
-@inject DeleteFeed DeleteFeedHandler
+@using Ansjon.Core.Aggregates.Feeds
+@using Ansjon.UseCases.Admin.DTOs.FeedDtos
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+
 @inject ISnackbar Snackbar
 @inject ILogger<AdminFeedCard> Logger
 

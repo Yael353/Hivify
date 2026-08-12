@@ -2,7 +2,7 @@
 using Ansjon.UseCases.Abstractions.Context;
 using Ansjon.UseCases.Abstractions.Presistence;
 
-namespace Ansjon.UseCases.Communications.FeedUseCases;
+namespace Ansjon.UseCases.Admin.Commands;
 
 public class DeleteFeed
 {
