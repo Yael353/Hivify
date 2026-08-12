@@ -1,11 +1,11 @@
-﻿@page "/admin/feeds"
+﻿@page "/admin"
 @attribute [Authorize(Roles = "Admin")]
 @rendermode InteractiveServer
 
 @using Ansjon.Components.Admin.AdminSideBar
 @using Microsoft.AspNetCore.Authorization
 
-<PageTitle>Admin – Hantera feeds</PageTitle>
+<PageTitle>Admin – Hantera</PageTitle>
 
 <AuthorizeView Roles="Admin">
     <Authorized>

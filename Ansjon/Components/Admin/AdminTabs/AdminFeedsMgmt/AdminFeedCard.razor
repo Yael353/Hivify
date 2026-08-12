@@ -2,6 +2,7 @@
 
 
 @using Ansjon.Core.Aggregates.Feeds
+@using Ansjon.UseCases.Admin.Commands
 @using Ansjon.UseCases.Admin.DTOs.FeedDtos
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
@@ -9,6 +10,8 @@
 
 @inject ISnackbar Snackbar
 @inject ILogger<AdminFeedCard> Logger
+@inject DeleteFeed DeleteFeed
+@inject UpdateFeed UpdateFeed
 
 <MudCard Class="feed-card" Elevation="1">
 
@@ -131,7 +134,7 @@
             _updateDto.Title = _updateDto.Title.Trim();
             _updateDto.Content = _updateDto.Content.Trim();
 
-            await UpdateFeedHandler.UpdateFeedAsync(Feed.Id.Value, _updateDto);
+            await UpdateFeed.UpdateFeedAsync(Feed.Id.Value, _updateDto);
 
             Snackbar.Add("Feed uppdaterades.", Severity.Success);
             _editing = false;
@@ -152,7 +155,7 @@
     {
         try
         {
-            await DeleteFeedHandler.DeleteFeedAsync(Feed.Id.Value);
+             await DeleteFeed.DeleteFeedAsync(Feed.Id.Value);
             Snackbar.Add("Feed borttagen.", Severity.Success);
             await OnChanged.InvokeAsync();
         }
