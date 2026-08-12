@@ -31,7 +31,7 @@
     <Folder Include="Complaints\Commands\" />
     <Folder Include="Complaints\Handlers\" />
     <Folder Include="Complaints\Queries\" />
-    <Folder Include="Houses\Handlers\" />
-    <Folder Include="Houses\Queries\" />
+    <Folder Include="Houses\Commands\DeleteHouse\" />
+    <Folder Include="Houses\Commands\UpdateHouse\" />
   </ItemGroup>
 </Project>

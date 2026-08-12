@@ -1,8 +1,7 @@
 ﻿using Ansjon.Core.Aggregates.Houses;
-using Ansjon.Core.Aggregates.Houses.Tenants;
 using Ansjon.UseCases.Abstractions.Messaging;
 
-namespace Ansjon.UseCases.Houses.Commands;
+namespace Ansjon.UseCases.Houses.Commands.AddTenant;
 
 public sealed record AddHouseTenantCommand(
     HouseID HouseId,
@@ -10,4 +9,4 @@ public sealed record AddHouseTenantCommand(
     string LastName,
     string Email,
     string PhoneNumber
-) : ICommand<TenantID>;
+) : ICommand<Guid>;

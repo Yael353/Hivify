@@ -1,6 +1,6 @@
 ﻿namespace Ansjon.UseCases.Houses.DTOs
 {
-    public sealed record HouseDto(
+    public sealed record HouseListItemDto(
        Guid Id,
        string Address,
        string HouseNumber,

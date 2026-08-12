@@ -1,8 +1,6 @@
 using Ansjon.Components;
 using Ansjon.Components.Account;
 using Ansjon.Core.Aggregates.Associations.Members;
-using Ansjon.Core.Aggregates.Houses;
-using Ansjon.Core.Aggregates.Houses.Tenants;
 using Ansjon.Infrastructures.ContextProviders;
 using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Identity;
@@ -20,7 +18,7 @@ using Ansjon.UseCases.Common.Messaging;
 using Ansjon.UseCases.Common.Validators;
 using Ansjon.UseCases.Complaints.DTOs;
 using Ansjon.UseCases.Feeds;
-using Ansjon.UseCases.Houses.Commands;
+using Ansjon.UseCases.Houses;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -97,8 +95,6 @@ builder.Services.AddScoped<IFeedRepo, FeedRepo>();
 builder.Services.AddScoped<IComplaintRepo, ComplaintRepo>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUserProvider>();
-builder.Services.AddScoped<ICommandHandler<AddHouseCommand, HouseID>, AddHouseCommandHandler>();
-builder.Services.AddScoped<ICommandHandler<AddHouseTenantCommand, TenantID>, AddHouseTenantCommandHandler>();
 builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
 builder.Services.AddScoped<IHouseRepo, HouseRepo>();
 
@@ -108,6 +104,7 @@ builder.Services.AddScoped<IHouseRepo, HouseRepo>();
 #region Application
 
 builder.Services.AddFeedServices();
+builder.Services.AddHouseServices();
 builder.Services.AddComplaintServices();
 
 builder.Services.AddScoped<IValidator<CreateComplaintDto>,

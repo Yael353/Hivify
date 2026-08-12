@@ -1,11 +1,10 @@
-﻿using Ansjon.Core.Aggregates.Houses.Tenants;
-using Ansjon.Core.SharedKernel.ValuesObjects;
+﻿using Ansjon.Core.SharedKernel.ValuesObjects;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
 
-namespace Ansjon.UseCases.Houses.Commands;
+namespace Ansjon.UseCases.Houses.Commands.AddTenant;
 
-public sealed class AddHouseTenantCommandHandler : ICommandHandler<AddHouseTenantCommand, TenantID>
+public sealed class AddHouseTenantCommandHandler : ICommandHandler<AddHouseTenantCommand, Guid>
 {
     private readonly IHouseRepo _houseRepo;
 
@@ -14,7 +13,7 @@ public sealed class AddHouseTenantCommandHandler : ICommandHandler<AddHouseTenan
         _houseRepo = houseRepo;
     }
 
-    public async Task<TenantID> Handle(AddHouseTenantCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(AddHouseTenantCommand command, CancellationToken cancellationToken)
     {
         var house = await _houseRepo.GetByIdAsync(command.HouseId, cancellationToken);
         if (house is null)
@@ -28,6 +27,6 @@ public sealed class AddHouseTenantCommandHandler : ICommandHandler<AddHouseTenan
 
         await _houseRepo.SaveChangesAsync(cancellationToken);
 
-        return tenant.Id;
+        return tenant.Id.Value;
     }
 }

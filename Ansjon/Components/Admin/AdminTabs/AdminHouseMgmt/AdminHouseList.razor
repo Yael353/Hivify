@@ -1,52 +1,133 @@
-﻿@using Ansjon.UseCases.Houses.DTOs
+﻿@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Houses.DTOs
+@using Ansjon.UseCases.Houses.Queries.GetHouses
 @using MudBlazor
 
-<MudTable Items="@_houses" 
-          Hover="true" 
-          Striped="true" 
-          Bordered="true" 
-          Elevation="1" 
-          Class="mt-2"
-          Style="border-radius: 12px; overflow: hidden;">
+@inject IQuerySender QuerySender
 
-    <HeaderContent>
-        <MudTh>Adress</MudTh>
-        <MudTh>Husnummer</MudTh>
-       
-        <MudTh Class="text-right">Åtgärd</MudTh>
-    </HeaderContent>
+@if (_loading)
+{
+    <div class="text-center py-6">
 
-    <RowTemplate>
-        <MudTd>@context.Address</MudTd>
-        <MudTd>@context.HouseNumber</MudTd>
-       <MudTd Class="text-center">
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       Size="Size.Small"
-                       OnClick="@(() => OnHouseSelected.InvokeAsync(context))">
-                Se detaljer
-            </MudButton>
-        </MudTd>
-    </RowTemplate>
+        <MudProgressCircular
+            Indeterminate="true"
+            Color="Color.Primary" />
 
-    @* <NoDataContent>
-        <MudText Color="Color.Tertiary" Class="text-center pa-6">
-            Inga hus hittades.
+        <MudText Class="mt-3"
+                 Color="Color.Tertiary">
+            Laddar hus...
         </MudText>
-    </NoDataContent> *@
-</MudTable>
+
+    </div>
+}
+else if (!_houses.Any())
+{
+    <div class="text-center py-6">
+
+        <MudIcon Icon="@Icons.Material.Filled.House"
+                 Size="Size.Large"
+                 Color="Color.Tertiary" />
+
+        <MudText Typo="Typo.h6"
+                 Class="mt-2">
+            Inga hus ännu
+        </MudText>
+
+        <MudText Color="Color.Tertiary">
+            Lägg till ditt första hus nedan.
+        </MudText>
+
+    </div>
+}
+else
+{
+    <MudTable Items="_houses"
+              Hover="true"
+              Striped="true"
+              Bordered="true"
+              Elevation="1"
+              Class="mt-2"
+              Style="border-radius: 12px; overflow: hidden;">
+
+        <HeaderContent>
+
+            <MudTh>Adress</MudTh>
+            <MudTh>Husnummer</MudTh>
+            <MudTh>Postnummer</MudTh>
+            <MudTh Class="text-right">
+                Åtgärd
+            </MudTh>
+
+        </HeaderContent>
+
+        <RowTemplate>
+
+            <MudTd>
+                @context.Address
+            </MudTd>
+
+            <MudTd>
+                @context.HouseNumber
+            </MudTd>
+
+            <MudTd>
+                @context.PostalCode
+            </MudTd>
+
+            <MudTd Class="text-right">
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Small"
+                           OnClick="@(() => SelectHouse(context))">
+
+                    Se detaljer
+
+                </MudButton>
+
+            </MudTd>
+
+        </RowTemplate>
+
+    </MudTable>
+}
 
 @code {
-    [Parameter]
-    public EventCallback<HouseDto> OnHouseSelected { get; set; }
 
-    private List<HouseDto> _houses = new()
+    [Parameter]
+    public EventCallback<HouseListItemDto> OnHouseSelected { get; set; }
+
+    private IReadOnlyList<HouseListItemDto> _houses = [];
+
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
     {
-        new HouseDto(Guid.NewGuid(), "Storgatan 1", "10", "211 20", DateTime.Now),
-        new HouseDto(Guid.NewGuid(), "Parkvägen 5", "25", "211 30", DateTime.Now),
-        new HouseDto(Guid.NewGuid(), "Sjöstrand 3", "8", "211 40", DateTime.Now),
-        new HouseDto(Guid.NewGuid(), "Bäckgatan 7", "12", "211 50", DateTime.Now),
-        new HouseDto(Guid.NewGuid(), "Lundavägen 12", "5", "222 30", DateTime.Now),
-        new HouseDto(Guid.NewGuid(), "Malmövägen 3", "2", "211 60", DateTime.Now)
-    };
+        await Refresh();
+    }
+
+     public async Task Refresh()
+    {
+        _loading = true;
+
+        await InvokeAsync(StateHasChanged);
+
+        try
+        {
+            _houses = await QuerySender.Send(
+                new GetHousesQuery());
+        }
+        finally
+        {
+            _loading = false;
+
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task SelectHouse(
+        HouseListItemDto house)
+    {
+        await OnHouseSelected.InvokeAsync(house);
+    }
 }

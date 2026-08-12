@@ -1,0 +1,25 @@
+﻿using Ansjon.UseCases.Abstractions.Messaging;
+using Ansjon.UseCases.Houses.Commands.AddTenant;
+using Ansjon.UseCases.Houses.Commands.CreateHouse;
+using Ansjon.UseCases.Houses.DTOs;
+using Ansjon.UseCases.Houses.Queries.GetHouses;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Ansjon.UseCases.Houses;
+
+
+public static class ServiceCollectionExtensions
+{
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddHouseServices()
+        {
+
+            services.AddScoped<ICommandHandler<AddHouseCommand, Guid>, AddHouseCommandHandler>();
+            services.AddScoped<ICommandHandler<AddHouseTenantCommand, Guid>, AddHouseTenantCommandHandler>();
+            services.AddScoped<IQueryHandler<GetHousesQuery, IReadOnlyList<HouseListItemDto>>, GetHousesQueryHandler>();
+
+            return services;
+        }
+    }
+}

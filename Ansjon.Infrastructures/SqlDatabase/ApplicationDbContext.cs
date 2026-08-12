@@ -130,21 +130,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 value => new HouseID(value));
 
 
-        modelBuilder.Entity<House>()
-            .Property(h => h.AssociationId)
-            .HasConversion(
-                id => id.Value,
-                value => new AssociationID(value));
-
-
-        // House -> Association relationship
-        modelBuilder.Entity<House>()
-            .HasOne<Association>()
-            .WithMany()
-            .HasForeignKey(h => h.AssociationId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-
 
         // =====================
         // House Value Objects

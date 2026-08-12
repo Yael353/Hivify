@@ -1,6 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Associations;
-using Ansjon.Core.Aggregates.Associations.Members;
-using Ansjon.Core.Aggregates.Houses.Tenants;
+﻿using Ansjon.Core.Aggregates.Houses.Tenants;
 using Ansjon.Core.Exceptions;
 using Ansjon.Core.SharedKernel;
 using Ansjon.Core.SharedKernel.ValuesObjects;
@@ -9,7 +7,7 @@ namespace Ansjon.Core.Aggregates.Houses;
 
 public class House : BaseEntity<HouseID>, IAggregateRoot
 {
-    public AssociationID AssociationId { get; private set; }
+
     public Address Address { get; private set; }
     public HouseNumber HouseNumber { get; private set; }
     public PostalCode PostalCode { get; private set; }
@@ -118,5 +116,5 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
         return _tenants.FirstOrDefault(t => t.Id == tenantId);
     }
 
-    
+
 }
