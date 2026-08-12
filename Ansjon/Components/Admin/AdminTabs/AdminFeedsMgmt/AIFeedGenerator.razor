@@ -1,91 +1,167 @@
-﻿@using Ansjon.UseCases.Abstractions.Services
+﻿
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Abstractions.Services
+@using Ansjon.UseCases.Feeds.Commands.CreateFeed
+@using MudBlazor
+
 @inject IFeedGenerator FeedGenerator
-@inject CreateFeed CreateFeedHandler
+@inject ISender Sender
 @inject ISnackbar Snackbar
+@inject ILogger<AIFeedGenerator> Logger
 
 <MudExpansionPanels>
-    <MudExpansionPanel Text="Skapa feed med AI" Icon="@Icons.Material.Filled.AutoAwesome">
-        <MudStack Spacing="4" Class="pa-6">
-            <MudTextField Label="Beskriv vad feeden ska handla om"
-                          Variant="Variant.Outlined"
-                          Lines="5"
-                          TextArea="true"
-                          @bind-Value="_instruction" />
 
-            <MudButton Color="Color.Primary"
-                       Variant="Variant.Filled"
-                       StartIcon="@Icons.Material.Filled.AutoAwesome"
-                       Disabled="_loading"
-                       OnClick="GenerateAsync">
-                @(_loading ? "Genererar..." : "Generera feed")
+  <MudExpansionPanel Text="Skapa feed med AI"
+    Icon="@Icons.Material.Filled.AutoAwesome">
+
+    <MudStack Spacing="4" Class="pa-6">
+
+      <MudTextField Label="Beskriv vad feeden ska handla om"
+        Variant="Variant.Outlined"
+        Lines="5"
+        TextArea="true"
+        @bind-Value="_instruction" />
+
+      <MudButton Color="Color.Primary"
+        Variant="Variant.Filled"
+        StartIcon="@Icons.Material.Filled.AutoAwesome"
+        Disabled="_loading"
+        OnClick="GenerateAsync">
+
+        @(_loading ? "Genererar..." : "Generera feed")
+
+      </MudButton>
+
+      @if (_generated is not null)
+      {
+        <MudDivider />
+
+        <MudText Typo="Typo.h6">
+          Förhandsvisning
+        </MudText>
+
+        <MudCard Elevation="1"
+          Class="ai-preview-card">
+
+          <MudCardHeader>
+
+            <MudText Typo="Typo.h6">
+              @_generated.Title
+            </MudText>
+
+          </MudCardHeader>
+
+          <MudCardContent>
+
+            <MudText>
+              @_generated.Content
+            </MudText>
+
+          </MudCardContent>
+
+          <MudCardActions>
+
+            <MudButton Color="Color.Success"
+              Variant="Variant.Filled"
+              Disabled="_publishing"
+              OnClick="PublishAsync">
+
+              @(_publishing ? "Publicerar..." : "Publicera")
+
             </MudButton>
 
-            @if (_generated is not null)
-            {
-                <MudDivider />
-                <MudText Typo="Typo.h6">Förhandsvisning</MudText>
+          </MudCardActions>
 
-                <MudCard Elevation="1" Class="ai-preview-card">
-                    <MudCardHeader>
-                        <MudText Typo="Typo.h6">@_generated.Title</MudText>
-                    </MudCardHeader>
-                    <MudCardContent>
-                        <MudText>@_generated.Content</MudText>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Color="Color.Success"
-                                   Variant="Variant.Filled"
-                                   OnClick="PublishAsync">
-                            Publicera
-                        </MudButton>
-                    </MudCardActions>
-                </MudCard>
-            }
-        </MudStack>
-    </MudExpansionPanel>
+        </MudCard>
+      }
+
+    </MudStack>
+
+  </MudExpansionPanel>
+
 </MudExpansionPanels>
 
 <style>
-    .ai-preview-card {
-        border-radius: 12px;
-        border: 1px solid #e9edf2;
-    }
+  .ai-preview-card {
+    border-radius: 12px;
+    border: 1px solid #e9edf2;
+  }
 </style>
 
 @code {
-    private string _instruction = "";
-    private bool _loading;
-    private CreateFeedDto? _generated;
 
-    private async Task GenerateAsync()
+  private string _instruction = string.Empty;
+
+  private bool _loading;
+  private bool _publishing;
+
+  private CreateFeedDto? _generated;
+
+  private async Task GenerateAsync()
+  {
+    if (string.IsNullOrWhiteSpace(_instruction))
+      return;
+
+    try
     {
-        if (string.IsNullOrWhiteSpace(_instruction)) return;
+      _loading = true;
 
-        try
-        {
-            _loading = true;
-            _generated = await FeedGenerator.GenerateAsync(_instruction);
-        }
-        finally
-        {
-            _loading = false;
-        }
+      _generated =
+          await FeedGenerator.GenerateAsync(
+              _instruction.Trim());
     }
-
-    private async Task PublishAsync()
+    catch (Exception ex)
     {
-        if (_generated is null) return;
+      Logger.LogError(
+          ex,
+          "Error generating AI feed");
 
-        var dto = new CreateFeedDto
-        {
-            Title = _generated.Title,
-            Content = _generated.Content
-        };
-
-        await CreateFeedHandler.CreateFeedAsync(dto);
-        Snackbar.Add("AI-feed publicerad!", Severity.Success);
-
-        _generated = null;
-        _instruction = "";
+      Snackbar.Add(
+          "Kunde inte generera feed.",
+          Severity.Error);
     }
+    finally
+    {
+      _loading = false;
+    }
+  }
+
+  private async Task PublishAsync()
+  {
+    if (_generated is null || _publishing)
+      return;
+
+    try
+    {
+      _publishing = true;
+
+      var command = new CreateFeedCommand(
+          _generated.Title.Trim(),
+          _generated.Content.Trim());
+
+      await Sender.Send(command);
+
+      Snackbar.Add(
+          "AI-feed publicerad!",
+          Severity.Success);
+
+      _generated = null;
+      _instruction = string.Empty;
+    }
+    catch (Exception ex)
+    {
+      Logger.LogError(
+          ex,
+          "Error publishing AI-generated feed");
+
+      Snackbar.Add(
+          "Kunde inte publicera AI-feeden.",
+          Severity.Error);
+    }
+    finally
+    {
+      _publishing = false;
+    }
+  }
 }
+

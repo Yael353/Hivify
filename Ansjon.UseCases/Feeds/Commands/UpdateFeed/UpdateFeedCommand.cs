@@ -1,6 +1,10 @@
-﻿namespace Ansjon.UseCases.Feeds.Commands.UpdateFeed;
+﻿using Ansjon.Core.Aggregates.Feeds;
+using Ansjon.UseCases.Abstractions.Messaging;
+
+namespace Ansjon.UseCases.Feeds.Commands.UpdateFeed;
 
 public sealed record UpdateFeedCommand(
-    Guid FeedId,
+    FeedID FeedId,
     string Title,
-    string Content);
+    string Content)
+    : ICommand<FeedID>;

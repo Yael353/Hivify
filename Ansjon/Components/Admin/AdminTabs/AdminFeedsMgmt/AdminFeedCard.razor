@@ -1,88 +1,63 @@
-﻿@attribute [Authorize(Roles = "Admin")]
-
+﻿
+@attribute [Authorize(Roles = "Admin")]
 
 @using Ansjon.Core.Aggregates.Feeds
-@using Ansjon.UseCases.Feeds.DTOs
-@using Ansjon.UseCases.Feeds.Handlers
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
-
-
-@inject ISnackbar Snackbar
-@inject ILogger<AdminFeedCard> Logger
-
 
 <MudCard Class="feed-card" Elevation="1">
 
     @if (_editing)
     {
-        <MudCardContent Class="pa-5">
-            <MudStack Spacing="3">
-                <MudText Typo="Typo.h6" Color="Color.Primary">Redigera feed</MudText>
-
-                <MudTextField Label="Titel"
-                              Variant="Variant.Outlined"
-                              @bind-Value="_updateDto.Title"
-                              Required="true" />
-
-                <MudTextField Label="Innehåll"
-                              Variant="Variant.Outlined"
-                              TextArea="true"
-                              Lines="5"
-                              @bind-Value="_updateDto.Content" />
-            </MudStack>
-        </MudCardContent>
-
-        <MudDivider />
-
-        <MudCardActions Class="pa-4">
-            <MudButton Color="Color.Success"
-                       Variant="Variant.Filled"
-                       StartIcon="@Icons.Material.Filled.Save"
-                       Disabled="_saving"
-                       OnClick="SaveAsync">
-                @(_saving ? "Sparar..." : "Spara")
-            </MudButton>
-
-            <MudButton Color="Color.Secondary"
-                       Variant="Variant.Outlined"
-                       StartIcon="@Icons.Material.Filled.Close"
-                       Disabled="_saving"
-                       OnClick="Cancel">
-                Avbryt
-            </MudButton>
-        </MudCardActions>
+        <EditFeedForm
+            Feed="Feed"
+            OnSaved="HandleSaved"
+            OnCancelled="HandleCancelled" />
     }
     else
     {
         <MudCardHeader>
+
             <CardHeaderContent>
-                <MudText Typo="Typo.h6" Color="Color.Primary">
+                <MudText Typo="Typo.h6"
+                         Color="Color.Primary">
                     @Feed.Title.Value
                 </MudText>
             </CardHeaderContent>
+
             <CardHeaderActions>
+
                 <MudIconButton Icon="@Icons.Material.Filled.Edit"
                                Color="Color.Primary"
                                OnClick="StartEdit" />
-                <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                               Color="Color.Error"
-                               OnClick="DeleteAsync" />
+
+                <FeedActions
+                    FeedId="Feed.Id"
+                    OnDeleted="HandleDeleted" />
+
             </CardHeaderActions>
+
         </MudCardHeader>
 
         <MudDivider />
 
         <MudCardContent Class="pa-5">
-            <MudText Typo="Typo.body2" Color="Color.Dark" Style="white-space:pre-wrap;">
+
+            <MudText Typo="Typo.body2"
+                     Color="Color.Dark"
+                     Style="white-space:pre-wrap;">
                 @Feed.Content.Value
             </MudText>
 
-            <MudText Typo="Typo.caption" Color="Color.Tertiary" Class="mt-4">
+            <MudText Typo="Typo.caption"
+                     Color="Color.Tertiary"
+                     Class="mt-4">
                 @Feed.CreatedDate.ToString("dd MMM yyyy, HH:mm")
             </MudText>
+
         </MudCardContent>
     }
+
 </MudCard>
 
 <style>
@@ -91,12 +66,13 @@
         transition: box-shadow 0.2s ease;
     }
 
-        .feed-card:hover {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
-        }
+    .feed-card:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+    }
 </style>
 
 @code {
+
     [Parameter]
     public Feed Feed { get; set; } = default!;
 
@@ -104,64 +80,27 @@
     public EventCallback OnChanged { get; set; }
 
     private bool _editing;
-    private bool _saving;
-    private UpdateFeedDto _updateDto = new();
 
     private void StartEdit()
     {
-        _updateDto = new UpdateFeedDto
-        {
-            Title = Feed.Title.Value,
-            Content = Feed.Content.Value
-        };
         _editing = true;
     }
 
-    private void Cancel()
+    private void HandleCancelled()
     {
         _editing = false;
-        _updateDto = new();
     }
 
-    private async Task SaveAsync()
+    private async Task HandleSaved()
     {
-        if (_saving) return;
+        _editing = false;
 
-        try
-        {
-            _saving = true;
-            _updateDto.Title = _updateDto.Title.Trim();
-            _updateDto.Content = _updateDto.Content.Trim();
-
-            await UpdateFeed.UpdateFeedAsync(Feed.Id.Value, _updateDto);
-
-            Snackbar.Add("Feed uppdaterades.", Severity.Success);
-            _editing = false;
-            await OnChanged.InvokeAsync();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "Error updating feed {Id}", Feed.Id.Value);
-            Snackbar.Add("Kunde inte uppdatera feed.", Severity.Error);
-        }
-        finally
-        {
-            _saving = false;
-        }
+        await OnChanged.InvokeAsync();
     }
 
-    private async Task DeleteAsync()
+    private async Task HandleDeleted()
     {
-        try
-        {
-             await DeleteFeed.DeleteFeedAsync(Feed.Id.Value);
-            Snackbar.Add("Feed borttagen.", Severity.Success);
-            await OnChanged.InvokeAsync();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "Error deleting feed {Id}", Feed.Id.Value);
-            Snackbar.Add("Kunde inte ta bort feed.", Severity.Error);
-        }
+        await OnChanged.InvokeAsync();
     }
 }
+

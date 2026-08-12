@@ -1,0 +1,132 @@
+﻿
+@using Ansjon.Core.Aggregates.Feeds
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Feeds.Commands.UpdateFeed
+@using MudBlazor
+
+@inject ISender Sender
+@inject ISnackbar Snackbar
+@inject ILogger<EditFeedForm> Logger
+
+<MudCardContent Class="pa-5">
+
+  <MudStack Spacing="3">
+
+    <MudText Typo="Typo.h6"
+      Color="Color.Primary">
+      Redigera feed
+    </MudText>
+
+    <MudTextField Label="Titel"
+      Variant="Variant.Outlined"
+      @bind-Value="_title"
+      Required="true"
+      MaxLength="200"
+      Counter="200" />
+
+    <MudTextField Label="Innehåll"
+      Variant="Variant.Outlined"
+      @bind-Value="_content"
+      Required="true"
+      MaxLength="5000"
+      Counter="5000"
+      TextArea="true"
+      Lines="5" />
+
+  </MudStack>
+
+</MudCardContent>
+
+<MudDivider />
+
+<MudCardActions Class="pa-4">
+
+  <MudButton Color="Color.Success"
+    Variant="Variant.Filled"
+    StartIcon="@Icons.Material.Filled.Save"
+    Disabled="_saving"
+    OnClick="SaveAsync">
+
+    @(_saving ? "Sparar..." : "Spara")
+
+  </MudButton>
+
+  <MudButton Color="Color.Secondary"
+    Variant="Variant.Outlined"
+    StartIcon="@Icons.Material.Filled.Close"
+    Disabled="_saving"
+    OnClick="Cancel">
+
+    Avbryt
+
+  </MudButton>
+
+</MudCardActions>
+
+@code {
+
+  [Parameter]
+  public Feed Feed { get; set; } = default!;
+
+  [Parameter]
+  public EventCallback OnSaved { get; set; }
+
+  [Parameter]
+  public EventCallback OnCancelled { get; set; }
+
+  private string _title = string.Empty;
+  private string _content = string.Empty;
+
+  private bool _saving;
+
+  protected override void OnParametersSet()
+  {
+    _title = Feed.Title.Value;
+    _content = Feed.Content.Value;
+  }
+
+  private async Task SaveAsync()
+  {
+    if (_saving)
+      return;
+
+    try
+    {
+      _saving = true;
+
+      var command = new UpdateFeedCommand(
+          Feed.Id,
+          _title.Trim(),
+          _content.Trim());
+
+      await Sender.Send(command);
+
+      Snackbar.Add(
+          "Feed uppdaterades.",
+          Severity.Success);
+
+      await OnSaved.InvokeAsync();
+    }
+    catch (Exception ex)
+    {
+      Logger.LogError(
+          ex,
+          "Error updating feed {FeedId}",
+          Feed.Id.Value);
+
+      Snackbar.Add(
+          "Kunde inte uppdatera feed.",
+          Severity.Error);
+    }
+    finally
+    {
+      _saving = false;
+    }
+  }
+
+  private async Task Cancel()
+  {
+    await OnCancelled.InvokeAsync();
+  }
+}
+

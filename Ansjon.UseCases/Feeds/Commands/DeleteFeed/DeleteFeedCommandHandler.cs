@@ -1,10 +1,14 @@
 ﻿using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.UseCases.Abstractions.Context;
+using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
+
+
 
 namespace Ansjon.UseCases.Feeds.Commands.DeleteFeed;
 
 public sealed class DeleteFeedCommandHandler
+    : ICommandHandler<DeleteFeedCommand, bool>
 {
     private readonly IFeedRepo _feedRepository;
     private readonly ICurrentUser _currentUser;
@@ -17,35 +21,35 @@ public sealed class DeleteFeedCommandHandler
         _currentUser = currentUser;
     }
 
-    public async Task HandleAsync(
+    public async Task<bool> Handle(
         DeleteFeedCommand command,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(command);
-
-        // Application authorization
+        // Application-layer authorization
         if (!await _currentUser.IsInRoleAsync("Admin"))
         {
             throw new UnauthorizedAccessException(
                 "Only administrators can delete feeds.");
         }
 
-        var feed =
-            await _feedRepository.GetByIdAsync(
-                command.FeedId);
+        var feed = await _feedRepository.GetByIdAsync(
+            command.FeedId,
+            cancellationToken);
 
         if (feed is null)
         {
             throw new KeyNotFoundException(
-                $"Feed {command.FeedId} not found.");
+                $"Feed {command.FeedId.Value} was not found.");
         }
 
-        var role = MemberRole.GeneralMember;
-
         // Domain operation
-        feed.Delete(role);
+        feed.Delete(MemberRole.GeneralMember);
 
-        // Persist
-        await _feedRepository.UpdateFeedAsync(feed);
+        // Persist the aggregate
+        await _feedRepository.UpdateFeedAsync(
+            feed,
+            cancellationToken);
+
+        return true;
     }
 }

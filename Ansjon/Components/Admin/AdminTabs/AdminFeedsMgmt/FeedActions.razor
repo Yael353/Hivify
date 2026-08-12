@@ -1,0 +1,63 @@
+﻿
+@using Ansjon.Core.Aggregates.Feeds
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Feeds.Commands.DeleteFeed
+@using MudBlazor
+
+@inject ISender Sender
+@inject ISnackbar Snackbar
+@inject ILogger<FeedActions> Logger
+
+<MudIconButton Icon="@Icons.Material.Filled.Delete"
+  Color="Color.Error"
+  Disabled="_deleting"
+  OnClick="DeleteAsync" />
+
+@code {
+
+  [Parameter]
+  public FeedID FeedId { get; set; }
+
+  [Parameter]
+  public EventCallback OnDeleted { get; set; }
+
+  private bool _deleting;
+
+  private async Task DeleteAsync()
+  {
+    if (_deleting)
+      return;
+
+    try
+    {
+      _deleting = true;
+
+      var command =
+          new DeleteFeedCommand(FeedId);
+
+      await Sender.Send(command);
+
+      Snackbar.Add(
+          "Feed borttagen.",
+          Severity.Success);
+
+      await OnDeleted.InvokeAsync();
+    }
+    catch (Exception ex)
+    {
+      Logger.LogError(
+          ex,
+          "Error deleting feed {FeedId}",
+          FeedId.Value);
+
+      Snackbar.Add(
+          "Kunde inte ta bort feed.",
+          Severity.Error);
+    }
+    finally
+    {
+      _deleting = false;
+    }
+  }
+}
+

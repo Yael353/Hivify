@@ -2,12 +2,12 @@
 using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.SharedKernel.ValuesObjects;
 using Ansjon.UseCases.Abstractions.Context;
+using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
+using Ansjon.UseCases.Feeds.Commands.CreateFeed;
 using FluentValidation;
 
-namespace Ansjon.UseCases.Feeds.Commands.CreateFeed;
-
-public sealed class CreateFeedCommandHandler
+public sealed class CreateFeedCommandHandler : ICommandHandler<CreateFeedCommand, FeedID>
 {
     private readonly IFeedRepo _feedRepository;
     private readonly ICurrentUser _currentUser;
@@ -23,13 +23,12 @@ public sealed class CreateFeedCommandHandler
         _validator = validator;
     }
 
-    public async Task<Guid> HandleAsync(CreateFeedCommand command, CancellationToken cancellationToken = default)
+    public async Task<FeedID> Handle(CreateFeedCommand command, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(command);
 
         await _validator.ValidateAndThrowAsync(command, cancellationToken);
 
-        // Application authorization
         if (!await _currentUser.IsInRoleAsync("Admin"))
         {
             throw new UnauthorizedAccessException(
@@ -38,16 +37,14 @@ public sealed class CreateFeedCommandHandler
 
         var userId = await _currentUser.GetUserIdAsync();
 
-        // Create domain aggregate
         var feed = Feed.CreateFeed(
             new MemberID(userId),
             MemberRole.GeneralMember,
             new Title(command.Title),
             new Description(command.Content));
 
-        // Persist aggregate
         await _feedRepository.CreateFeedAsync(feed);
 
-        return feed.Id.Value;
+        return feed.Id;
     }
 }
