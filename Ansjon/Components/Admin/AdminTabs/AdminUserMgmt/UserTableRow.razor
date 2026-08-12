@@ -1,124 +1,133 @@
 ﻿@using Ansjon.UseCases.Admin.DTOs
 @using Ansjon.UseCases.Admin.DTOs.UserMngDtos
 
-<MudTd DataLabel="User">
+@if (User is null)
+{
+    <MudTd>
+        <MudText Color="Color.Error">Ogiltig användardata</MudText>
+    </MudTd>
+}
+else
+{
+    <MudTd DataLabel="User">
 
-  <MudStack Row="true"
-    AlignItems="AlignItems.Center"
-    Spacing="2">
+        <MudStack Row="true"
+                  AlignItems="AlignItems.Center"
+                  Spacing="2">
 
-    <MudAvatar Color="Color.Primary"
-      Size="Size.Medium">
+            <MudAvatar Color="Color.Primary"
+                       Size="Size.Medium">
 
-      @GetInitials(User.UserName, User.Email)
+                @GetInitials(User.UserName, User.Email)
 
-    </MudAvatar>
+            </MudAvatar>
 
-    <MudStack Spacing="0">
+            <MudStack Spacing="0">
 
-      <MudText Typo="Typo.body1">
-        @(User.UserName ?? "No username")
-      </MudText>
+                <MudText Typo="Typo.body1">
+                    @(User.UserName ?? "No username")
+                </MudText>
 
-      <MudText Typo="Typo.caption"
-        Color="Color.Secondary">
+                <MudText Typo="Typo.caption"
+                         Color="Color.Secondary">
 
-        @(User.Email ?? "No email")
+                    @(User.Email ?? "No email")
 
-      </MudText>
+                </MudText>
 
-    </MudStack>
+            </MudStack>
 
-  </MudStack>
+        </MudStack>
 
-</MudTd>
+    </MudTd>
 
-<MudTd DataLabel="Email">
+    <MudTd DataLabel="Email">
 
-  @(User.Email ?? "—")
+        @(User.Email ?? "—")
 
-</MudTd>
+    </MudTd>
 
-<MudTd DataLabel="Email Confirmed">
+    <MudTd DataLabel="Email Confirmed">
 
-  @if (User.EmailConfirmed)
-  {
-    <MudChip T="string"
-      Size="Size.Small"
-      Color="Color.Success"
-      Variant="Variant.Outlined"
-      Icon="@Icons.Material.Filled.Check">
+        @if (User.EmailConfirmed)
+        {
+            <MudChip T="string"
+                     Size="Size.Small"
+                     Color="Color.Success"
+                     Variant="Variant.Outlined"
+                     Icon="@Icons.Material.Filled.Check">
 
-      Confirmed
+                Confirmed
 
-    </MudChip>
-  }
-  else
-  {
-    <MudChip T="string"
-      Size="Size.Small"
-      Color="Color.Warning"
-      Variant="Variant.Outlined"
-      Icon="@Icons.Material.Filled.Warning">
+            </MudChip>
+        }
+        else
+        {
+            <MudChip T="string"
+                     Size="Size.Small"
+                     Color="Color.Warning"
+                     Variant="Variant.Outlined"
+                     Icon="@Icons.Material.Filled.Warning">
 
-      Not confirmed
+                Not confirmed
 
-    </MudChip>
-  }
+            </MudChip>
+        }
 
-</MudTd>
+    </MudTd>
 
-<MudTd DataLabel="User ID">
+    <MudTd DataLabel="User ID">
 
-  <MudText Typo="Typo.caption">
-    @User.UserId
-  </MudText>
+        <MudText Typo="Typo.caption">
+            @User.UserId
+        </MudText>
 
-</MudTd>
+    </MudTd>
 
-<MudTd DataLabel="Actions" Align="Align.Right">
+    <MudTd DataLabel="Actions" Align="Align.Right">
 
-  <MudButton Variant="Variant.Outlined"
-    Size="Size.Small"
-    StartIcon="@Icons.Material.Filled.ManageAccounts"
-    Href="@($"/admin/usermanagement/{User.UserId}")">
+        <MudButton Variant="Variant.Outlined"
+                   Size="Size.Small"
+                   StartIcon="@Icons.Material.Filled.ManageAccounts"
+                   Href="@($"/admin/usermanagement/{User.UserId}")">
 
-    Manage
+            Manage
 
-  </MudButton>
+        </MudButton>
 
-</MudTd>
+    </MudTd>
 
 @code {
 
-  [Parameter]
-  public UserListItem User { get; set; } = default!;
+    [Parameter]
+    public UserListItem User { get; set; } = default!;
 
-  private static string GetInitials(
-      string? userName,
-      string? email)
-  {
-    var value = userName;
-
-    if (string.IsNullOrWhiteSpace(value))
-      value = email;
-
-    if (string.IsNullOrWhiteSpace(value))
-      return "?";
-
-    var parts = value.Split(
-        ' ',
-        StringSplitOptions.RemoveEmptyEntries);
-
-    if (parts.Length >= 2)
+    private static string GetInitials(
+        string? userName,
+        string? email)
     {
-      return string.Concat(
-              parts[0][0],
-              parts[1][0])
-          .ToUpperInvariant();
+        var value = userName;
+
+        if (string.IsNullOrWhiteSpace(value))
+            value = email;
+
+        if (string.IsNullOrWhiteSpace(value))
+            return "?";
+
+        var parts = value.Split(
+            ' ',
+            StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length >= 2)
+        {
+            return string.Concat(
+                    parts[0][0],
+                    parts[1][0])
+                .ToUpperInvariant();
+        }
+
+        return value[..1].ToUpperInvariant();
     }
 
-    return value[..1].ToUpperInvariant();
-  }
-
+}
 }

@@ -1,0 +1,31 @@
+﻿@page "/admin/nyheter"
+@layout AdminLayout
+
+@using Ansjon.Components.Admin.AdminTabs.AdminFeedsMgmt
+
+@using MudBlazor
+
+<PageTitle>Admin – Nyheter</PageTitle>
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="font-weight-bold mb-3">
+    Hantera nyheter
+</MudText>
+<MudText Typo="Typo.body2" Color="Color.Tertiary" Class="mb-4">
+    Här kan du skapa, redigera och ta bort nyheter.
+</MudText>
+
+<MudDivider Class="mb-4" />
+
+<AdminFeed />
+
+@code {
+    private AdminFeedList? _feedList;
+
+    private async Task RefreshFeeds()
+    {
+        if (_feedList is not null)
+        {
+            await _feedList.Refresh();
+        }
+    }
+}

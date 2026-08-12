@@ -2,23 +2,20 @@
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
 
-	<MudPaper Class="pa-6 mb-6" Elevation="0">
+    <MudPaper Class="pa-6 mb-6" Elevation="0">
 
-		<MudStack Row="true"
-							AlignItems="AlignItems.Center"
-							Spacing="2">
+        <MudStack Row="true"
+                  AlignItems="AlignItems.Center"
+                  Spacing="2">
 
-		</MudStack>
+        </MudStack>
 
-	</MudPaper>
-	<AIFeedGenerator />
-	<MudDivider Class="my-6" />
-	<CreateFeedForm OnCreated="RefreshFeeds" />
-
-
-	<MudDivider Class="my-6" />
-
-	<AdminFeedList @ref="_feedList" />
+    </MudPaper>
+    @* <AIFeedGenerator /> *@
+    <MudDivider Class="my-6" />
+    <CreateFeedForm OnCreated="RefreshFeeds" />
+    <MudDivider Class="my-6" />
+    <AdminFeedList @ref="_feedList" />
 
 
 
@@ -29,15 +26,15 @@
 @code
 {
 
-	private AdminFeedList? _feedList;
+    private AdminFeedList? _feedList;
 
-	public async Task RefreshFeeds()
+    public async Task RefreshFeeds()
 
-	{
-		if (_feedList is not null)
-		{
-			await _feedList.Refresh();
-		}
-	}
+    {
+        if (_feedList is not null)
+        {
+            await _feedList.Refresh();
+        }
+    }
 
 }
