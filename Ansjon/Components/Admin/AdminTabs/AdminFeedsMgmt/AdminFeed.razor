@@ -1,26 +1,11 @@
 ﻿@using MudBlazor
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
-
-    <MudPaper Class="pa-6 mb-6" Elevation="0">
-
-        <MudStack Row="true"
-                  AlignItems="AlignItems.Center"
-                  Spacing="2">
-
-        </MudStack>
-
-    </MudPaper>
-    @* <AIFeedGenerator /> *@
+    <AIFeedGenerator />
     <MudDivider Class="my-6" />
     <CreateFeedForm OnCreated="RefreshFeeds" />
     <MudDivider Class="my-6" />
     <AdminFeedList @ref="_feedList" />
-
-
-
-
-
 </MudContainer>
 
 @code
