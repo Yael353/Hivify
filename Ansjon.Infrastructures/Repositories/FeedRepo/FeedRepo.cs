@@ -27,6 +27,7 @@ public sealed class FeedRepo : IFeedRepo
         CancellationToken cancellationToken = default)
     {
         return await _context.Feeds
+            .Where(f => f.DeletedAt == null)
             .ToListAsync(cancellationToken);
     }
 
@@ -41,14 +42,15 @@ public sealed class FeedRepo : IFeedRepo
     }
 
     public async Task<IEnumerable<Feed>> GetAllByDateAsync(
-        DateTime createdDate,
-        CancellationToken cancellationToken = default)
+     DateTime createdDate,
+     CancellationToken cancellationToken = default)
     {
         return await _context.Feeds
-            .Where(f => f.CreatedDate.Date == createdDate.Date)
+            .Where(f =>
+                f.DeletedAt == null &&
+                f.CreatedDate.Date == createdDate.Date)
             .ToListAsync(cancellationToken);
     }
-
     public async Task UpdateFeedAsync(
         Feed feed,
         CancellationToken cancellationToken = default)
