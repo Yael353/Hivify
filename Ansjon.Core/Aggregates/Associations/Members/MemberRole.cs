@@ -2,6 +2,7 @@
 {
     public enum MemberRole
     {
+        Admin,
         GeneralMember
     }
 }

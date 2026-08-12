@@ -2,16 +2,15 @@
 
 
 @using Ansjon.Core.Aggregates.Feeds
-@using Ansjon.UseCases.Admin.Commands
-@using Ansjon.UseCases.Admin.DTOs.FeedDtos
+@using Ansjon.UseCases.Feeds.DTOs
+@using Ansjon.UseCases.Feeds.Handlers
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
 
 @inject ISnackbar Snackbar
 @inject ILogger<AdminFeedCard> Logger
-@inject DeleteFeed DeleteFeed
-@inject UpdateFeed UpdateFeed
+
 
 <MudCard Class="feed-card" Elevation="1">
 

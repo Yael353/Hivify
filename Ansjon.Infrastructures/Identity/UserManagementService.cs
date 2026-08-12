@@ -1,5 +1,5 @@
-﻿using Ansjon.UseCases.Admin.DTOs;
-using Ansjon.UseCases.Admin.UserManagment;
+﻿using Ansjon.UseCases.Abstractions.Presistence;
+using Ansjon.UseCases.Admin.DTOs.UserMngDtos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
