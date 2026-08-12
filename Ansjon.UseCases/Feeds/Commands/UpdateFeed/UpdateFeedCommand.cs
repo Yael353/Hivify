@@ -1,10 +1,5 @@
-﻿using Ansjon.Core.Aggregates.Feeds;
-using Ansjon.UseCases.Abstractions.Messaging;
+﻿using Ansjon.UseCases.Abstractions.Messaging;
 
 namespace Ansjon.UseCases.Feeds.Commands.UpdateFeed;
 
-public sealed record UpdateFeedCommand(
-    FeedID FeedId,
-    string Title,
-    string Content)
-    : ICommand<FeedID>;
+public sealed record UpdateFeedCommand(Guid FeedId, string Title, string Content) : ICommand<bool>;

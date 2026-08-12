@@ -1,26 +1,26 @@
-﻿@using Ansjon.Core.Aggregates.Feeds
+﻿@using Ansjon.UseCases.Feeds.DTOs
+@using MudBlazor
 
-@if (Feeds is null)
+@if (!Feeds.Any())
 {
-    <MudProgressCircular Indeterminate="true" />
-}
-else if (!Feeds.Any())
-{
-    <MudAlert Severity="Severity.Info">
-        Inga feeds hittades.
-    </MudAlert>
+  <MudAlert Severity="Severity.Info">
+    Inga feeds hittades.
+  </MudAlert>
 }
 else
 {
-    <MudStack Spacing="3">
-        @foreach (var feed in Feeds)
-        {
-            <UserFeedCard Feed="feed" />
-        }
-    </MudStack>
+  <MudStack Spacing="3">
+
+    @foreach (var feed in Feeds)
+    {
+      <UserFeedCard Feed="feed" />
+    }
+
+  </MudStack>
 }
 
 @code {
-    [Parameter, EditorRequired]
-    public IEnumerable<Feed>? Feeds { get; set; }
+
+  [Parameter, EditorRequired]
+  public IReadOnlyList<FeedListItemDto> Feeds { get; set; } = [];
 }

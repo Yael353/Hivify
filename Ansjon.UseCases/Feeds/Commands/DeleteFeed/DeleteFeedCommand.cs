@@ -1,6 +1,5 @@
-﻿using Ansjon.Core.Aggregates.Feeds;
-using Ansjon.UseCases.Abstractions.Messaging;
+﻿using Ansjon.UseCases.Abstractions.Messaging;
 
 namespace Ansjon.UseCases.Feeds.Commands.DeleteFeed;
 
-public sealed record DeleteFeedCommand(FeedID FeedId) : ICommand<bool>;
+public sealed record DeleteFeedCommand(Guid FeedId) : ICommand<bool>;

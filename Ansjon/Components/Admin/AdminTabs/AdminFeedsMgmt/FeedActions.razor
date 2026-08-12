@@ -1,5 +1,4 @@
 ﻿
-@using Ansjon.Core.Aggregates.Feeds
 @using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Feeds.Commands.DeleteFeed
 @using MudBlazor
@@ -16,7 +15,7 @@
 @code {
 
   [Parameter]
-  public FeedID FeedId { get; set; }
+  public Guid FeedId { get; set; }
 
   [Parameter]
   public EventCallback OnDeleted { get; set; }
@@ -32,8 +31,7 @@
     {
       _deleting = true;
 
-      var command =
-          new DeleteFeedCommand(FeedId);
+      var command = new DeleteFeedCommand(FeedId);
 
       await Sender.Send(command);
 
@@ -48,7 +46,7 @@
       Logger.LogError(
           ex,
           "Error deleting feed {FeedId}",
-          FeedId.Value);
+          FeedId);
 
       Snackbar.Add(
           "Kunde inte ta bort feed.",

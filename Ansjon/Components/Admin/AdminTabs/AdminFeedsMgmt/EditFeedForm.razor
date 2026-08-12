@@ -2,6 +2,7 @@
 @using Ansjon.Core.Aggregates.Feeds
 @using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Feeds.Commands.UpdateFeed
+@using Ansjon.UseCases.Feeds.DTOs
 @using MudBlazor
 
 @inject ISender Sender
@@ -66,7 +67,7 @@
 @code {
 
   [Parameter]
-  public Feed Feed { get; set; } = default!;
+  public FeedListItemDto Feed { get; set; } = default!;
 
   [Parameter]
   public EventCallback OnSaved { get; set; }
@@ -81,8 +82,8 @@
 
   protected override void OnParametersSet()
   {
-    _title = Feed.Title.Value;
-    _content = Feed.Content.Value;
+    _title = Feed.Title;
+    _content = Feed.Content;
   }
 
   private async Task SaveAsync()
@@ -112,7 +113,7 @@
       Logger.LogError(
           ex,
           "Error updating feed {FeedId}",
-          Feed.Id.Value);
+          Feed.Id);
 
       Snackbar.Add(
           "Kunde inte uppdatera feed.",

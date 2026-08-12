@@ -3,84 +3,116 @@
 
 @using Ansjon.Components.User.Home
 @using Ansjon.Components.User.UserFeeds
-@using Ansjon.Core.Aggregates.Feeds
-@using Ansjon.UseCases.Feeds.Queries
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Feeds.DTOs
+@using Ansjon.UseCases.Feeds.Queries.GetFeeds
 @using Microsoft.AspNetCore.Authorization
-@inject ViewFeeds ViewFeeds
+
+@inject IQuerySender QuerySender
 
 <PageTitle>Hem</PageTitle>
 
 <div class="container py-4">
 
-    <div class="mb-5">
-        <UserHero />
+  <div class="mb-5">
+    <UserHero />
+  </div>
+
+  <section class="card shadow-sm border-0 rounded-4 mb-5">
+
+    <div class="card-body p-4 p-md-5">
+
+      <div class="d-flex align-items-center justify-content-between mb-3">
+
+        <h5 class="fw-bold text-dark mb-0">
+          Senaste nytt
+        </h5>
+
+        <span class="text-muted small">
+          @_feeds.Count inlägg
+        </span>
+
+      </div>
+
+      <hr class="my-3" />
+
+      @if (_loading)
+      {
+        <div class="text-center py-5">
+
+          <div class="spinner-border text-primary"
+            role="status">
+          </div>
+
+          <p class="text-muted mt-3 mb-0">
+            Laddar feeds...
+          </p>
+
+        </div>
+      }
+      else if (_feeds.Count == 0)
+      {
+        <div class="text-center py-5">
+
+          <p class="text-muted mb-0">
+            Inga feeds ännu.
+          </p>
+
+        </div>
+      }
+      else
+      {
+        <UserFeedList Feeds="_feeds" />
+      }
+
     </div>
 
-    <section class="card shadow-sm border-0 rounded-4 mb-5">
-        <div class="card-body p-4 p-md-5">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-                <h5 class="fw-bold text-dark mb-0">Senaste nytt</h5>
-                <span class="text-muted small">@(_feeds?.Count() ?? 0) inlägg</span>
-            </div>
-            <hr class="my-3" />
-            <UserFeedList Feeds="_feeds" />
-        </div>
-    </section>
+  </section>
 
-    <section class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-4 p-md-5">
-            <div class="d-flex align-items-baseline justify-content-between mb-2 flex-wrap gap-2">
-                <h5 class="fw-bold text-dark mb-0">Ärendehantering</h5>
-                <span class="text-muted small">Något som inte fungerar?</span>
-            </div>
-            <hr class="my-3" />
-            <ComplaintComp />
-        </div>
-    </section>
+
+  <section class="card shadow-sm border-0 rounded-4">
+
+    <div class="card-body p-4 p-md-5">
+
+      <div class="d-flex align-items-baseline justify-content-between mb-2 flex-wrap gap-2">
+
+        <h5 class="fw-bold text-dark mb-0">
+          Ärendehantering
+        </h5>
+
+        <span class="text-muted small">
+          Något som inte fungerar?
+        </span>
+
+      </div>
+
+      <hr class="my-3" />
+
+      <ComplaintComp />
+
+    </div>
+
+  </section>
 
 </div>
 
+
 @code {
-    private IEnumerable<Feed>? _feeds;
 
-    protected override async Task OnInitializedAsync()
+  private IReadOnlyList<FeedListItemDto> _feeds = [];
+
+  private bool _loading = true;
+
+  protected override async Task OnInitializedAsync()
+  {
+    try
     {
-        _feeds = await ViewFeeds.GetAllFeedsAsync();
+      _feeds = await QuerySender.Send(
+          new GetFeedsQuery());
     }
+    finally
+    {
+      _loading = false;
+    }
+  }
 }
-
-<style>
-    .container {
-        max-width: 1200px;
-    }
-
-    .card {
-        background: #ffffff;
-        border-radius: 20px !important;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
-        transition: box-shadow 0.2s ease;
-    }
-
-        .card:hover {
-            box-shadow: 0 6px 28px rgba(0, 0, 0, 0.06) !important;
-        }
-
-    hr {
-        border: 0;
-        height: 1px;
-        background: #e9edf2;
-        opacity: 1;
-    }
-
-    /* Animation */
-    .card {
-        animation: fadeUp 0.4s ease-out;
-    }
-
-    
-    }
-
-    /* Responsivt */
-    
-    }
-</style>

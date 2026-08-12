@@ -121,9 +121,8 @@ builder.Services.AddScoped<
     AddStaffMemberCommandHandler>();
 
 builder.Services.AddScoped<ISender, Sender>();
-builder.Services.AddScoped<
-    ICurrentAssociationProvider,
-    CurrentAssociationProvider>();
+builder.Services.AddScoped<IQuerySender, QuerySender>();
+builder.Services.AddScoped<ICurrentAssociationProvider, CurrentAssociationProvider>();
 #endregion
 
 #region AI Integration
