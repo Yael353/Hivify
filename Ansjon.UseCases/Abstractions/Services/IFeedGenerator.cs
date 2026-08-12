@@ -1,7 +1,9 @@
-﻿namespace Ansjon.UseCases.Abstractions.Services
+﻿using Ansjon.UseCases.Feeds.DTOs;
+
+namespace Ansjon.UseCases.Abstractions.Services
 {
     public interface IFeedGenerator
     {
-        Task<CreateFeedDto> GenerateAsync(string instruction);
+        Task<GeneratedFeedDto> GenerateAsync(string instruction);
     }
 }

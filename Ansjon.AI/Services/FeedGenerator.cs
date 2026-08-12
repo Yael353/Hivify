@@ -1,23 +1,25 @@
 ﻿using Ansjon.UseCases.Abstractions.Services;
+using Ansjon.UseCases.Feeds.DTOs;
 using Microsoft.Extensions.AI;
+using System.Text.Json;
 
-namespace Ansjon.AI.Services
+namespace Ansjon.AI.Services;
+
+public sealed class FeedGenerator : IFeedGenerator
 {
-    public class FeedGenerator : IFeedGenerator
+    private readonly IChatClient _client;
+
+    public FeedGenerator(IChatClient client)
     {
-        private readonly IChatClient _client;
+        _client = client;
+    }
 
+    public async Task<GeneratedFeedDto> GenerateAsync(
+        string instruction)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(instruction);
 
-        public FeedGenerator(IChatClient client)
-        {
-            _client = client;
-        }
-
-
-        public async Task<CreateFeedDto> GenerateAsync(string instruction)
-        {
-
-            var prompt = $$"""
+        var prompt = $$"""
             You are a municipality communication assistant.
 
             Your task is to create a public announcement feed for citizens.
@@ -32,25 +34,59 @@ namespace Ansjon.AI.Services
             User request:
             {{instruction}}
 
-            Return only valid JSON in this format:
+            Return only valid JSON.
+            Do not use markdown.
+            Do not use ```json.
+            Do not add any text outside the JSON.
+
+            JSON format:
 
             {
-                "title": "",
-                "content": ""
+              "title": "",
+              "content": ""
             }
             """;
 
+        var response = await _client.GetResponseAsync(prompt);
 
-            var response = await _client.GetResponseAsync(prompt);
-            Console.WriteLine(response);
+        var json = response.Text;
 
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            throw new InvalidOperationException(
+                "The AI returned an empty response.");
+        }
 
-            // later we deserialize JSON here
+        try
+        {
+            var result =
+                JsonSerializer.Deserialize<GeneratedFeedDto>(
+                    json,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
 
-            return new CreateFeedDto
+            if (result is null)
             {
-                Title = response.Text
-            };
+                throw new InvalidOperationException(
+                    "The AI response could not be converted to a feed.");
+            }
+
+            if (string.IsNullOrWhiteSpace(result.Title) ||
+                string.IsNullOrWhiteSpace(result.Content))
+            {
+                throw new InvalidOperationException(
+                    "The AI returned an incomplete feed.");
+            }
+
+            return result;
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidOperationException(
+                "The AI returned invalid feed JSON.",
+                ex);
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿
-@using Ansjon.UseCases.Abstractions.Messaging
+﻿@using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Abstractions.Services
 @using Ansjon.UseCases.Feeds.Commands.CreateFeed
+@using Ansjon.UseCases.Feeds.DTOs
 @using MudBlazor
 
 @inject IFeedGenerator FeedGenerator
@@ -66,7 +66,9 @@
               Disabled="_publishing"
               OnClick="PublishAsync">
 
-              @(_publishing ? "Publicerar..." : "Publicera")
+              @(_publishing
+                  ? "Publicerar..."
+                  : "Publicera")
 
             </MudButton>
 
@@ -90,12 +92,15 @@
 
 @code {
 
+  [Parameter]
+  public EventCallback OnCreated { get; set; }
+
   private string _instruction = string.Empty;
 
   private bool _loading;
   private bool _publishing;
 
-  private CreateFeedDto? _generated;
+  private GeneratedFeedDto? _generated;
 
   private async Task GenerateAsync()
   {
@@ -147,6 +152,8 @@
 
       _generated = null;
       _instruction = string.Empty;
+
+      await OnCreated.InvokeAsync();
     }
     catch (Exception ex)
     {
@@ -164,4 +171,3 @@
     }
   }
 }
-
