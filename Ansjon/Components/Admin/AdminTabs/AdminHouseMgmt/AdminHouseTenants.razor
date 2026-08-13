@@ -2,6 +2,12 @@
 @using Ansjon.UseCases.Houses.DTOs
 @using Ansjon.UseCases.Houses.Queries.GetHouseTenants
 @using MudBlazor
+@using Ansjon.UseCases.Houses.Commands.RemoveTenant
+
+@inject IQuerySender QuerySender
+@inject ISender Sender
+@inject ISnackbar Snackbar
+@inject ILogger<AdminHouseTenants> Logger
 
 @inject IQuerySender QuerySender
 
@@ -52,21 +58,31 @@
           Elevation="0"
           Style="border-radius: 8px; background: #f8faff;">
 
-          <MudText Typo="Typo.body1">
-            @tenant.FullName
-          </MudText>
+          <MudStack Row="true"
+            AlignItems="AlignItems.Center"
+            Justify="Justify.SpaceBetween">
 
-          <MudText Typo="Typo.caption"
-            Color="Color.Tertiary">
-            @tenant.Email
-          </MudText>
+            <div>
+              <MudText Typo="Typo.body1">
+                @tenant.FullName
+              </MudText>
 
-          <MudText Typo="Typo.caption"
-            Color="Color.Tertiary">
-            @tenant.PhoneNumber
-          </MudText>
+              <MudText Typo="Typo.caption"
+                Color="Color.Tertiary">
+                @tenant.Email
+              </MudText>
+            </div>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+              Color="Color.Error"
+              Size="Size.Small"
+              Disabled="_deletingTenantId == tenant.Id"
+              OnClick="@(() => DeleteTenantAsync(tenant.Id))" />
+
+          </MudStack>
 
         </MudPaper>
+      
       }
 
     </MudStack>
@@ -85,6 +101,8 @@
   private List<TenantListItemDto> _tenants = [];
 
   private bool _loading;
+
+  private Guid? _deletingTenantId;
 
   protected override async Task OnParametersSetAsync()
   {
@@ -108,6 +126,52 @@
     finally
     {
       _loading = false;
+    }
+  }
+  private async Task DeleteTenantAsync(Guid tenantId)
+  {
+    if (_deletingTenantId.HasValue)
+      return;
+
+    try
+    {
+      _deletingTenantId = tenantId;
+
+      var deleted = await Sender.Send(
+          new RemoveHouseTenantCommand(
+              HouseId,
+              tenantId));
+
+      if (!deleted)
+      {
+        Snackbar.Add(
+            "Boende eller hus kunde inte hittas.",
+            Severity.Error);
+
+        return;
+      }
+
+      Snackbar.Add(
+          "Boende togs bort.",
+          Severity.Success);
+
+      await Refresh();
+    }
+    catch (Exception ex)
+    {
+      Logger.LogError(
+          ex,
+          "Error removing tenant {TenantId} from house {HouseId}",
+          tenantId,
+          HouseId);
+
+      Snackbar.Add(
+          "Kunde inte ta bort boende.",
+          Severity.Error);
+    }
+    finally
+    {
+      _deletingTenantId = null;
     }
   }
 }

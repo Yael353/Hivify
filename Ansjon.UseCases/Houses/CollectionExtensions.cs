@@ -1,6 +1,7 @@
 ﻿using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Houses.Commands.AddTenant;
 using Ansjon.UseCases.Houses.Commands.CreateHouse;
+using Ansjon.UseCases.Houses.Commands.RemoveTenant;
 using Ansjon.UseCases.Houses.Commands.UpdateHouse;
 using Ansjon.UseCases.Houses.DTOs;
 using Ansjon.UseCases.Houses.Queries.GetHouse;
@@ -23,6 +24,7 @@ public static class ServiceCollectionExtensions
             services.AddScoped<ICommandHandler<UpdateHouseCommand, bool>, UpdateHouseCommandHandler>();
             services.AddScoped<IQueryHandler<GetHousesQuery, IReadOnlyList<HouseListItemDto>>, GetHousesQueryHandler>();
             services.AddScoped<IQueryHandler<GetHouseQuery, HouseListItemDto>, GetHouseQueryHandler>();
+            services.AddScoped<ICommandHandler<RemoveHouseTenantCommand, bool>, RemoveHouseTenantCommandHandler>();
             services.AddScoped<IQueryHandler<GetHouseTenantsQuery, IReadOnlyList<TenantListItemDto>>, GetHouseTenantsQueryHandler>();
 
             return services;
