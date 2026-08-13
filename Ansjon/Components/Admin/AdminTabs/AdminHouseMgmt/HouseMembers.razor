@@ -1,44 +1,91 @@
-﻿@using MudBlazor
+﻿@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Houses.DTOs
+@using Ansjon.UseCases.Houses.Queries.GetHouseTenants
+@using MudBlazor
 
-@if (_members.Any())
+@inject IQuerySender QuerySender
+
+@if (_loading)
 {
-    <MudText Typo="Typo.body2" Color="Color.Tertiary" Class="mb-2">
-        Boende i detta hus:
-    </MudText>
-    <MudStack Spacing="1">
-        @foreach (var member in _members)
-        {
-            <MudPaper Class="pa-2" Elevation="0" Style="border-radius: 6px; background: #f8faff;">
-                <MudText Typo="Typo.body2">
-                    @member.FullName
-                </MudText>
-                <MudText Typo="Typo.caption" Color="Color.Tertiary">
-                    @member.Email
-                </MudText>
-            </MudPaper>
-        }
-    </MudStack>
+  <div class="d-flex justify-center pa-4">
+    <MudProgressCircular Indeterminate="true"
+      Color="Color.Primary" />
+  </div>
+}
+else if (!_tenants.Any())
+{
+  <MudText Color="Color.Tertiary"
+    Class="text-center pa-4">
+    Inga boende registrerade i detta hus ännu.
+  </MudText>
 }
 else
 {
-    <MudText Color="Color.Tertiary" Class="text-center pa-4">
-        Inga boende registrerade i detta hus ännu.
-    </MudText>
+  <MudText Typo="Typo.body2"
+    Color="Color.Tertiary"
+    Class="mb-2">
+    Boende i detta hus:
+  </MudText>
+
+  <MudStack Spacing="1">
+
+    @foreach (var tenant in _tenants)
+    {
+      <MudPaper Class="pa-2"
+        Elevation="0"
+        Style="border-radius: 6px; background: #f8faff;">
+
+        <MudText Typo="Typo.body2">
+          @tenant.FirstName @tenant.LastName
+        </MudText>
+
+        <MudText Typo="Typo.caption"
+          Color="Color.Tertiary">
+          @tenant.Email
+        </MudText>
+
+      </MudPaper>
+    }
+
+  </MudStack>
 }
 
 @code {
-    [Parameter]
-    public Guid HouseId { get; set; }
 
-    private List<MemberDto> _members = new()
-    {
-        new() { FullName = "Anna Karlsson", Email = "anna@example.com" },
-        new() { FullName = "Björn Lindgren", Email = "bjorn@example.com" }
-    };
+  [Parameter]
+  public Guid HouseId { get; set; }
 
-    private class MemberDto
+  private IReadOnlyList<TenantListItemDto> _tenants = [];
+
+  private bool _loading;
+
+  private Guid _loadedHouseId;
+
+  protected override async Task OnParametersSetAsync()
+  {
+    if (HouseId == Guid.Empty)
+      return;
+
+    if (HouseId == _loadedHouseId)
+      return;
+
+    _loadedHouseId = HouseId;
+
+    await LoadTenantsAsync();
+  }
+
+  private async Task LoadTenantsAsync()
+  {
+    _loading = true;
+
+    try
     {
-        public string FullName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
+      _tenants = await QuerySender.Send(
+    new GetHouseTenantsQuery(HouseId));
     }
+    finally
+    {
+      _loading = false;
+    }
+  }
 }

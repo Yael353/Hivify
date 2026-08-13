@@ -1,5 +1,9 @@
-﻿@using Ansjon.UseCases.Houses.DTOs
+﻿@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Houses.DTOs
+@using Ansjon.UseCases.Houses.Queries.GetHouseTenants
 @using MudBlazor
+
+@inject IQuerySender QuerySender
 
 <MudStack Spacing="3">
 
@@ -10,21 +14,26 @@
     <MudText Typo="Typo.h6"
       Color="Color.Primary"
       Class="font-weight-bold">
-
       Boende
-
     </MudText>
 
     <MudText Typo="Typo.caption"
       Color="Color.Tertiary">
-
       @_tenants.Count boende
-
     </MudText>
 
   </MudStack>
 
-  @if (!_tenants.Any())
+  @if (_loading)
+  {
+    <div class="d-flex justify-center pa-4">
+
+      <MudProgressCircular Indeterminate="true"
+        Color="Color.Primary" />
+
+    </div>
+  }
+  else if (_tenants.Count == 0)
   {
     <MudText Color="Color.Tertiary"
       Class="text-center pa-4">
@@ -49,9 +58,12 @@
 
           <MudText Typo="Typo.caption"
             Color="Color.Tertiary">
-
             @tenant.Email
+          </MudText>
 
+          <MudText Typo="Typo.caption"
+            Color="Color.Tertiary">
+            @tenant.PhoneNumber
           </MudText>
 
         </MudPaper>
@@ -72,9 +84,30 @@
 
   private List<TenantListItemDto> _tenants = [];
 
-  private async Task Refresh()
+  private bool _loading;
+
+  protected override async Task OnParametersSetAsync()
   {
-    // We'll replace this with GetHouseTenantsQuery.
-    await Task.CompletedTask;
+    await Refresh();
+  }
+
+  public async Task Refresh()
+  {
+    if (HouseId == Guid.Empty)
+      return;
+
+    _loading = true;
+
+    try
+    {
+      var tenants = await QuerySender.Send(
+          new GetHouseTenantsQuery(HouseId));
+
+      _tenants = tenants.ToList();
+    }
+    finally
+    {
+      _loading = false;
+    }
   }
 }

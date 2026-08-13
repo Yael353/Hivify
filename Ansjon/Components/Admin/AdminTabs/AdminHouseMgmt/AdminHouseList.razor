@@ -4,6 +4,8 @@
 @using MudBlazor
 
 @inject IQuerySender QuerySender
+@inject NavigationManager NavigationManager
+
 
 @if (_loading)
 {
@@ -33,7 +35,7 @@ else if (_houses.Count == 0)
     </MudText>
 
     <MudText Color="Color.Tertiary">
-      Lägg till ditt första hus nedan.
+      Lägg till ditt första hus ovan.
     </MudText>
 
   </div>
@@ -50,15 +52,24 @@ else
 
     <HeaderContent>
 
-      <MudTh>Adress</MudTh>
-      <MudTh>Husnummer</MudTh>
-      <MudTh>Postnummer</MudTh>
+      <MudTh>
+        Adress
+      </MudTh>
+
+      <MudTh>
+        Husnummer
+      </MudTh>
+
+      <MudTh>
+        Postnummer
+      </MudTh>
 
       <MudTh Class="text-right">
         Åtgärd
       </MudTh>
 
     </HeaderContent>
+
 
     <RowTemplate>
 
@@ -79,7 +90,7 @@ else
         <MudButton Variant="Variant.Filled"
           Color="Color.Primary"
           Size="Size.Small"
-          OnClick="@(() => SelectHouse(context))">
+          OnClick="@(() => OpenHouse(context.Id))">
 
           Se detaljer
 
@@ -92,19 +103,19 @@ else
   </MudTable>
 }
 
-@code {
 
-  [Parameter]
-  public EventCallback<HouseListItemDto> OnHouseSelected { get; set; }
+@code {
 
   private IReadOnlyList<HouseListItemDto> _houses = [];
 
   private bool _loading = true;
 
+
   protected override async Task OnInitializedAsync()
   {
     await Refresh();
   }
+
 
   public async Task Refresh()
   {
@@ -125,8 +136,10 @@ else
     }
   }
 
-  private Task SelectHouse(HouseListItemDto house)
+
+  private void OpenHouse(Guid houseId)
   {
-    return OnHouseSelected.InvokeAsync(house);
+    NavigationManager.NavigateTo(
+        $"/admin/hus/{houseId}");
   }
 }

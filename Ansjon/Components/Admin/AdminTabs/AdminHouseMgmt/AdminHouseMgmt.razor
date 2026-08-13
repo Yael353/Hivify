@@ -1,96 +1,62 @@
-﻿@using Ansjon.Components.Admin.AdminTabs.AdminHouseMgmt.AdminHouseTenants
-@using Ansjon.UseCases.Houses.DTOs
+﻿@using Ansjon.UseCases.Houses.DTOs
 @using MudBlazor
 
 <MudText Typo="Typo.h5"
-         Color="Color.Primary"
-         Class="font-weight-bold mb-3">
-    Hantera hus
+  Color="Color.Primary"
+  Class="font-weight-bold mb-3">
+  Hantera hus
 </MudText>
 
 <MudText Typo="Typo.body2"
-         Color="Color.Tertiary"
-         Class="mb-4">
-    Här kan du se alla hus, lägga till nya och hantera boende.
+  Color="Color.Tertiary"
+  Class="mb-4">
+  Här kan du se alla hus och lägga till nya.
 </MudText>
 
 <MudDivider Class="mb-4" />
 
 <MudGrid>
 
-    <!-- Create -->
-    <MudItem xs="12">
-        <AddHouseButton OnHouseAdded="RefreshHouses" />
-    </MudItem>
+  <!-- Add house -->
+  <MudItem xs="12">
 
-    <!-- List -->
-    <MudItem xs="12">
-        <MudPaper Class="pa-4"
-                  Elevation="2"
-                  Style="border-radius: 12px;">
+    <AddHouseButton OnHouseAdded="RefreshHouses" />
 
-            <MudText Typo="Typo.subtitle2"
-                     Color="Color.Primary"
-                     Class="font-weight-semibold mb-3">
-                Alla hus
-            </MudText>
+  </MudItem>
 
-            <AdminHouseList
-                @ref="_houseList"
-                OnHouseSelected="SelectHouse" />
-                @if (_selectedHouse is not null)
-{
-    <MudItem xs="12">
 
-        <MudPaper Class="pa-4"
-                  Elevation="2"
-                  Style="border-radius: 12px;">
+  <!-- House list -->
+  <MudItem xs="12">
 
-            <AdminHouseTenants HouseId="_selectedHouse.Id" />
+    <MudPaper Class="pa-4"
+      Elevation="2"
+      Style="border-radius: 12px;">
 
-        </MudPaper>
+      <MudText Typo="Typo.subtitle2"
+        Color="Color.Primary"
+        Class="font-weight-semibold mb-3">
+        Alla hus
+      </MudText>
 
-    </MudItem>
-}
+      <AdminHouseList @ref="_houseList" />
 
-        </MudPaper>
-    </MudItem>
+    </MudPaper>
 
-    <!-- Selected house -->
-    @if (_selectedHouse is not null)
-    {
-        <MudItem xs="12">
-            <AdminHouseDetails
-                House="_selectedHouse"
-                OnHouseUpdated="HandleHouseUpdated" />
-        </MudItem>
-    }
+  </MudItem>
 
 </MudGrid>
 
+
 @code {
 
-    private AdminHouseList? _houseList;
+  private AdminHouseList? _houseList;
 
-    private HouseListItemDto? _selectedHouse;
 
-    private void SelectHouse(HouseListItemDto house)
-    {
-        _selectedHouse = house;
-    }
+  private async Task RefreshHouses()
+  {
+    if (_houseList is null)
+      return;
 
-    private async Task RefreshHouses()
-    {
-        if (_houseList is not null)
-        {
-            await _houseList.Refresh();
-        }
-    }
-
-    private async Task HandleHouseUpdated()
-    {
-        await RefreshHouses();
-
-        _selectedHouse = null;
-    }
+    await _houseList.Refresh();
+  }
 }
