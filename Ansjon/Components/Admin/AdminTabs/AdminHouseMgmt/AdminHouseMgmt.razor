@@ -16,16 +16,14 @@
 <MudDivider Class="mb-4" />
 
 <MudGrid>
-      <!-- Skapa hus -->
+
+    <!-- Create -->
     <MudItem xs="12">
-
         <AddHouseButton OnHouseAdded="RefreshHouses" />
-
     </MudItem>
 
-    <!-- Hela listan -->
+    <!-- List -->
     <MudItem xs="12">
-
         <MudPaper Class="pa-4"
                   Elevation="2"
                   Style="border-radius: 12px;">
@@ -41,9 +39,17 @@
                 OnHouseSelected="SelectHouse" />
 
         </MudPaper>
-
     </MudItem>
-  
+
+    <!-- Selected house -->
+    @if (_selectedHouse is not null)
+    {
+        <MudItem xs="12">
+            <AdminHouseDetails
+                House="_selectedHouse"
+                OnHouseUpdated="HandleHouseUpdated" />
+        </MudItem>
+    }
 
 </MudGrid>
 
@@ -64,5 +70,12 @@
         {
             await _houseList.Refresh();
         }
+    }
+
+    private async Task HandleHouseUpdated()
+    {
+        await RefreshHouses();
+
+        _selectedHouse = null;
     }
 }

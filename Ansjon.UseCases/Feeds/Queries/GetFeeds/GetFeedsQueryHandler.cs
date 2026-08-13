@@ -4,8 +4,7 @@ using Ansjon.UseCases.Feeds.DTOs;
 
 namespace Ansjon.UseCases.Feeds.Queries.GetFeeds;
 
-public sealed class GetFeedsQueryHandler
-    : IQueryHandler<GetFeedsQuery, IReadOnlyList<FeedListItemDto>>
+public sealed class GetFeedsQueryHandler : IQueryHandler<GetFeedsQuery, IReadOnlyList<FeedListItemDto>>
 {
     private readonly IFeedRepo _feedRepository;
 

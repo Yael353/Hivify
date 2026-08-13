@@ -7,127 +7,126 @@
 
 @if (_loading)
 {
-    <div class="text-center py-6">
+  <div class="text-center py-6">
 
-        <MudProgressCircular
-            Indeterminate="true"
-            Color="Color.Primary" />
+    <MudProgressCircular Indeterminate="true"
+      Color="Color.Primary" />
 
-        <MudText Class="mt-3"
-                 Color="Color.Tertiary">
-            Laddar hus...
-        </MudText>
+    <MudText Class="mt-3"
+      Color="Color.Tertiary">
+      Laddar hus...
+    </MudText>
 
-    </div>
+  </div>
 }
-else if (!_houses.Any())
+else if (_houses.Count == 0)
 {
-    <div class="text-center py-6">
+  <div class="text-center py-6">
 
-        <MudIcon Icon="@Icons.Material.Filled.House"
-                 Size="Size.Large"
-                 Color="Color.Tertiary" />
+    <MudIcon Icon="@Icons.Material.Filled.House"
+      Size="Size.Large"
+      Color="Color.Tertiary" />
 
-        <MudText Typo="Typo.h6"
-                 Class="mt-2">
-            Inga hus ännu
-        </MudText>
+    <MudText Typo="Typo.h6"
+      Class="mt-2">
+      Inga hus ännu
+    </MudText>
 
-        <MudText Color="Color.Tertiary">
-            Lägg till ditt första hus nedan.
-        </MudText>
+    <MudText Color="Color.Tertiary">
+      Lägg till ditt första hus nedan.
+    </MudText>
 
-    </div>
+  </div>
 }
 else
 {
-    <MudTable Items="_houses"
-              Hover="true"
-              Striped="true"
-              Bordered="true"
-              Elevation="1"
-              Class="mt-2"
-              Style="border-radius: 12px; overflow: hidden;">
+  <MudTable Items="_houses"
+    Hover="true"
+    Striped="true"
+    Bordered="true"
+    Elevation="1"
+    Class="mt-2"
+    Style="border-radius: 12px; overflow: hidden;">
 
-        <HeaderContent>
+    <HeaderContent>
 
-            <MudTh>Adress</MudTh>
-            <MudTh>Husnummer</MudTh>
-            <MudTh>Postnummer</MudTh>
-            <MudTh Class="text-right">
-                Åtgärd
-            </MudTh>
+      <MudTh>Adress</MudTh>
+      <MudTh>Husnummer</MudTh>
+      <MudTh>Postnummer</MudTh>
 
-        </HeaderContent>
+      <MudTh Class="text-right">
+        Åtgärd
+      </MudTh>
 
-        <RowTemplate>
+    </HeaderContent>
 
-            <MudTd>
-                @context.Address
-            </MudTd>
+    <RowTemplate>
 
-            <MudTd>
-                @context.HouseNumber
-            </MudTd>
+      <MudTd>
+        @context.Address
+      </MudTd>
 
-            <MudTd>
-                @context.PostalCode
-            </MudTd>
+      <MudTd>
+        @context.HouseNumber
+      </MudTd>
 
-            <MudTd Class="text-right">
+      <MudTd>
+        @context.PostalCode
+      </MudTd>
 
-                <MudButton Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           Size="Size.Small"
-                           OnClick="@(() => SelectHouse(context))">
+      <MudTd Class="text-right">
 
-                    Se detaljer
+        <MudButton Variant="Variant.Filled"
+          Color="Color.Primary"
+          Size="Size.Small"
+          OnClick="@(() => SelectHouse(context))">
 
-                </MudButton>
+          Se detaljer
 
-            </MudTd>
+        </MudButton>
 
-        </RowTemplate>
+      </MudTd>
 
-    </MudTable>
+    </RowTemplate>
+
+  </MudTable>
 }
 
 @code {
 
-    [Parameter]
-    public EventCallback<HouseListItemDto> OnHouseSelected { get; set; }
+  [Parameter]
+  public EventCallback<HouseListItemDto> OnHouseSelected { get; set; }
 
-    private IReadOnlyList<HouseListItemDto> _houses = [];
+  private IReadOnlyList<HouseListItemDto> _houses = [];
 
-    private bool _loading = true;
+  private bool _loading = true;
 
-    protected override async Task OnInitializedAsync()
+  protected override async Task OnInitializedAsync()
+  {
+    await Refresh();
+  }
+
+  public async Task Refresh()
+  {
+    _loading = true;
+
+    await InvokeAsync(StateHasChanged);
+
+    try
     {
-        await Refresh();
+      _houses = await QuerySender.Send(
+          new GetHousesQuery());
     }
-
-     public async Task Refresh()
+    finally
     {
-        _loading = true;
+      _loading = false;
 
-        await InvokeAsync(StateHasChanged);
-
-        try
-        {
-            _houses = await QuerySender.Send(
-                new GetHousesQuery());
-        }
-        finally
-        {
-            _loading = false;
-
-            await InvokeAsync(StateHasChanged);
-        }
+      await InvokeAsync(StateHasChanged);
     }
+  }
 
-    private async Task SelectHouse(
-        HouseListItemDto house)
-    {
-        await OnHouseSelected.InvokeAsync(house);
-    }
+  private Task SelectHouse(HouseListItemDto house)
+  {
+    return OnHouseSelected.InvokeAsync(house);
+  }
 }
