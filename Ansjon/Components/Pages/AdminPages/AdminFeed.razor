@@ -17,15 +17,3 @@
 <MudDivider Class="mb-4" />
 
 <AdminFeed />
-
-@code {
-    private AdminFeedList? _feedList;
-
-    private async Task RefreshFeeds()
-    {
-        if (_feedList is not null)
-        {
-            await _feedList.Refresh();
-        }
-    }
-}
