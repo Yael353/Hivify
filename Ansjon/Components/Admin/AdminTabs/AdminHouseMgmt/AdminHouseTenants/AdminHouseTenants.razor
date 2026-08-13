@@ -1,0 +1,80 @@
+﻿@using Ansjon.UseCases.Houses.DTOs
+@using MudBlazor
+
+<MudStack Spacing="3">
+
+  <MudStack Row="true"
+    AlignItems="AlignItems.Center"
+    Justify="Justify.SpaceBetween">
+
+    <MudText Typo="Typo.h6"
+      Color="Color.Primary"
+      Class="font-weight-bold">
+
+      Boende
+
+    </MudText>
+
+    <MudText Typo="Typo.caption"
+      Color="Color.Tertiary">
+
+      @_tenants.Count boende
+
+    </MudText>
+
+  </MudStack>
+
+  @if (!_tenants.Any())
+  {
+    <MudText Color="Color.Tertiary"
+      Class="text-center pa-4">
+
+      Inga boende registrerade i detta hus ännu.
+
+    </MudText>
+  }
+  else
+  {
+    <MudStack Spacing="2">
+
+      @foreach (var tenant in _tenants)
+      {
+        <MudPaper Class="pa-3"
+          Elevation="0"
+          Style="border-radius: 8px; background: #f8faff;">
+
+          <MudText Typo="Typo.body1">
+            @tenant.FullName
+          </MudText>
+
+          <MudText Typo="Typo.caption"
+            Color="Color.Tertiary">
+
+            @tenant.Email
+
+          </MudText>
+
+        </MudPaper>
+      }
+
+    </MudStack>
+  }
+
+  <AddTenantButton HouseId="HouseId"
+    OnTenantAdded="Refresh" />
+
+</MudStack>
+
+@code {
+
+  [Parameter]
+  public Guid HouseId { get; set; }
+
+  private List<TenantListItemDto> _tenants = [];
+
+  private async Task Refresh()
+  {
+    // We'll replace this with GetHouseTenantsQuery.
+    await Task.CompletedTask;
+  }
+}
