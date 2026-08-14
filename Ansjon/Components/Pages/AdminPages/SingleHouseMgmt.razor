@@ -1,8 +1,10 @@
-﻿@page "/admin/hus/{HouseId:guid}"
+﻿
+@page "/admin/hus/{HouseId:guid}"
 @layout AdminLayout
 @rendermode InteractiveServer
 
 @using Ansjon.Components.Admin.AdminTabs.AdminHouseMgmt
+@using Ansjon.Components.Admin.AdminTabs.AdminHouseMgmt.HouseTenants
 @using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Houses.DTOs
 @using Ansjon.UseCases.Houses.Queries.GetHouse
@@ -11,131 +13,129 @@
 @inject IQuerySender QuerySender
 @inject NavigationManager NavigationManager
 
+
 <PageTitle>Admin – Hus</PageTitle>
 
 @if (_loading)
 {
-    <div class="d-flex justify-center pa-6">
+  <div class="d-flex justify-center pa-6">
 
-        <MudProgressCircular
-            Indeterminate="true"
-            Color="Color.Primary" />
+    <MudProgressCircular Indeterminate="true"
+      Color="Color.Primary" />
 
-    </div>
+  </div>
 }
 else if (_house is null)
 {
-    <MudAlert Severity="Severity.Error">
-        Huset kunde inte hittas.
-    </MudAlert>
+  <MudAlert Severity="Severity.Error">
+
+    Huset kunde inte hittas.
+
+  </MudAlert>
 }
 else
 {
-    <!-- Header -->
+  <MudStack Row="true"
+    AlignItems="AlignItems.Center"
+    Justify="Justify.SpaceBetween"
+    Class="mb-4">
 
-    <MudStack Row="true"
-              AlignItems="AlignItems.Center"
-              Justify="Justify.SpaceBetween"
-              Class="mb-4">
+    <div>
 
-        <div>
+      <MudText Typo="Typo.h5"
+        Color="Color.Primary"
+        Class="font-weight-bold">
 
-            <MudText Typo="Typo.h5"
-                     Color="Color.Primary"
-                     Class="font-weight-bold">
+        @_house.Address @_house.HouseNumber
 
-                @_house.Address @_house.HouseNumber
+      </MudText>
 
-            </MudText>
+      <MudText Typo="Typo.body2"
+        Color="Color.Tertiary">
 
-            <MudText Typo="Typo.body2"
-                     Color="Color.Tertiary">
+        @_house.PostalCode
 
-                @_house.PostalCode
+      </MudText>
 
-            </MudText>
+    </div>
 
-        </div>
+    <MudButton Variant="Variant.Outlined"
+      StartIcon="@Icons.Material.Filled.ArrowBack"
+      OnClick="GoBack">
 
-        <MudButton Variant="Variant.Outlined"
-                   StartIcon="@Icons.Material.Filled.ArrowBack"
-                   OnClick="GoBack">
+      Tillbaka
 
-            Tillbaka
+    </MudButton>
 
-        </MudButton>
-
-    </MudStack>
+  </MudStack>
 
 
-    <MudGrid>
+  <MudGrid>
 
-        <!-- House -->
+    <MudItem xs="12" md="6">
 
-        <MudItem xs="12" md="6">
+      <AdminHouseDetails House="_house"
+        OnHouseUpdated="HandleHouseUpdated" />
 
-            <AdminHouseDetails
-                House="_house"
-                OnHouseUpdated="HandleHouseUpdated" />
-
-        </MudItem>
+    </MudItem>
 
 
-        <!-- Tenants -->
+    <MudItem xs="12" md="6">
 
-        <MudItem xs="12" md="6">
+      <MudPaper Class="pa-4"
+        Elevation="2"
+        Style="border-radius: 12px;">
 
-            <MudPaper Class="pa-4"
-                      Elevation="2"
-                      Style="border-radius: 12px;">
+        <AdminHouseTenants HouseId="HouseId" />
 
-                <AdminHouseTenants
-                    HouseId="HouseId" />
+      </MudPaper>
 
-            </MudPaper>
+    </MudItem>
 
-        </MudItem>
-
-    </MudGrid>
+  </MudGrid>
 }
 
 @code {
 
-    [Parameter]
-    public Guid HouseId { get; set; }
+  [Parameter]
+  public Guid HouseId { get; set; }
 
-    private HouseListItemDto? _house;
+  private HouseListItemDto? _house;
 
-    private bool _loading;
+  private bool _loading;
 
-    protected override async Task OnParametersSetAsync()
+
+  protected override async Task OnParametersSetAsync()
+  {
+    await LoadHouseAsync();
+  }
+
+
+  private async Task LoadHouseAsync()
+  {
+    _loading = true;
+    _house = null;
+
+    try
     {
-        await LoadHouseAsync();
+      _house = await QuerySender.Send(
+          new GetHouseQuery(HouseId));
     }
-
-    private async Task LoadHouseAsync()
+    finally
     {
-        _loading = true;
-        _house = null;
-
-        try
-        {
-            _house = await QuerySender.Send(
-                new GetHouseQuery(HouseId));
-        }
-        finally
-        {
-            _loading = false;
-        }
+      _loading = false;
     }
+  }
 
-    private async Task HandleHouseUpdated()
-    {
-        await LoadHouseAsync();
-    }
 
-    private void GoBack()
-    {
-        NavigationManager.NavigateTo("/admin/hus");
-    }
+  private async Task HandleHouseUpdated()
+  {
+    await LoadHouseAsync();
+  }
+
+
+  private void GoBack()
+  {
+    NavigationManager.NavigateTo("/admin/hus");
+  }
 }

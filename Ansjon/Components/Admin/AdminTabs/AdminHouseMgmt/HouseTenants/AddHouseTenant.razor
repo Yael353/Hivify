@@ -1,0 +1,336 @@
+﻿
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Abstractions.Presistence
+@using Ansjon.UseCases.AdminUserMgmt.DTOs
+@using Ansjon.UseCases.Houses.Commands.AddTenant
+@using MudBlazor
+
+@inject IUserManagementService UserManagementService
+@inject ISender Sender
+@inject ISnackbar Snackbar
+@inject ILogger<AddHouseTenant> Logger
+
+<MudStack Spacing="2">
+
+  <MudText Typo="Typo.h6"
+    Color="Color.Primary">
+
+    Lägg till boende
+
+  </MudText>
+
+  <MudText Typo="Typo.body2"
+    Color="Color.Tertiary">
+
+    Sök efter en registrerad användare och lägg till
+    användaren som boende i detta hus.
+
+  </MudText>
+
+  <MudAutocomplete T="UserListItem"
+    Label="Sök användare"
+    Placeholder="Namn eller e-post..."
+    Variant="Variant.Outlined"
+    Dense="true"
+    Clearable="true"
+    ResetValueOnEmptyText="true"
+    ToStringFunc="GetUserDisplayName"
+    SearchFunc="SearchUsersAsync"
+    Value="_selectedUser"
+    ValueChanged="OnUserSelected"
+    Disabled="_loadingUsers || _saving">
+
+    <ItemTemplate Context="user">
+
+      <MudStack Row="true"
+        AlignItems="AlignItems.Center"
+        Spacing="2">
+
+        <MudAvatar Color="Color.Primary"
+          Size="Size.Small">
+
+          @GetInitials(user)
+
+        </MudAvatar>
+
+        <MudStack Spacing="0">
+
+          <MudText Typo="Typo.body2">
+
+            @(user.UserName ?? "Okänd användare")
+
+          </MudText>
+
+          <MudText Typo="Typo.caption"
+            Color="Color.Secondary">
+
+            @(user.Email ?? "Ingen e-post")
+
+          </MudText>
+
+        </MudStack>
+
+      </MudStack>
+
+    </ItemTemplate>
+
+    <NoItemsTemplate>
+
+      <MudText Class="pa-3"
+        Typo="Typo.body2"
+        Color="Color.Tertiary">
+
+        Inga användare hittades.
+
+      </MudText>
+
+    </NoItemsTemplate>
+
+  </MudAutocomplete>
+
+
+  @if (_loadingUsers)
+  {
+    <MudStack Row="true"
+      AlignItems="AlignItems.Center"
+      Spacing="2">
+
+      <MudProgressCircular Indeterminate="true"
+        Size="Size.Small"
+        Color="Color.Primary" />
+
+      <MudText Typo="Typo.body2"
+        Color="Color.Tertiary">
+
+        Laddar användare...
+
+      </MudText>
+
+    </MudStack>
+  }
+
+
+  @if (_errorMessage is not null)
+  {
+    <MudAlert Severity="Severity.Error"
+      Variant="Variant.Outlined">
+
+      @_errorMessage
+
+    </MudAlert>
+  }
+
+
+  @if (_selectedUser is not null)
+  {
+    <MudPaper Class="pa-3"
+      Elevation="0"
+      Style="border: 1px solid #e9edf2; border-radius: 8px;">
+
+      <MudStack Row="true"
+        AlignItems="AlignItems.Center"
+        Justify="Justify.SpaceBetween">
+
+        <MudStack Spacing="0">
+
+          <MudText Typo="Typo.body1">
+
+            @(_selectedUser.UserName ?? "Okänd användare")
+
+          </MudText>
+
+          <MudText Typo="Typo.caption"
+            Color="Color.Tertiary">
+
+            @(_selectedUser.Email ?? "Ingen e-post")
+
+          </MudText>
+
+        </MudStack>
+
+        <MudButton Variant="Variant.Filled"
+          Color="Color.Primary"
+          StartIcon="@Icons.Material.Filled.PersonAdd"
+          Disabled="_saving"
+          OnClick="AddTenantAsync">
+
+          @(_saving
+              ? "Lägger till..."
+              : "Lägg till")
+
+        </MudButton>
+
+      </MudStack>
+
+    </MudPaper>
+  }
+
+</MudStack>
+
+@code {
+
+  [Parameter, EditorRequired]
+  public Guid HouseId { get; set; }
+
+  [Parameter]
+  public EventCallback OnTenantAdded { get; set; }
+
+  private IReadOnlyList<UserListItem> _users = [];
+
+  private UserListItem? _selectedUser;
+
+  private bool _loadingUsers;
+  private bool _saving;
+
+  private bool _usersLoaded;
+
+  private string? _errorMessage;
+
+
+  private async Task<IEnumerable<UserListItem>> SearchUsersAsync(
+      string? searchText,
+      CancellationToken cancellationToken)
+  {
+    try
+    {
+      await EnsureUsersLoadedAsync(cancellationToken);
+
+      if (string.IsNullOrWhiteSpace(searchText))
+        return _users;
+
+      return _users
+          .Where(user =>
+              Contains(user.UserName, searchText) ||
+              Contains(user.Email, searchText) ||
+              user.Id.ToString().Contains(
+                  searchText,
+                  StringComparison.OrdinalIgnoreCase))
+          .ToList();
+    }
+    catch (OperationCanceledException)
+    {
+      return [];
+    }
+    catch (Exception ex)
+    {
+      Logger.LogError(
+          ex,
+          "Failed to search Identity users");
+
+      _errorMessage =
+          "Kunde inte ladda användare.";
+
+      return [];
+    }
+  }
+
+
+  private async Task EnsureUsersLoadedAsync(
+      CancellationToken cancellationToken)
+  {
+    if (_usersLoaded)
+      return;
+
+    _loadingUsers = true;
+    _errorMessage = null;
+
+    try
+    {
+      _users =
+          await UserManagementService
+              .GetUsersAsync(cancellationToken);
+
+      _usersLoaded = true;
+    }
+    finally
+    {
+      _loadingUsers = false;
+    }
+  }
+
+
+  private static bool Contains(
+      string? value,
+      string searchText)
+  {
+    return value?.Contains(
+        searchText,
+        StringComparison.OrdinalIgnoreCase) == true;
+  }
+
+
+  private void OnUserSelected(
+      UserListItem? user)
+  {
+    _selectedUser = user;
+    _errorMessage = null;
+  }
+
+
+  private async Task AddTenantAsync()
+  {
+    if (_saving || _selectedUser is null)
+      return;
+
+    var userId = _selectedUser.Id;
+
+    _saving = true;
+    _errorMessage = null;
+
+    try
+    {
+      await Sender.Send(
+          new AddHouseTenantCommand(
+              HouseId,
+              userId));
+
+      Snackbar.Add(
+          "Användaren lades till som boende.",
+          Severity.Success);
+
+      _selectedUser = null;
+
+      await OnTenantAdded.InvokeAsync();
+    }
+    catch (Exception ex)
+    {
+      Logger.LogError(
+          ex,
+          "Failed to add user {UserId} to house {HouseId}",
+          userId,
+          HouseId);
+
+      Snackbar.Add(
+          "Kunde inte lägga till användaren som boende.",
+          Severity.Error);
+    }
+    finally
+    {
+      _saving = false;
+    }
+  }
+
+
+  private static string GetUserDisplayName(
+      UserListItem? user)
+  {
+    if (user is null)
+      return string.Empty;
+
+    return user.UserName
+        ?? user.Email
+        ?? user.Id.ToString();
+  }
+
+
+  private static string GetInitials(
+      UserListItem user)
+  {
+    var value = user.UserName ?? user.Email;
+
+    if (string.IsNullOrWhiteSpace(value))
+      return "?";
+
+    return value[..1].ToUpperInvariant();
+  }
+}

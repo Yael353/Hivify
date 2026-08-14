@@ -9,8 +9,7 @@
 
     <MudStack Spacing="3">
 
-        <UserManagementHeader
-            OnRefresh="LoadUsersAsync" />
+        <UserManagementHeader OnRefresh="LoadUsersAsync" />
 
         <UserSearch
             SearchText="_searchText"
@@ -27,16 +26,8 @@
             </MudAlert>
         }
 
-        <UserTable
-            Users="_filteredUsers" />
+        <UserTable Users="_filteredUsers" />
 
-        <MudText Typo="Typo.caption"
-                 Color="Color.Secondary">
-
-            Showing @_filteredUsers.Count
-            of @_users.Count users
-
-        </MudText>
 
     </MudStack>
 

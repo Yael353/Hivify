@@ -1,0 +1,60 @@
+﻿
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Houses.DTOs
+@using Ansjon.UseCases.Houses.Queries.GetHouseTenants
+@using MudBlazor
+@using Ansjon.Components.Admin.AdminTabs.AdminHouseMgmt.HouseTenants
+
+@inject IQuerySender QuerySender
+
+<MudStack Spacing="3">
+
+    <AddHouseTenant
+        HouseId="HouseId"
+        OnTenantAdded="RefreshAsync" />
+
+    <MudDivider />
+
+    <HouseTenantList Tenants="_tenants" Loading="_loading" />
+
+</MudStack>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public Guid HouseId { get; set; }
+
+    private IReadOnlyList<TenantListItemDto> _tenants = [];
+
+    private bool _loading;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (HouseId == Guid.Empty)
+            return;
+
+        await LoadTenantsAsync();
+    }
+
+    private async Task LoadTenantsAsync()
+    {
+        _loading = true;
+
+        try
+        {
+            _tenants =
+                await QuerySender.Send(
+                    new GetHouseTenantsQuery(HouseId));
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task RefreshAsync()
+    {
+        await LoadTenantsAsync();
+    }
+}
+

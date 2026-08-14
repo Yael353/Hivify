@@ -2,7 +2,7 @@
 using Ansjon.UseCases.Abstractions.Presistence;
 using Ansjon.UseCases.AdminUserMgmt.DTOs;
 
-namespace Ansjon.UseCases.AdminUserMgmt.Queries.GetUsers;
+namespace Ansjon.UseCases.AdminUserMgmt.Queries;
 
 public sealed class GetUsersQueryHandler
     : IQueryHandler<

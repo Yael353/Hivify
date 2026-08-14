@@ -1,6 +1,6 @@
 ﻿using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.AdminUserMgmt.DTOs;
-using Ansjon.UseCases.AdminUserMgmt.Queries.GetUsers;
+using Ansjon.UseCases.AdminUserMgmt.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Ansjon.UseCases.AdminUserMgmt;
