@@ -3,7 +3,7 @@ using Ansjon.Core.Aggregates.Houses.Tenants;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
 
-namespace Ansjon.UseCases.Houses.Commands.RemoveTenant;
+namespace Ansjon.UseCases.Houses.Commands.DeleteTenant;
 
 public sealed class RemoveHouseTenantCommandHandler
     : ICommandHandler<RemoveHouseTenantCommand, bool>

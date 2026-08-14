@@ -4,8 +4,5 @@ namespace Ansjon.UseCases.Houses.Commands.AddTenant;
 
 public sealed record AddHouseTenantCommand(
     Guid HouseId,
-    string FirstName,
-    string LastName,
-    string Email,
-    string PhoneNumber
-) : ICommand<Guid>;
+    Guid UserId)
+    : ICommand<Guid>;

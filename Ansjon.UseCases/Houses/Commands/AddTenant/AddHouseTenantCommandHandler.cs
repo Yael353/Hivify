@@ -2,33 +2,46 @@
 using Ansjon.Core.SharedKernel.ValuesObjects;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
-
-namespace Ansjon.UseCases.Houses.Commands.AddTenant;
+using Ansjon.UseCases.Houses.Commands.AddTenant;
 
 public sealed class AddHouseTenantCommandHandler : ICommandHandler<AddHouseTenantCommand, Guid>
 {
     private readonly IHouseRepo _houseRepo;
+    private readonly IUserManagementService _userManagementService;
 
-    public AddHouseTenantCommandHandler(IHouseRepo houseRepo)
+    public AddHouseTenantCommandHandler(
+        IHouseRepo houseRepo,
+        IUserManagementService userManagementService)
     {
         _houseRepo = houseRepo;
+        _userManagementService = userManagementService;
     }
 
-    public async Task<Guid> Handle(AddHouseTenantCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(
+        AddHouseTenantCommand command,
+        CancellationToken cancellationToken)
     {
-        var house = await _houseRepo.GetByIdAsync(new HouseID(command.HouseId), cancellationToken);
+        var house = await _houseRepo.GetByIdAsync(
+            new HouseID(command.HouseId),
+            cancellationToken);
 
         if (house is null)
             throw new InvalidOperationException(
                 "House could not be found.");
 
-        var tenant = house.AddTenant(
-            new Name(command.FirstName),
-            new Name(command.LastName),
-            new Email(command.Email),
-            new PhoneNumber(command.PhoneNumber));
+        var user = await _userManagementService.GetUserByIdAsync(
+            command.UserId,
+            cancellationToken);
 
-        await _houseRepo.SaveChangesAsync(cancellationToken);
+        if (user is null)
+            throw new InvalidOperationException(
+                "User could not be found.");
+
+        var tenant = house.AddTenant(
+            new UserID(user.Id));
+
+        await _houseRepo.SaveChangesAsync(
+            cancellationToken);
 
         return tenant.Id.Value;
     }

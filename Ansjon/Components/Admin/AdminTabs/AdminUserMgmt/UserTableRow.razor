@@ -1,5 +1,5 @@
-﻿@using Ansjon.UseCases.Admin.DTOs
-@using Ansjon.UseCases.Admin.DTOs.UserMngDtos
+﻿@using Ansjon.UseCases.AdminUserMgmt.DTOs
+
 
 @if (User is null)
 {
@@ -79,7 +79,7 @@ else
     <MudTd DataLabel="User ID">
 
         <MudText Typo="Typo.caption">
-            @User.UserId
+            @User.Id
         </MudText>
 
     </MudTd>
@@ -89,7 +89,7 @@ else
         <MudButton Variant="Variant.Outlined"
                    Size="Size.Small"
                    StartIcon="@Icons.Material.Filled.ManageAccounts"
-                   Href="@($"/admin/usermanagement/{User.UserId}")">
+                   Href="@($"/admin/usermanagement/{User.Id}")">
 
             Manage
 

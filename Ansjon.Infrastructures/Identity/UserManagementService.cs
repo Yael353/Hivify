@@ -1,40 +1,56 @@
 ﻿using Ansjon.UseCases.Abstractions.Presistence;
-using Ansjon.UseCases.Admin.DTOs.UserMngDtos;
+using Ansjon.UseCases.AdminUserMgmt.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ansjon.Infrastructures.Identity
+namespace Ansjon.Infrastructures.Identity;
+
+public sealed class UserManagementService
+    : IUserManagementService
 {
-    public sealed class UserManagementService : IUserManagementService
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public UserManagementService(
+        UserManager<ApplicationUser> userManager)
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        _userManager = userManager;
+    }
 
-        public UserManagementService(
-            UserManager<ApplicationUser> userManager)
-        {
-            _userManager = userManager;
-        }
+    public async Task<IReadOnlyList<UserListItem>> GetUsersAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var users = await _userManager.Users
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 
-        public async Task<IReadOnlyList<UserListItem>> GetUsersAsync(
-            CancellationToken cancellationToken = default)
-        {
-            Console.WriteLine("UserManagementService: entered");
+        return users
+            .Select(MapToUserListItem)
+            .ToList();
+    }
 
-            var users = await _userManager.Users
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+    public async Task<UserListItem?> GetUserByIdAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                user => user.Id == userId,
+                cancellationToken);
 
-            Console.WriteLine(
-                $"UserManagementService: found {users.Count} users");
+        return user is null
+            ? null
+            : MapToUserListItem(user);
+    }
 
-            return users
-                .Select(user => new UserListItem(
-                    user.Id,
-                    user.UserName,
-                    user.Email,
-                    user.EmailConfirmed))
-                .ToList();
-        }
-
+    private static UserListItem MapToUserListItem(
+        ApplicationUser user)
+    {
+        return new UserListItem(
+            user.Id,
+            user.UserName,
+            user.Email,
+            user.PhoneNumber,
+            user.EmailConfirmed);
     }
 }

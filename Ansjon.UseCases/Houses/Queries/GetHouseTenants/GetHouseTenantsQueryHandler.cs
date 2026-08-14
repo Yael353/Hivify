@@ -34,10 +34,7 @@ public sealed class GetHouseTenantsQueryHandler
             .Where(t => t.DeletedAt == null)
             .Select(t => new TenantListItemDto(
                 t.Id.Value,
-                t.FirstName.Value,
-                t.LastName.Value,
-                t.Email.Value,
-                t.PhoneNumber.Value,
+                t.UserId.Value,
                 t.CreatedAt))
             .ToList();
     }

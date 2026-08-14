@@ -1,6 +1,6 @@
 ﻿
 @using Ansjon.UseCases.Abstractions.Presistence
-@using Ansjon.UseCases.Admin.DTOs.UserMngDtos
+@using Ansjon.UseCases.AdminUserMgmt.DTOs
 
 
 @inject IUserManagementService UserManagementService
@@ -100,7 +100,7 @@
                 _searchText,
                 StringComparison.OrdinalIgnoreCase) ?? false)
             ||
-            user.UserId
+            user.Id
                 .ToString()
                 .Contains(
                     _searchText,

@@ -180,52 +180,31 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
 
 
-        // 3. Value Objects – OwnsOne
-        modelBuilder.Entity<Tenant>()
-            .OwnsOne(t => t.FirstName, firstName =>
-            {
-                firstName.Property(f => f.Value)
-                    .HasColumnName("FirstName")
-                    .HasMaxLength(100)
-                    .IsRequired();
-            });
+        // Tenant
+        modelBuilder.Entity<Tenant>(tenant =>
+        {
+            tenant.HasKey(t => t.Id);
 
-        modelBuilder.Entity<Tenant>()
-            .OwnsOne(t => t.LastName, lastName =>
-            {
-                lastName.Property(l => l.Value)
-                    .HasColumnName("LastName")
-                    .HasMaxLength(100)
-                    .IsRequired();
-            });
+            tenant.Property(t => t.Id)
+                .HasConversion(
+                    id => id.Value,
+                    value => new TenantID(value))
+                .HasColumnName("TenantId");
 
-        modelBuilder.Entity<Tenant>()
-            .OwnsOne(t => t.Email, email =>
-            {
-                email.Property(e => e.Value)
-                    .HasColumnName("Email")
-                    .HasMaxLength(200)
-                    .IsRequired();
-            });
+            tenant.Property(t => t.UserId)
+                .HasConversion(
+                    id => id.Value,
+                    value => new UserID(value))
+                .HasColumnName("UserId")
+                .IsRequired();
 
-        modelBuilder.Entity<Tenant>()
-            .OwnsOne(t => t.PhoneNumber, phoneNumber =>
-            {
-                phoneNumber.Property(p => p.Value)
-                    .HasColumnName("PhoneNumber")
-                    .HasMaxLength(20)
-                    .IsRequired();
-            });
+            tenant.Property(t => t.CreatedAt)
+                .HasColumnName("CreatedAt")
+                .IsRequired();
 
-        // 4. Vanliga properties
-        modelBuilder.Entity<Tenant>()
-            .Property(t => t.CreatedAt)
-            .HasColumnName("CreatedAt")
-            .IsRequired();
-
-        modelBuilder.Entity<Tenant>()
-            .Property(t => t.DeletedAt)
-            .HasColumnName("DeletedAt");
+            tenant.Property(t => t.DeletedAt)
+                .HasColumnName("DeletedAt");
+        });
 
 
     }

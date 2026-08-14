@@ -1,7 +1,7 @@
 ﻿using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Houses.Commands.AddTenant;
 using Ansjon.UseCases.Houses.Commands.CreateHouse;
-using Ansjon.UseCases.Houses.Commands.RemoveTenant;
+using Ansjon.UseCases.Houses.Commands.DeleteTenant;
 using Ansjon.UseCases.Houses.Commands.UpdateHouse;
 using Ansjon.UseCases.Houses.DTOs;
 using Ansjon.UseCases.Houses.Queries.GetHouse;

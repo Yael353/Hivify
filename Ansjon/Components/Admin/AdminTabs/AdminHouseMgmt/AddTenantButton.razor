@@ -1,8 +1,11 @@
 ﻿@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.AdminUserMgmt.DTOs
 @using Ansjon.UseCases.Houses.Commands.AddTenant
+@using Ansjon.UseCases.AdminUserMgmt.Queries.GetUsers
 @using MudBlazor
 
 @inject ISender Sender
+@inject IQuerySender QuerySender
 @inject ISnackbar Snackbar
 @inject ILogger<AddTenantButton> Logger
 
@@ -30,36 +33,53 @@
         Color="Color.Primary"
         Class="mb-4">
 
-        Ny boende
+        Lägg till boende
 
       </MudText>
 
       <MudStack Spacing="3">
 
-        <MudTextField Label="Förnamn"
-          @bind-Value="_firstName"
+        <MudAutocomplete T="UserListItem"
+          Label="Sök användare"
           Variant="Variant.Outlined"
-          Required="true"
-          RequiredError="Förnamn är obligatoriskt" />
+          Value="_selectedUser"
+          ValueChanged="OnUserSelected"
+          SearchFunc="SearchUsers"
+          ToStringFunc="GetUserDisplayName"
+          Clearable="true"
+          CoerceText="true"
+          ResetValueOnEmptyText="true" />
 
-        <MudTextField Label="Efternamn"
-          @bind-Value="_lastName"
-          Variant="Variant.Outlined"
-          Required="true"
-          RequiredError="Efternamn är obligatoriskt" />
+        @if (_selectedUser is not null)
+        {
+          <MudPaper Class="pa-3"
+            Elevation="0"
+            Style="background: #f8faff; border-radius: 8px;">
 
-        <MudTextField Label="E-post"
-          @bind-Value="_email"
-          Variant="Variant.Outlined"
-          InputType="InputType.Email"
-          Required="true"
-          RequiredError="E-post är obligatoriskt" />
+            <MudText Typo="Typo.body1">
+              @_selectedUser.UserName
+            </MudText>
 
-        <MudTextField Label="Telefonnummer"
-          @bind-Value="_phoneNumber"
-          Variant="Variant.Outlined"
-          Required="true"
-          RequiredError="Telefonnummer är obligatoriskt" />
+            <MudText Typo="Typo.caption"
+              Color="Color.Tertiary">
+
+              @_selectedUser.Email
+
+            </MudText>
+
+            @if (!string.IsNullOrWhiteSpace(
+                _selectedUser.PhoneNumber))
+            {
+              <MudText Typo="Typo.caption"
+                Color="Color.Tertiary">
+
+                @_selectedUser.PhoneNumber
+
+              </MudText>
+            }
+
+          </MudPaper>
+        }
 
         <MudStack Row="true"
           Spacing="2"
@@ -75,11 +95,11 @@
 
           <MudButton Variant="Variant.Filled"
             Color="Color.Success"
-            Disabled="_saving"
+            Disabled="_saving || _selectedUser is null"
             StartIcon="@Icons.Material.Filled.Save"
             OnClick="SaveTenantAsync">
 
-            @(_saving ? "Sparar..." : "Spara")
+            @(_saving ? "Sparar..." : "Lägg till")
 
           </MudButton>
 
@@ -103,10 +123,9 @@
   private bool _isAdding;
   private bool _saving;
 
-  private string _firstName = string.Empty;
-  private string _lastName = string.Empty;
-  private string _email = string.Empty;
-  private string _phoneNumber = string.Empty;
+  private UserListItem? _selectedUser;
+
+  private IReadOnlyList<UserListItem> _users = [];
 
   private void OpenForm()
   {
@@ -115,8 +134,52 @@
 
   private void Cancel()
   {
-    ResetForm();
+    _selectedUser = null;
     _isAdding = false;
+  }
+
+  private async Task<IEnumerable<UserListItem>> SearchUsers(
+      string value,
+      CancellationToken cancellationToken)
+  {
+    if (_users.Count == 0)
+    {
+      _users = await QuerySender.Send(
+          new GetUsersQuery(),
+          cancellationToken);
+    }
+
+    if (string.IsNullOrWhiteSpace(value))
+      return _users;
+
+    return _users.Where(user =>
+        (user.UserName?.Contains(
+            value,
+            StringComparison.OrdinalIgnoreCase) ?? false)
+        ||
+        (user.Email?.Contains(
+            value,
+            StringComparison.OrdinalIgnoreCase) ?? false));
+  }
+
+  private void OnUserSelected(UserListItem? user)
+  {
+    _selectedUser = user;
+  }
+
+  private static string GetUserDisplayName(
+      UserListItem? user)
+  {
+    if (user is null)
+      return string.Empty;
+
+    if (!string.IsNullOrWhiteSpace(user.UserName))
+      return user.UserName;
+
+    if (!string.IsNullOrWhiteSpace(user.Email))
+      return user.Email;
+
+    return user.Id.ToString();
   }
 
   private async Task SaveTenantAsync()
@@ -124,13 +187,10 @@
     if (_saving)
       return;
 
-    if (string.IsNullOrWhiteSpace(_firstName) ||
-        string.IsNullOrWhiteSpace(_lastName) ||
-        string.IsNullOrWhiteSpace(_email) ||
-        string.IsNullOrWhiteSpace(_phoneNumber))
+    if (_selectedUser is null)
     {
       Snackbar.Add(
-          "Fyll i alla fält.",
+          "Välj en användare.",
           Severity.Warning);
 
       return;
@@ -142,18 +202,15 @@
 
       var command = new AddHouseTenantCommand(
           HouseId,
-          _firstName.Trim(),
-          _lastName.Trim(),
-          _email.Trim(),
-          _phoneNumber.Trim());
+          _selectedUser.Id);
 
       await Sender.Send(command);
 
       Snackbar.Add(
-          "Boende skapades!",
+          "Användaren lades till som boende.",
           Severity.Success);
 
-      ResetForm();
+      _selectedUser = null;
       _isAdding = false;
 
       await OnTenantAdded.InvokeAsync();
@@ -162,24 +219,17 @@
     {
       Logger.LogError(
           ex,
-          "Error creating tenant for house {HouseId}",
+          "Error adding user {UserId} as tenant to house {HouseId}",
+          _selectedUser.Id,
           HouseId);
 
       Snackbar.Add(
-          "Kunde inte skapa boende.",
+          "Kunde inte lägga till boende.",
           Severity.Error);
     }
     finally
     {
       _saving = false;
     }
-  }
-
-  private void ResetForm()
-  {
-    _firstName = string.Empty;
-    _lastName = string.Empty;
-    _email = string.Empty;
-    _phoneNumber = string.Empty;
   }
 }

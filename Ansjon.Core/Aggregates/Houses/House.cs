@@ -80,20 +80,20 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
                 "The house has been deleted.");
     }
 
-    public Tenant AddTenant(
-       Name firstName,
-       Name lastName,
-       Email email,
-       PhoneNumber phoneNumber)
+    public Tenant AddTenant(UserID userId)
     {
         EnsureNotDeleted();
 
+        if (_tenants.Any(t =>
+            t.UserId == userId &&
+            t.DeletedAt == null))
+        {
+            throw new DomainException("Användaren är redan boende i detta hus.");
+        }
+
         var tenant = Tenant.Create(
             new TenantID(Guid.NewGuid()),
-            firstName,
-            lastName,
-            email,
-            phoneNumber);
+            userId);
 
         _tenants.Add(tenant);
 

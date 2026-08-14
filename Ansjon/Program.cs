@@ -12,6 +12,7 @@ using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Abstractions.Context;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
+using Ansjon.UseCases.AdminUserMgmt;
 using Ansjon.UseCases.Association.Commands;
 using Ansjon.UseCases.Association.Handlers;
 using Ansjon.UseCases.Common.Messaging;
@@ -105,6 +106,7 @@ builder.Services.AddScoped<IHouseRepo, HouseRepo>();
 
 builder.Services.AddFeedServices();
 builder.Services.AddHouseServices();
+builder.Services.AddAdminServices();
 builder.Services.AddComplaintServices();
 
 builder.Services.AddScoped<IValidator<CreateComplaintDto>,

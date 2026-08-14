@@ -1,15 +1,13 @@
 ﻿@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Houses.Commands.DeleteTenant
 @using Ansjon.UseCases.Houses.DTOs
 @using Ansjon.UseCases.Houses.Queries.GetHouseTenants
 @using MudBlazor
-@using Ansjon.UseCases.Houses.Commands.RemoveTenant
 
 @inject IQuerySender QuerySender
 @inject ISender Sender
 @inject ISnackbar Snackbar
 @inject ILogger<AdminHouseTenants> Logger
-
-@inject IQuerySender QuerySender
 
 <MudStack Spacing="3">
 
@@ -63,26 +61,37 @@
             Justify="Justify.SpaceBetween">
 
             <div>
+
               <MudText Typo="Typo.body1">
-                @tenant.FullName
+                User ID: @tenant.UserId
               </MudText>
 
               <MudText Typo="Typo.caption"
                 Color="Color.Tertiary">
-                @tenant.Email
+
+                Tenant ID: @tenant.TenantId
+
               </MudText>
+
+              <MudText Typo="Typo.caption"
+                Color="Color.Tertiary">
+
+                Registrerad:
+                @tenant.CreatedAt.ToString("yyyy-MM-dd HH:mm")
+
+              </MudText>
+
             </div>
 
             <MudIconButton Icon="@Icons.Material.Filled.Delete"
               Color="Color.Error"
               Size="Size.Small"
-              Disabled="_deletingTenantId == tenant.Id"
-              OnClick="@(() => DeleteTenantAsync(tenant.Id))" />
+              Disabled="_deletingTenantId == tenant.TenantId"
+              OnClick="@(() => DeleteTenantAsync(tenant.TenantId))" />
 
           </MudStack>
 
         </MudPaper>
-      
       }
 
     </MudStack>
@@ -123,11 +132,23 @@
 
       _tenants = tenants.ToList();
     }
+    catch (Exception ex)
+    {
+      Logger.LogError(
+          ex,
+          "Error loading tenants for house {HouseId}",
+          HouseId);
+
+      Snackbar.Add(
+          "Kunde inte hämta boende.",
+          Severity.Error);
+    }
     finally
     {
       _loading = false;
     }
   }
+
   private async Task DeleteTenantAsync(Guid tenantId)
   {
     if (_deletingTenantId.HasValue)
