@@ -5,22 +5,16 @@ using Ansjon.UseCases.Houses.DTOs;
 
 namespace Ansjon.UseCases.Houses.Queries.GetHouseTenants;
 
-public sealed class GetHouseTenantsQueryHandler
-    : IQueryHandler<
-        GetHouseTenantsQuery,
-        IReadOnlyList<TenantListItemDto>>
+public sealed class GetHouseTenantsQueryHandler : IQueryHandler<GetHouseTenantsQuery, IReadOnlyList<TenantListItemDto>>
 {
     private readonly IHouseRepo _houseRepo;
 
-    public GetHouseTenantsQueryHandler(
-        IHouseRepo houseRepo)
+    public GetHouseTenantsQueryHandler(IHouseRepo houseRepo)
     {
         _houseRepo = houseRepo;
     }
 
-    public async Task<IReadOnlyList<TenantListItemDto>> Handle(
-        GetHouseTenantsQuery query,
-        CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<TenantListItemDto>> Handle(GetHouseTenantsQuery query, CancellationToken cancellationToken)
     {
         var house = await _houseRepo.GetByIdAsync(
             new HouseID(query.HouseId),
@@ -35,6 +29,7 @@ public sealed class GetHouseTenantsQueryHandler
             .Select(t => new TenantListItemDto(
                 t.Id.Value,
                 t.UserId.Value,
+                t.Email.Value,
                 t.CreatedAt))
             .ToList();
     }

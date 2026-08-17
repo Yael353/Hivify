@@ -17,8 +17,7 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
 
     private readonly List<Tenant> _tenants = [];
 
-    public IReadOnlyCollection<Tenant> Tenants
-    => _tenants.AsReadOnly();
+    public IReadOnlyCollection<Tenant> Tenants => _tenants.AsReadOnly();
 
 
     private House()
@@ -26,12 +25,7 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
     }
 
 
-    private House(
-        HouseID id,
-        Address address,
-        HouseNumber houseNumber,
-        PostalCode postalCode)
-        : base(id)
+    private House(HouseID id, Address address, HouseNumber houseNumber, PostalCode postalCode) : base(id)
     {
         Address = address;
         HouseNumber = houseNumber;
@@ -40,10 +34,7 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
     }
 
 
-    public static House Create(
-        Address address,
-        HouseNumber houseNumber,
-        PostalCode postalCode)
+    public static House Create(Address address, HouseNumber houseNumber, PostalCode postalCode)
     {
         return new House(
             new HouseID(Guid.NewGuid()),
@@ -53,10 +44,7 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
     }
 
 
-    public void Update(
-        Address address,
-        HouseNumber houseNumber,
-        PostalCode postalCode)
+    public void Update(Address address, HouseNumber houseNumber, PostalCode postalCode)
     {
         EnsureNotDeleted();
 
@@ -80,7 +68,7 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
                 "The house has been deleted.");
     }
 
-    public Tenant AddTenant(UserID userId)
+    public Tenant AddTenant(UserID userId, Email email)
     {
         EnsureNotDeleted();
 
@@ -91,9 +79,7 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
             throw new DomainException("Användaren är redan boende i detta hus.");
         }
 
-        var tenant = Tenant.Create(
-            new TenantID(Guid.NewGuid()),
-            userId);
+        var tenant = Tenant.Create(new TenantID(Guid.NewGuid()), userId, email);
 
         _tenants.Add(tenant);
 

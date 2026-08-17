@@ -136,6 +136,7 @@
 
   [Parameter, EditorRequired]
   public Guid HouseId { get; set; }
+  public string Email { get; set; } = string.Empty;
 
   [Parameter]
   public EventCallback OnTenantAdded { get; set; }
@@ -204,6 +205,7 @@
       return;
 
     var userId = _selectedUser.Id;
+    var email = _selectedUser.Email ?? string.Empty;
 
     _saving = true;
     _errorMessage = null;
@@ -213,7 +215,8 @@
       await Sender.Send(
           new AddHouseTenantCommand(
               HouseId,
-              userId));
+              userId,
+              email));
 
       _selectedUser = null;
 
