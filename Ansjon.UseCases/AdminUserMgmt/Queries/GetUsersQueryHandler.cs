@@ -4,15 +4,12 @@ using Ansjon.UseCases.AdminUserMgmt.DTOs;
 
 namespace Ansjon.UseCases.AdminUserMgmt.Queries;
 
-public sealed class GetUsersQueryHandler
-    : IQueryHandler<
-        GetUsersQuery,
-        IReadOnlyList<UserListItem>>
+public sealed class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, IReadOnlyList<UserListItem>>
 {
-    private readonly IUserManagementService _userManagementService;
+    private readonly IUserRepo _userManagementService;
 
     public GetUsersQueryHandler(
-        IUserManagementService userManagementService)
+        IUserRepo userManagementService)
     {
         _userManagementService = userManagementService;
     }

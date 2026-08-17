@@ -2,7 +2,7 @@
 
 namespace Ansjon.UseCases.Abstractions.Presistence
 {
-    public interface IUserManagementService
+    public interface IUserRepo
     {
         Task<IReadOnlyList<UserListItem>> GetUsersAsync(CancellationToken cancellationToken = default);
         Task<UserListItem?> GetUserByIdAsync(Guid userId, CancellationToken cancellationToken = default);

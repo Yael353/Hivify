@@ -58,3 +58,25 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.admin-sidebar-paper {
+    min-height: 100vh;
+    border-right: 1px solid #e9edf2;
+    border-radius: 0;
+}
+
+.admin-content {
+    flex: 1;
+    min-width: 0;
+    padding: 24px;
+}

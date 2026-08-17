@@ -8,6 +8,7 @@ using Ansjon.Infrastructures.Repositories.AssociationRepo;
 using Ansjon.Infrastructures.Repositories.ComplaintRepos;
 using Ansjon.Infrastructures.Repositories.FeedRepo;
 using Ansjon.Infrastructures.Repositories.HouseRepo;
+using Ansjon.Infrastructures.Repositories.UsersRepo;
 using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Abstractions.Context;
 using Ansjon.UseCases.Abstractions.Messaging;
@@ -65,28 +66,45 @@ var connectionString =
     ?? throw new InvalidOperationException(
         "Connection string 'DefaultConnection' not found.");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+});
+
+// Scoped context for Identity and other code that explicitly
+// requires ApplicationDbContext.
+builder.Services.AddScoped<ApplicationDbContext>(sp =>
+{
+    var factory =
+        sp.GetRequiredService<
+            IDbContextFactory<ApplicationDbContext>>();
+
+    return factory.CreateDbContext();
+});
 
 #endregion
 
 #region Identity
 
-builder.Services.AddIdentityCore<ApplicationUser>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = true;
-    options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
-})
-.AddRoles<IdentityRole<Guid>>()
-.AddEntityFrameworkStores<ApplicationDbContext>()
-.AddSignInManager()
-.AddDefaultTokenProviders();
-builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+builder.Services
+    .AddIdentityCore<ApplicationUser>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+        options.Stores.SchemaVersion =
+            IdentitySchemaVersions.Version3;
+    })
+    .AddRoles<IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddSignInManager()
+    .AddDefaultTokenProviders();
 
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>,
+builder.Services.AddScoped<
+    IUserRepo,
+    UsersRepo>();
+
+builder.Services.AddSingleton<
+    IEmailSender<ApplicationUser>,
     IdentityNoOpEmailSender>();
-
-
 
 #endregion
 
@@ -98,6 +116,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUserProvider>();
 builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
 builder.Services.AddScoped<IHouseRepo, HouseRepo>();
+builder.Services.AddScoped<IUserRepo, UsersRepo>();
 
 
 #endregion

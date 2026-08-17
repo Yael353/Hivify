@@ -1,99 +1,64 @@
-﻿
-@page "/admin/hus/{HouseId:guid}"
+﻿@page "/admin/hus/{HouseId:guid}"
+
 @layout AdminLayout
 @rendermode InteractiveServer
 
-@using Ansjon.Components.Admin.AdminTabs.AdminHouseMgmt
 @using Ansjon.Components.Admin.AdminTabs.AdminHouseMgmt.HouseTenants
 @using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Houses.DTOs
 @using Ansjon.UseCases.Houses.Queries.GetHouse
-@using MudBlazor
 
 @inject IQuerySender QuerySender
 @inject NavigationManager NavigationManager
 
+<div class="container py-4">
 
-<PageTitle>Admin – Hus</PageTitle>
-
-@if (_loading)
-{
-  <div class="d-flex justify-center pa-6">
-
-    <MudProgressCircular Indeterminate="true"
-      Color="Color.Primary" />
-
-  </div>
-}
-else if (_house is null)
-{
-  <MudAlert Severity="Severity.Error">
-
-    Huset kunde inte hittas.
-
-  </MudAlert>
-}
-else
-{
-  <MudStack Row="true"
-    AlignItems="AlignItems.Center"
-    Justify="Justify.SpaceBetween"
-    Class="mb-4">
-
+  @if (_loading)
+  {
     <div>
+      <p>Laddar hus...</p>
+    </div>
+  }
+  else if (_house is null)
+  {
+    <div>
+      <h2>Huset kunde inte hittas</h2>
 
-      <MudText Typo="Typo.h5"
-        Color="Color.Primary"
-        Class="font-weight-bold">
+      <button type="button"
+        class="btn btn-outline-secondary mt-3"
+        @onclick="GoBack">
+        Tillbaka
+      </button>
+    </div>
+  }
+  else
+  {
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-        @_house.Address @_house.HouseNumber
+      <div>
+        <h1 class="h4 mb-1">
+          @_house.Address
+        </h1>
 
-      </MudText>
+        <p class="text-muted mb-0">
+          Hus
+        </p>
+      </div>
 
-      <MudText Typo="Typo.body2"
-        Color="Color.Tertiary">
-
-        @_house.PostalCode
-
-      </MudText>
+      <button type="button"
+        class="btn btn-outline-secondary"
+        @onclick="GoBack">
+        Tillbaka
+      </button>
 
     </div>
 
-    <MudButton Variant="Variant.Outlined"
-      StartIcon="@Icons.Material.Filled.ArrowBack"
-      OnClick="GoBack">
+    <hr class="mb-4" />
 
-      Tillbaka
+    <HouseTenants HouseId="HouseId" />
+  }
 
-    </MudButton>
-
-  </MudStack>
-
-
-  <MudGrid>
-
-    <MudItem xs="12" md="6">
-
-      <AdminHouseDetails House="_house"
-        OnHouseUpdated="HandleHouseUpdated" />
-
-    </MudItem>
-
-
-    <MudItem xs="12" md="6">
-
-      <MudPaper Class="pa-4"
-        Elevation="2"
-        Style="border-radius: 12px;">
-
-        <AdminHouseTenants HouseId="HouseId" />
-
-      </MudPaper>
-
-    </MudItem>
-
-  </MudGrid>
-}
+</div>
 
 @code {
 
@@ -101,15 +66,21 @@ else
   public Guid HouseId { get; set; }
 
   private HouseListItemDto? _house;
-
   private bool _loading;
-
+  private Guid _loadedHouseId;
 
   protected override async Task OnParametersSetAsync()
   {
+    if (HouseId == Guid.Empty)
+      return;
+
+    if (_loadedHouseId == HouseId)
+      return;
+
+    _loadedHouseId = HouseId;
+
     await LoadHouseAsync();
   }
-
 
   private async Task LoadHouseAsync()
   {
@@ -126,13 +97,6 @@ else
       _loading = false;
     }
   }
-
-
-  private async Task HandleHouseUpdated()
-  {
-    await LoadHouseAsync();
-  }
-
 
   private void GoBack()
   {

@@ -12,20 +12,15 @@ public sealed class QuerySender : IQuerySender
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<TResponse> Send<TResponse>(
-        IQuery<TResponse> query,
-        CancellationToken cancellationToken = default)
+    public async Task<TResponse> Send<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
     {
         var queryType = query.GetType();
 
-        var handlerType =
-            typeof(IQueryHandler<,>)
-                .MakeGenericType(
+        var handlerType = typeof(IQueryHandler<,>).MakeGenericType(
                     queryType,
                     typeof(TResponse));
 
-        dynamic handler =
-            _serviceProvider.GetRequiredService(handlerType);
+        dynamic handler = _serviceProvider.GetRequiredService(handlerType);
 
         return await handler.Handle(
             (dynamic)query,

@@ -1,0 +1,78 @@
+﻿@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Houses.DTOs
+@using Ansjon.UseCases.Houses.Queries.GetHouseTenants
+@using MudBlazor
+
+@inject IQuerySender QuerySender
+
+<AddHouseTenant HouseId="HouseId" OnTenantAdded="RefreshAsync" />
+
+<MudDivider Class="my-4" />
+
+@if (_loading)
+{
+  <MudProgressCircular Indeterminate="true"
+    Size="Size.Small" />
+}
+else if (_errorMessage is not null)
+{
+  <MudAlert Severity="Severity.Error">
+    @_errorMessage
+  </MudAlert>
+}
+else
+{
+  <HouseTenantList Tenants="_tenants" />
+}
+
+@code {
+  [Parameter, EditorRequired]
+  public Guid HouseId { get; set; }
+
+  private IReadOnlyList<TenantListItemDto> _tenants = [];
+
+  private bool _loading;
+  private string? _errorMessage;
+
+  private Guid _loadedHouseId;
+
+  protected override async Task OnParametersSetAsync()
+  {
+    if (HouseId == Guid.Empty)
+      return;
+
+    // Don't reload simply because the parent rerendered.
+    if (_loadedHouseId == HouseId)
+      return;
+
+    _loadedHouseId = HouseId;
+
+    await LoadTenantsAsync();
+  }
+
+  private async Task LoadTenantsAsync()
+  {
+    _loading = true;
+    _errorMessage = null;
+
+    try
+    {
+      _tenants = await QuerySender.Send(new GetHouseTenantsQuery(HouseId));
+    }
+    catch (Exception ex)
+    {
+      _errorMessage = "Kunde inte ladda boende.";
+
+      Console.Error.WriteLine(ex);
+    }
+    finally
+    {
+      _loading = false;
+    }
+  }
+
+  private async Task RefreshAsync()
+  {
+    await LoadTenantsAsync();
+  }
+}

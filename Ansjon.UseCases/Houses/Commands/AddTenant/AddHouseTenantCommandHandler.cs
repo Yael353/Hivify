@@ -8,11 +8,11 @@ public sealed class AddHouseTenantCommandHandler
     : ICommandHandler<AddHouseTenantCommand, Guid>
 {
     private readonly IHouseRepo _houseRepo;
-    private readonly IUserManagementService _userManagementService;
+    private readonly IUserRepo _userManagementService;
 
     public AddHouseTenantCommandHandler(
         IHouseRepo houseRepo,
-        IUserManagementService userManagementService)
+        IUserRepo userManagementService)
     {
         _houseRepo = houseRepo;
         _userManagementService = userManagementService;

@@ -7,7 +7,7 @@
 @using Ansjon.UseCases.AdminUserMgmt.DTOs
 @using MudBlazor
 
-@inject IUserManagementService UserManagementService
+@inject IUserRepo UserManagementService
 @inject NavigationManager NavigationManager
 
 <PageTitle>Admin – Användare</PageTitle>
@@ -221,8 +221,7 @@
     try
     {
       _user =
-          await UserManagementService
-              .GetUserByIdAsync(UserId);
+          await UserManagementService.GetUserByIdAsync(UserId);
     }
     finally
     {

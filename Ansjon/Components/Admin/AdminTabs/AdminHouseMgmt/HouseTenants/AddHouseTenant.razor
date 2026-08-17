@@ -1,171 +1,136 @@
-﻿
-@using Ansjon.UseCases.Abstractions.Messaging
-@using Ansjon.UseCases.Abstractions.Presistence
+﻿@using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.AdminUserMgmt.DTOs
+@using Ansjon.UseCases.AdminUserMgmt.Queries
 @using Ansjon.UseCases.Houses.Commands.AddTenant
-@using MudBlazor
 
-@inject IUserManagementService UserManagementService
+@inject IQuerySender QuerySender
 @inject ISender Sender
-@inject ISnackbar Snackbar
 @inject ILogger<AddHouseTenant> Logger
 
-<MudStack Spacing="2">
+<div class="mb-4">
 
-  <MudText Typo="Typo.h6"
-    Color="Color.Primary">
-
+  <h2 class="h5 mb-2">
     Lägg till boende
+  </h2>
 
-  </MudText>
-
-  <MudText Typo="Typo.body2"
-    Color="Color.Tertiary">
-
-    Sök efter en registrerad användare och lägg till
+  <p class="text-muted">
+    Välj en registrerad användare och lägg till
     användaren som boende i detta hus.
-
-  </MudText>
-
-  <MudAutocomplete T="UserListItem"
-    Label="Sök användare"
-    Placeholder="Namn eller e-post..."
-    Variant="Variant.Outlined"
-    Dense="true"
-    Clearable="true"
-    ResetValueOnEmptyText="true"
-    ToStringFunc="GetUserDisplayName"
-    SearchFunc="SearchUsersAsync"
-    Value="_selectedUser"
-    ValueChanged="OnUserSelected"
-    Disabled="_loadingUsers || _saving">
-
-    <ItemTemplate Context="user">
-
-      <MudStack Row="true"
-        AlignItems="AlignItems.Center"
-        Spacing="2">
-
-        <MudAvatar Color="Color.Primary"
-          Size="Size.Small">
-
-          @GetInitials(user)
-
-        </MudAvatar>
-
-        <MudStack Spacing="0">
-
-          <MudText Typo="Typo.body2">
-
-            @(user.UserName ?? "Okänd användare")
-
-          </MudText>
-
-          <MudText Typo="Typo.caption"
-            Color="Color.Secondary">
-
-            @(user.Email ?? "Ingen e-post")
-
-          </MudText>
-
-        </MudStack>
-
-      </MudStack>
-
-    </ItemTemplate>
-
-    <NoItemsTemplate>
-
-      <MudText Class="pa-3"
-        Typo="Typo.body2"
-        Color="Color.Tertiary">
-
-        Inga användare hittades.
-
-      </MudText>
-
-    </NoItemsTemplate>
-
-  </MudAutocomplete>
-
+  </p>
 
   @if (_loadingUsers)
   {
-    <MudStack Row="true"
-      AlignItems="AlignItems.Center"
-      Spacing="2">
+    <div class="d-flex align-items-center gap-2">
+      <div class="spinner-border spinner-border-sm"
+        role="status"
+        aria-hidden="true">
+      </div>
 
-      <MudProgressCircular Indeterminate="true"
-        Size="Size.Small"
-        Color="Color.Primary" />
-
-      <MudText Typo="Typo.body2"
-        Color="Color.Tertiary">
-
+      <span>
         Laddar användare...
-
-      </MudText>
-
-    </MudStack>
+      </span>
+    </div>
   }
-
-
-  @if (_errorMessage is not null)
+  else if (_errorMessage is not null)
   {
-    <MudAlert Severity="Severity.Error"
-      Variant="Variant.Outlined">
-
+    <div class="alert alert-danger">
       @_errorMessage
-
-    </MudAlert>
+    </div>
   }
-
-
-  @if (_selectedUser is not null)
+  else
   {
-    <MudPaper Class="pa-3"
-      Elevation="0"
-      Style="border: 1px solid #e9edf2; border-radius: 8px;">
+    <div class="mb-3">
 
-      <MudStack Row="true"
-        AlignItems="AlignItems.Center"
-        Justify="Justify.SpaceBetween">
+      <label for="tenantUser"
+        class="form-label">
+        Användare
+      </label>
 
-        <MudStack Spacing="0">
+      <select id="tenantUser"
+        class="form-select"
+        value="@SelectedUserIdString"
+        @onchange="OnUserChanged">
 
-          <MudText Typo="Typo.body1">
+        <option value="">
+          -- Välj användare --
+        </option>
 
-            @(_selectedUser.UserName ?? "Okänd användare")
+        @foreach (var user in _users)
+        {
+          <option value="@user.Id">
+            @GetUserDisplayName(user)
+            @if (!string.IsNullOrWhiteSpace(user.Email))
+            {
+              @($" ({user.Email})")
+            }
+          </option>
+        }
 
-          </MudText>
+      </select>
 
-          <MudText Typo="Typo.caption"
-            Color="Color.Tertiary">
+    </div>
 
-            @(_selectedUser.Email ?? "Ingen e-post")
+    @if (_selectedUser is not null)
+    {
+      <div class="border rounded p-3 mb-3">
 
-          </MudText>
+        <div class="d-flex align-items-center gap-3">
 
-        </MudStack>
+          <div class="rounded-circle bg-primary text-white
+            d-flex align-items-center justify-content-center"
+            style="width: 40px; height: 40px;">
 
-        <MudButton Variant="Variant.Filled"
-          Color="Color.Primary"
-          StartIcon="@Icons.Material.Filled.PersonAdd"
-          Disabled="_saving"
-          OnClick="AddTenantAsync">
+            @GetInitials(_selectedUser)
 
-          @(_saving
-              ? "Lägger till..."
-              : "Lägg till")
+          </div>
 
-        </MudButton>
+          <div>
 
-      </MudStack>
+            <div class="fw-semibold">
+              @GetUserDisplayName(_selectedUser)
+            </div>
 
-    </MudPaper>
+            @if (!string.IsNullOrWhiteSpace(_selectedUser.Email))
+            {
+              <div class="text-muted small">
+                @_selectedUser.Email
+              </div>
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <button type="button"
+        class="btn btn-primary"
+        disabled="@_saving"
+        @onclick="AddTenantAsync">
+
+        @if (_saving)
+        {
+          <span class="spinner-border spinner-border-sm me-2"
+            role="status"
+            aria-hidden="true">
+          </span>
+
+          <span>
+            Lägger till...
+          </span>
+        }
+        else
+        {
+          <span>
+            Lägg till
+          </span>
+        }
+
+      </button>
+    }
   }
 
-</MudStack>
+</div>
 
 @code {
 
@@ -182,65 +147,34 @@
   private bool _loadingUsers;
   private bool _saving;
 
-  private bool _usersLoaded;
-
   private string? _errorMessage;
 
+  private string SelectedUserIdString =>
+      _selectedUser?.Id.ToString() ?? string.Empty;
 
-  private async Task<IEnumerable<UserListItem>> SearchUsersAsync(
-      string? searchText,
-      CancellationToken cancellationToken)
+  protected override async Task OnInitializedAsync()
   {
-    try
-    {
-      await EnsureUsersLoadedAsync(cancellationToken);
-
-      if (string.IsNullOrWhiteSpace(searchText))
-        return _users;
-
-      return _users
-          .Where(user =>
-              Contains(user.UserName, searchText) ||
-              Contains(user.Email, searchText) ||
-              user.Id.ToString().Contains(
-                  searchText,
-                  StringComparison.OrdinalIgnoreCase))
-          .ToList();
-    }
-    catch (OperationCanceledException)
-    {
-      return [];
-    }
-    catch (Exception ex)
-    {
-      Logger.LogError(
-          ex,
-          "Failed to search Identity users");
-
-      _errorMessage =
-          "Kunde inte ladda användare.";
-
-      return [];
-    }
+    await LoadUsersAsync();
   }
 
-
-  private async Task EnsureUsersLoadedAsync(
-      CancellationToken cancellationToken)
+  private async Task LoadUsersAsync()
   {
-    if (_usersLoaded)
-      return;
-
     _loadingUsers = true;
     _errorMessage = null;
 
     try
     {
-      _users =
-          await UserManagementService
-              .GetUsersAsync(cancellationToken);
+      _users = await QuerySender.Send(
+          new GetUsersQuery());
+    }
+    catch (Exception ex)
+    {
+      Logger.LogError(
+          ex,
+          "Failed to load Identity users");
 
-      _usersLoaded = true;
+      _errorMessage =
+          "Kunde inte ladda användare.";
     }
     finally
     {
@@ -248,24 +182,21 @@
     }
   }
 
-
-  private static bool Contains(
-      string? value,
-      string searchText)
+  private void OnUserChanged(ChangeEventArgs args)
   {
-    return value?.Contains(
-        searchText,
-        StringComparison.OrdinalIgnoreCase) == true;
-  }
+    var value = args.Value?.ToString();
 
+    if (!Guid.TryParse(value, out var userId))
+    {
+      _selectedUser = null;
+      return;
+    }
 
-  private void OnUserSelected(
-      UserListItem? user)
-  {
-    _selectedUser = user;
+    _selectedUser =
+        _users.FirstOrDefault(user => user.Id == userId);
+
     _errorMessage = null;
   }
-
 
   private async Task AddTenantAsync()
   {
@@ -284,10 +215,6 @@
               HouseId,
               userId));
 
-      Snackbar.Add(
-          "Användaren lades till som boende.",
-          Severity.Success);
-
       _selectedUser = null;
 
       await OnTenantAdded.InvokeAsync();
@@ -300,9 +227,8 @@
           userId,
           HouseId);
 
-      Snackbar.Add(
-          "Kunde inte lägga till användaren som boende.",
-          Severity.Error);
+      _errorMessage =
+          "Kunde inte lägga till användaren som boende.";
     }
     finally
     {
@@ -310,23 +236,20 @@
     }
   }
 
-
   private static string GetUserDisplayName(
-      UserListItem? user)
+      UserListItem user)
   {
-    if (user is null)
-      return string.Empty;
-
     return user.UserName
         ?? user.Email
         ?? user.Id.ToString();
   }
 
-
   private static string GetInitials(
       UserListItem user)
   {
-    var value = user.UserName ?? user.Email;
+    var value =
+        user.UserName
+        ?? user.Email;
 
     if (string.IsNullOrWhiteSpace(value))
       return "?";
