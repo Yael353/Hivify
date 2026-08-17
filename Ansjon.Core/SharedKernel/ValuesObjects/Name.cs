@@ -12,7 +12,7 @@ namespace Ansjon.Core.SharedKernel.ValuesObjects
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new DomainException("Namn är obligatoriskt.");
-         
+
             value = value.Trim();
             if (value.Length > 100)
             {

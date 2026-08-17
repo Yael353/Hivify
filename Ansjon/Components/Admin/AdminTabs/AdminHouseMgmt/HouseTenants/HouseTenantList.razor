@@ -1,0 +1,78 @@
+﻿
+@using Ansjon.UseCases.Houses.DTOs
+@using MudBlazor
+
+@if (Loading)
+{
+  <div class="d-flex justify-center pa-4">
+
+    <MudProgressCircular Indeterminate="true"
+      Color="Color.Primary" />
+
+  </div>
+}
+else if (Tenants.Count == 0)
+{
+  <MudAlert Severity="Severity.Info"
+    Variant="Variant.Outlined">
+
+    Inga boende är registrerade i detta hus ännu.
+
+  </MudAlert>
+}
+else
+{
+  <MudStack Spacing="2">
+
+    <MudText Typo="Typo.body2"
+      Color="Color.Tertiary">
+
+      Boende i huset (@Tenants.Count)
+
+    </MudText>
+
+    @foreach (var tenant in Tenants)
+    {
+      <MudPaper Class="pa-3"
+        Elevation="0"
+        Style="border: 1px solid #e9edf2; border-radius: 8px;">
+
+        <MudStack Row="true"
+          AlignItems="AlignItems.Center"
+          Justify="Justify.SpaceBetween">
+
+          <MudStack Spacing="0">
+
+            <MudText Typo="Typo.body1">
+              Tenant: @tenant.Email
+            </MudText>
+
+            <MudText Typo="Typo.caption"
+              Color="Color.Tertiary">
+
+              Tillagd:
+              @tenant.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+
+            </MudText>
+
+          </MudStack>
+
+          <MudIcon Icon="@Icons.Material.Filled.Home"
+            Color="Color.Primary" />
+
+        </MudStack>
+
+      </MudPaper>
+    }
+
+  </MudStack>
+}
+
+@code {
+
+  [Parameter]
+  public IReadOnlyList<TenantListItemDto> Tenants { get; set; } = [];
+
+  [Parameter]
+  public bool Loading { get; set; }
+}

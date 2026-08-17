@@ -1,0 +1,262 @@
+﻿@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.AdminUserMgmt.DTOs
+@using Ansjon.UseCases.AdminUserMgmt.Queries
+@using Ansjon.UseCases.Houses.Commands.AddTenant
+
+@inject IQuerySender QuerySender
+@inject ISender Sender
+@inject ILogger<AddHouseTenant> Logger
+
+<div class="mb-4">
+
+  <h2 class="h5 mb-2">
+    Lägg till boende
+  </h2>
+
+  <p class="text-muted">
+    Välj en registrerad användare och lägg till
+    användaren som boende i detta hus.
+  </p>
+
+  @if (_loadingUsers)
+  {
+    <div class="d-flex align-items-center gap-2">
+      <div class="spinner-border spinner-border-sm"
+        role="status"
+        aria-hidden="true">
+      </div>
+
+      <span>
+        Laddar användare...
+      </span>
+    </div>
+  }
+  else if (_errorMessage is not null)
+  {
+    <div class="alert alert-danger">
+      @_errorMessage
+    </div>
+  }
+  else
+  {
+    <div class="mb-3">
+
+      <label for="tenantUser"
+        class="form-label">
+        Användare
+      </label>
+
+      <select id="tenantUser"
+        class="form-select"
+        value="@SelectedUserIdString"
+        @onchange="OnUserChanged">
+
+        <option value="">
+          -- Välj användare --
+        </option>
+
+        @foreach (var user in _users)
+        {
+          <option value="@user.Id">
+            @GetUserDisplayName(user)
+            @if (!string.IsNullOrWhiteSpace(user.Email))
+            {
+              @($" ({user.Email})")
+            }
+          </option>
+        }
+
+      </select>
+
+    </div>
+
+    @if (_selectedUser is not null)
+    {
+      <div class="border rounded p-3 mb-3">
+
+        <div class="d-flex align-items-center gap-3">
+
+          <div class="rounded-circle bg-primary text-white
+            d-flex align-items-center justify-content-center"
+            style="width: 40px; height: 40px;">
+
+            @GetInitials(_selectedUser)
+
+          </div>
+
+          <div>
+
+            <div class="fw-semibold">
+              @GetUserDisplayName(_selectedUser)
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(_selectedUser.Email))
+            {
+              <div class="text-muted small">
+                @_selectedUser.Email
+              </div>
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <button type="button"
+        class="btn btn-primary"
+        disabled="@_saving"
+        @onclick="AddTenantAsync">
+
+        @if (_saving)
+        {
+          <span class="spinner-border spinner-border-sm me-2"
+            role="status"
+            aria-hidden="true">
+          </span>
+
+          <span>
+            Lägger till...
+          </span>
+        }
+        else
+        {
+          <span>
+            Lägg till
+          </span>
+        }
+
+      </button>
+    }
+  }
+
+</div>
+
+@code {
+
+  [Parameter, EditorRequired]
+  public Guid HouseId { get; set; }
+  public string Email { get; set; } = string.Empty;
+
+  [Parameter]
+  public EventCallback OnTenantAdded { get; set; }
+
+  private IReadOnlyList<UserListItem> _users = [];
+
+  private UserListItem? _selectedUser;
+
+  private bool _loadingUsers;
+  private bool _saving;
+
+  private string? _errorMessage;
+
+  private string SelectedUserIdString =>
+      _selectedUser?.Id.ToString() ?? string.Empty;
+
+  protected override async Task OnInitializedAsync()
+  {
+    await LoadUsersAsync();
+  }
+
+  private async Task LoadUsersAsync()
+  {
+    _loadingUsers = true;
+    _errorMessage = null;
+
+    try
+    {
+      _users = await QuerySender.Send(
+          new GetUsersQuery());
+    }
+    catch (Exception ex)
+    {
+      Logger.LogError(
+          ex,
+          "Failed to load Identity users");
+
+      _errorMessage =
+          "Kunde inte ladda användare.";
+    }
+    finally
+    {
+      _loadingUsers = false;
+    }
+  }
+
+  private void OnUserChanged(ChangeEventArgs args)
+  {
+    var value = args.Value?.ToString();
+
+    if (!Guid.TryParse(value, out var userId))
+    {
+      _selectedUser = null;
+      return;
+    }
+
+    _selectedUser =
+        _users.FirstOrDefault(user => user.Id == userId);
+
+    _errorMessage = null;
+  }
+
+  private async Task AddTenantAsync()
+  {
+    if (_saving || _selectedUser is null)
+      return;
+
+    var userId = _selectedUser.Id;
+    var email = _selectedUser.Email ?? string.Empty;
+
+    _saving = true;
+    _errorMessage = null;
+
+    try
+    {
+      await Sender.Send(
+          new AddHouseTenantCommand(
+              HouseId,
+              userId,
+              email));
+
+      _selectedUser = null;
+
+      await OnTenantAdded.InvokeAsync();
+    }
+    catch (Exception ex)
+    {
+      Logger.LogError(
+          ex,
+          "Failed to add user {UserId} to house {HouseId}",
+          userId,
+          HouseId);
+
+      _errorMessage =
+          "Kunde inte lägga till användaren som boende.";
+    }
+    finally
+    {
+      _saving = false;
+    }
+  }
+
+  private static string GetUserDisplayName(
+      UserListItem user)
+  {
+    return user.UserName
+        ?? user.Email
+        ?? user.Id.ToString();
+  }
+
+  private static string GetInitials(
+      UserListItem user)
+  {
+    var value =
+        user.UserName
+        ?? user.Email;
+
+    if (string.IsNullOrWhiteSpace(value))
+      return "?";
+
+    return value[..1].ToUpperInvariant();
+  }
+}

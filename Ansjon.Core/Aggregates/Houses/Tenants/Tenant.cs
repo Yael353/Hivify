@@ -5,25 +5,22 @@ using Ansjon.Core.SharedKernel.ValuesObjects;
 public class Tenant : BaseEntity<TenantID>
 {
     public UserID UserId { get; private set; }
+    public Email Email { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
 
     private Tenant() { }
 
-    private Tenant(
-        TenantID id,
-        UserID userId)
-        : base(id)
+    private Tenant(TenantID id, UserID userId, Email email) : base(id)
     {
         UserId = userId;
+        Email = email;
         CreatedAt = DateTime.UtcNow;
     }
 
-    internal static Tenant Create(
-        TenantID id,
-        UserID userId)
+    internal static Tenant Create(TenantID id, UserID userId, Email email)
     {
-        return new Tenant(id, userId);
+        return new Tenant(id, userId, email);
     }
 }

@@ -4,6 +4,7 @@ using Ansjon.Infrastructures.SqlDatabase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ansjon.Infrastructures.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260817205603_AddedEmailToTenant")]
+    partial class AddedEmailToTenant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,18 +45,17 @@ namespace Ansjon.Infrastructures.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdminComment")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("Category")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ImageUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ResolvedDate")
                         .HasColumnType("datetime2");
@@ -61,14 +63,15 @@ namespace Ansjon.Infrastructures.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("TenantId")
+                    b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -369,54 +372,7 @@ namespace Ansjon.Infrastructures.Migrations
 
                     b.HasIndex("HouseId");
 
-                    b.ToTable("Tenants");
-                });
-
-            modelBuilder.Entity("Ansjon.Core.Aggregates.Complaints.Complaint", b =>
-                {
-                    b.OwnsOne("Ansjon.Core.SharedKernel.ValuesObjects.Description", "Description", b1 =>
-                        {
-                            b1.Property<Guid>("ComplaintId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(2000)
-                                .HasColumnType("nvarchar(2000)")
-                                .HasColumnName("Description");
-
-                            b1.HasKey("ComplaintId");
-
-                            b1.ToTable("Complaints");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ComplaintId");
-                        });
-
-                    b.OwnsOne("Ansjon.Core.SharedKernel.ValuesObjects.Title", "Title", b1 =>
-                        {
-                            b1.Property<Guid>("ComplaintId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(200)
-                                .HasColumnType("nvarchar(200)")
-                                .HasColumnName("Title");
-
-                            b1.HasKey("ComplaintId");
-
-                            b1.ToTable("Complaints");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ComplaintId");
-                        });
-
-                    b.Navigation("Description")
-                        .IsRequired();
-
-                    b.Navigation("Title")
-                        .IsRequired();
+                    b.ToTable("Tenant");
                 });
 
             modelBuilder.Entity("Ansjon.Core.Aggregates.Houses.House", b =>

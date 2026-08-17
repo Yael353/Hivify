@@ -225,19 +225,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 });
 
         // =====================
-        // Tenant – Aggregate Root
+        // Tenant – Entity
         // =====================
 
-        // 1. ID – primärnyckel
-        modelBuilder.Entity<Tenant>()
-            .Property(h => h.Id)
-            .HasConversion(
-                id => id.Value,
-                value => new TenantID(value));
-
-
-
-        // Tenant
         modelBuilder.Entity<Tenant>(tenant =>
         {
             tenant.HasKey(t => t.Id);
@@ -255,6 +245,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .HasColumnName("UserId")
                 .IsRequired();
 
+            tenant.Property(t => t.Email)
+                .HasConversion(
+                    email => email.Value,
+                    value => new Email(value))
+                .HasColumnName("Email")
+                .IsRequired();
+
             tenant.Property(t => t.CreatedAt)
                 .HasColumnName("CreatedAt")
                 .IsRequired();
@@ -262,7 +259,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             tenant.Property(t => t.DeletedAt)
                 .HasColumnName("DeletedAt");
         });
-
 
     }
 }

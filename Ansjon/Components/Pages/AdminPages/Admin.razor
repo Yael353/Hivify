@@ -2,15 +2,11 @@
 @attribute [Authorize(Roles = "Admin")]
 @rendermode InteractiveServer
 
-@using Ansjon.Components.Admin.AdminSideBar
 @using Microsoft.AspNetCore.Authorization
 
 <PageTitle>Admin – Hantera</PageTitle>
 
 <AuthorizeView Roles="Admin">
-    <Authorized>
-        <AdminSideBar />
-    </Authorized>
     <NotAuthorized>
         <MudAlert Severity="Severity.Error">
             Du har inte behörighet att visa denna sida.
