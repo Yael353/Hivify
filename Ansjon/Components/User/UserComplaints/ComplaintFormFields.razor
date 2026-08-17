@@ -1,23 +1,38 @@
+@using Ansjon.Core.SharedKernel.ValuesObjects
 @using Ansjon.UseCases.Complaints.DTOs
 
-<MudStack Spacing="3" Class="complaint-form-fields">
-		<MudTextField @bind-Value="NewComplaint.Title"
-									Label="Titel"
-									Placeholder="Kort sammanfattning av felet"
-									Variant="Variant.Outlined"
-									Required="true"
-									RequiredError="Titel krävs"
-									FullWidth="true" />
 
-		<MudTextField @bind-Value="NewComplaint.Description"
-									Label="Beskrivning"
-									Placeholder="Beskriv vad som har hänt, när det började och vad som påverkas"
-									Variant="Variant.Outlined"
-									Lines="8"
-									FullWidth="true" />
+<MudStack Spacing="3" Class="complaint-form-fields">
+    <!-- Kategori -->
+    <MudSelect T="ComplaintCategory"
+               Label="Kategori"
+               @bind-Value="NewComplaint.Category"
+               Required="true"
+               RequiredError="Välj en kategori"
+               FullWidth="true">
+        @foreach (ComplaintCategory category in Enum.GetValues(typeof(ComplaintCategory)))
+        {
+            <MudSelectItem Value="category">@category.ToString()</MudSelectItem>
+        }
+    </MudSelect>
+
+    <MudTextField @bind-Value="NewComplaint.Title"
+                  Label="Titel"
+                  Placeholder="Kort sammanfattning av felet"
+                  Variant="Variant.Outlined"
+                  Required="true"
+                  RequiredError="Titel krävs"
+                  FullWidth="true" />
+
+    <MudTextField @bind-Value="NewComplaint.Description"
+                  Label="Beskrivning"
+                  Placeholder="Beskriv vad som har hänt, när det började och vad som påverkas"
+                  Variant="Variant.Outlined"
+                  Lines="8"
+                  FullWidth="true" />
 </MudStack>
 
 @code {
-		[Parameter]
-		public CreateComplaintDto NewComplaint { get; set; } = new();
+    [Parameter]
+    public CreateComplaintDto NewComplaint { get; set; } = new();
 }

@@ -5,6 +5,10 @@
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider /> 
 
         @* <NavMenu /> *@
 <div class="admin-wrapper">
@@ -40,11 +44,11 @@
     </div>
 
     <div class="admin-content">
-        <MudThemeProvider />
+        @* <MudThemeProvider />
         <MudPopoverProvider />
         <MudDialogProvider />
         <MudSnackbarProvider />
-
+ *@
         <div class="admin-page">
             @Body
         </div>

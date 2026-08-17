@@ -1,19 +1,18 @@
-﻿@using Ansjon.Core.Aggregates.Complaints
-@using Ansjon.Core.Aggregates.Houses.Tenants
-@using Ansjon.UseCases.Complaints
+﻿@using Ansjon.Core.SharedKernel.ValuesObjects
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Complaints.Commands
 @using Ansjon.UseCases.Complaints.DTOs
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
 @using MudBlazor
 
-@inject CreateComplaint CreateComplaintHandler
+@inject ISender Sender
 @inject AuthenticationStateProvider AuthProvider
 @inject ISnackbar Snackbar
 
 <div class="complaint-form-wrapper">
     <MudPaper Class="pa-6" Elevation="2" Style="border-radius: 16px; border: 1px solid #e9edf2;">
         <MudStack Spacing="4">
-            <!-- Rubrik -->
             <div>
                 <MudText Typo="Typo.h5" Color="Color.Primary" Class="font-weight-bold">
                     Anmäl ett ärende
@@ -25,27 +24,8 @@
 
             <MudDivider />
 
-            <!-- Formulärfält -->
-            <MudTextField @bind-Value="NewComplaint.Title"
-                          Label="Titel"
-                          Placeholder="Ange en kort rubrik..."
-                          Variant="Variant.Outlined"
-                          Required="true"
-                          RequiredError="Titel är obligatorisk"
-                          Immediate="true"
-                          Class="mb-2" />
+            <ComplaintFormFields NewComplaint="NewComplaint" />
 
-            <MudTextField @bind-Value="NewComplaint.Description"
-                          Label="Beskrivning"
-                          Placeholder="Beskriv problemet i detalj..."
-                          Variant="Variant.Outlined"
-                          Lines="5"
-                          Required="true"
-                          RequiredError="Beskrivning är obligatorisk"
-                          Immediate="true"
-                          Class="mb-2" />
-
-            <!-- Filuppladdning -->
             <div class="file-upload-area mb-2">
                 <MudText Typo="Typo.body2" Color="Color.Tertiary" Class="mb-1">
                     Bifoga bild (valfritt)
@@ -60,14 +40,12 @@
                 }
             </div>
 
-            <!-- Miniatyr av bilden -->
             @if (!string.IsNullOrEmpty(NewComplaint.ImageUrl))
             {
                 <div class="image-preview mt-3">
                     <img src="@NewComplaint.ImageUrl"
                          alt="Bifogad bild"
                          style="max-height: 80px; width: auto; border-radius: 8px; object-fit: cover; border: 1px solid #e9edf2;" />
-
                     <MudButton Variant="Variant.Text"
                                Color="Color.Error"
                                Size="Size.Small"
@@ -80,7 +58,6 @@
 
             <MudDivider />
 
-            <!-- Skicka-knapp -->
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
                        Size="Size.Large"
@@ -118,77 +95,70 @@
         align-items: flex-start;
     }
 
-    .submit-btn {
-        transition: all 0.2s ease;
+    .submit-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3);
     }
-
-        .submit-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3);
-        }
 </style>
 
 @code
 {
-    #region State
-
     private readonly CreateComplaintDto NewComplaint = new();
     private bool _isSubmitting;
 
-    #endregion
-
-    #region Submit
-
     private async Task HandleSubmit()
     {
+        Console.WriteLine("🔍 1. HandleSubmit startar!");
         _isSubmitting = true;
+        StateHasChanged();
 
         try
         {
+            Console.WriteLine("🔍 2. Hämtar authState...");
             var authState = await AuthProvider.GetAuthenticationStateAsync();
             var user = authState.User;
 
             if (!user.Identity?.IsAuthenticated ?? true)
             {
+                Console.WriteLine("❌ 3. Användaren är inte inloggad!");
                 Snackbar.Add("Du måste vara inloggad för att skicka in felanmälan.", Severity.Warning);
                 return;
             }
+            Console.WriteLine("✅ 3. Användaren är inloggad.");
 
-            var tenantIdClaim = user.FindFirst("TenantId")?.Value;
+            Console.WriteLine($"🔍 4. Skapar kommando: {NewComplaint.Title}");
+            var command = new CreateComplaintCommand(
+                NewComplaint.Category,
+                NewComplaint.Title,
+                NewComplaint.Description,
+                NewComplaint.ImageUrl
+            );
 
-            if (string.IsNullOrWhiteSpace(tenantIdClaim))
-            {
-                Snackbar.Add("Boende kunde inte hittas.", Severity.Error);
-                return;
-            }
-
-            var tenantId = new TenantID(Guid.Parse(tenantIdClaim));
-
-            await CreateComplaintHandler.CreateComplaintAsync(NewComplaint, tenantId);
+            Console.WriteLine("🔍 5. Skickar kommando via Sender...");
+            await Sender.Send(command);
+            Console.WriteLine("✅ 6. Kommando skickat!");
 
             Snackbar.Add("Felanmälan skickades!", Severity.Success);
-
             ResetForm();
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"Fel: {ex.Message}", Severity.Error);
+            Console.WriteLine($"❌ FEL: {ex.Message}");
+            Console.WriteLine($"❌ INNER EXCEPTION: {ex.InnerException?.Message}");
+            Console.WriteLine($"Stacktrace: {ex.StackTrace}");
         }
         finally
         {
             _isSubmitting = false;
+            StateHasChanged();
+            Console.WriteLine("🔍 7. HandleSubmit avslutas");
         }
     }
-
-    #endregion
-
-    #region File Upload
 
     private async Task OnFileSelected(InputFileChangeEventArgs e)
     {
         var file = e.File;
-        if (file is null)
-            return;
+        if (file is null) return;
 
         try
         {
@@ -196,9 +166,7 @@
             using var memory = new MemoryStream();
             await stream.CopyToAsync(memory);
 
-            NewComplaint.ImageUrl =
-                $"data:{file.ContentType};base64,{Convert.ToBase64String(memory.ToArray())}";
-
+            NewComplaint.ImageUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(memory.ToArray())}";
             Snackbar.Add("Bild tillagd.", Severity.Info);
             StateHasChanged();
         }
@@ -216,17 +184,11 @@
         return Task.CompletedTask;
     }
 
-    #endregion
-
-    #region Helpers
-
     private void ResetForm()
     {
         NewComplaint.Title = string.Empty;
         NewComplaint.Description = string.Empty;
         NewComplaint.ImageUrl = null;
+        NewComplaint.Category = ComplaintCategory.Väg;
     }
-
-    #endregion
-
 }

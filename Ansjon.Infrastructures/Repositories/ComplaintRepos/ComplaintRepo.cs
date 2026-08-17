@@ -1,60 +1,68 @@
 ﻿using Ansjon.Core.Aggregates.Complaints;
-using Ansjon.Core.Aggregates.Houses.Tenants;
+using Ansjon.Core.SharedKernel.ValuesObjects;
 using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Abstractions.Presistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ansjon.Infrastructures.Repositories.ComplaintRepos
+namespace Ansjon.Infrastructure.Repositories.ComplaintRepos;
+
+public class ComplaintRepo : IComplaintRepo
 {
-    public class ComplaintRepo : IComplaintRepo
+    private readonly ApplicationDbContext _context;
+
+    public ComplaintRepo(ApplicationDbContext context)
     {
-        private readonly ApplicationDbContext _context;
+        _context = context;
+    }
 
-        public ComplaintRepo(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+    // =====================
+    // Commands
+    // =====================
 
-        public async Task CreateComplaintAsync(Complaint complaint)
-        {
-            _context.Complaints.Add(complaint);
-            await _context.SaveChangesAsync();
-        }
+    public async Task CreateComplaintAsync(Complaint complaint, CancellationToken cancellationToken = default)
+    {
+        _context.Complaints.Add(complaint);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 
-        public async Task<IEnumerable<Complaint>> GetAllComplaintsAsync()
-        {
-            return await _context.Complaints
-                .OrderByDescending(c => c.CreatedDate)
-                .ToListAsync();
-        }
+    public async Task UpdateComplaintAsync(Complaint complaint, CancellationToken cancellationToken = default)
+    {
+        _context.Complaints.Update(complaint);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 
-        public async Task<Complaint?> GetComplaintByIdAsync(Guid id)
+    public async Task DeleteComplaintByIdAsync(ComplaintID id, CancellationToken cancellationToken = default)
+    {
+        var complaint = await GetComplaintByIdAsync(id, cancellationToken);
+        if (complaint != null)
         {
-            return await _context.Complaints.FindAsync(id);
+            _context.Complaints.Remove(complaint);
+            await _context.SaveChangesAsync(cancellationToken);
         }
+    }
 
-        public async Task<IEnumerable<Complaint>> GetAllComplaintsByAuthorAsync(TenantID tenantId)
-        {
-            return await _context.Complaints
-                .Where(c => c.TenantId == tenantId)
-                .OrderByDescending(c => c.CreatedDate)
-                .ToListAsync();
-        }
+    // =====================
+    // Queries
+    // =====================
 
-        public async Task UpdateComplaintAsync(Complaint complaint)
-        {
-            _context.Complaints.Update(complaint);
-            await _context.SaveChangesAsync();
-        }
+    public async Task<IEnumerable<Complaint>> GetAllComplaintsAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Complaints
+            .OrderByDescending(c => c.CreatedDate)
+            .ToListAsync(cancellationToken);
+    }
 
-        public async Task DeleteComplaintByIdAsync(Guid complaintId)
-        {
-            var complaint = await GetComplaintByIdAsync(complaintId);
-            if (complaint != null)
-            {
-                _context.Complaints.Remove(complaint);
-                await _context.SaveChangesAsync();
-            }
-        }
+    public async Task<IEnumerable<Complaint>> GetComplaintsByUserAsync(UserID userId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Complaints
+            .Where(c => c.UserId == userId)
+            .OrderByDescending(c => c.CreatedDate)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Complaint?> GetComplaintByIdAsync(ComplaintID id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Complaints
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 }

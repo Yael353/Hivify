@@ -1,11 +1,12 @@
 using Ansjon.Components;
 using Ansjon.Components.Account;
 using Ansjon.Core.Aggregates.Associations.Members;
+using Ansjon.Infrastructure.Repositories.ComplaintRepos;
+using Ansjon.Infrastructure.Repositories.TenantRepo;
 using Ansjon.Infrastructures.ContextProviders;
 using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Identity;
 using Ansjon.Infrastructures.Repositories.AssociationRepo;
-using Ansjon.Infrastructures.Repositories.ComplaintRepos;
 using Ansjon.Infrastructures.Repositories.FeedRepo;
 using Ansjon.Infrastructures.Repositories.HouseRepo;
 using Ansjon.Infrastructures.SqlDatabase;
@@ -20,6 +21,7 @@ using Ansjon.UseCases.Common.Validators;
 using Ansjon.UseCases.Complaints.DTOs;
 using Ansjon.UseCases.Feeds;
 using Ansjon.UseCases.Houses;
+using Ansjon.UseCases.Complaints;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -98,6 +100,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUserProvider>();
 builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
 builder.Services.AddScoped<IHouseRepo, HouseRepo>();
+builder.Services.AddScoped<IComplaintRepo, ComplaintRepo>();
+builder.Services.AddScoped<ITenantRepo, TenantRepo>();
 
 
 #endregion
@@ -105,10 +109,10 @@ builder.Services.AddScoped<IHouseRepo, HouseRepo>();
 #region Application
 
 builder.Services.AddFeedServices();
+builder.Services.AddComplaintServices();
 builder.Services.AddHouseServices();
 builder.Services.AddAdminServices();
-builder.Services.AddComplaintServices();
-
+builder.Services.AddRazorComponents();
 builder.Services.AddScoped<IValidator<CreateComplaintDto>,
     ComplaintDtoValidator>();
 

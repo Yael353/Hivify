@@ -1,17 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Ansjon.Core.SharedKernel.ValuesObjects;
+using System.ComponentModel.DataAnnotations;
 
-namespace Ansjon.UseCases.Complaints.DTOs
+namespace Ansjon.UseCases.Complaints.DTOs;
+
+public class CreateComplaintDto
 {
-    public class CreateComplaintDto
-    {
-        [Required(ErrorMessage = "Titel är obligatorisk")]
-        [StringLength(200, ErrorMessage = "Titel får inte vara längre än 200 tecken")]
-        public string Title { get; set; } = null!;
+    [Required(ErrorMessage = "Kategori är obligatorisk")]
+    public ComplaintCategory Category { get; set; }
 
-        [Required(ErrorMessage = "Beskrivning är obligatorisk")]
-        [StringLength(1000, ErrorMessage = "Beskrivning får inte vara längre än 1000 tecken")]
-        public string Description { get; set; } = null!;
+    [Required(ErrorMessage = "Titel är obligatorisk")]
+    [StringLength(200, ErrorMessage = "Titeln får vara max 200 tecken")]
+    public string Title { get; set; } = string.Empty;
 
-        public string? ImageUrl { get; set; }
-    }
+    [Required(ErrorMessage = "Beskrivning är obligatorisk")]
+    [StringLength(2000, ErrorMessage = "Beskrivningen får vara max 2000 tecken")]
+    public string Description { get; set; } = string.Empty;
+
+    public string? ImageUrl { get; set; }
 }
