@@ -26,8 +26,5 @@
   <ItemGroup>
     <Folder Include="AdminUserMgmt\Commands\" />
     <Folder Include="Association\Queries\" />
-    <Folder Include="Complaints\Commands\" />
-    <Folder Include="Complaints\Handlers\" />
-    <Folder Include="Complaints\Queries\" />
   </ItemGroup>
 </Project>

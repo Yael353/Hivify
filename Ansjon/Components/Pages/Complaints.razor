@@ -1,10 +1,12 @@
 ﻿@page "/complaints"
 @attribute [Authorize]
+@layout MainLayout
 
 @using Ansjon.Components.User.UserComplaints
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 <PageTitle>Ärendehantering</PageTitle>
 
@@ -41,3 +43,13 @@
 
     
 </style>
+
+@code {
+    [CascadingParameter]
+    private LayoutComponentBase? Layout { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine($"🔍 Layout typ: {Layout?.GetType().Name ?? "Ingen layout!"}");
+    }
+}

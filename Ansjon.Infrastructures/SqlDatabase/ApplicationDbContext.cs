@@ -20,6 +20,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Member> StaffMembers { get; set; }
     public DbSet<Feed> Feeds => Set<Feed>();
     public DbSet<Complaint> Complaints => Set<Complaint>();
+    public DbSet<Tenant> Tenants { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,18 +32,74 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         // Complaint
         // =====================
 
-        modelBuilder.Entity<Complaint>()
-            .Property(c => c.Id)
-            .HasConversion(
-                id => id.Value,
-                value => new ComplaintID(value));
+        modelBuilder.Entity<Complaint>(entity =>
+        {
+            // 1. ID
+            entity.Property(c => c.Id)
+                .HasConversion(
+                    id => id.Value,
+                    value => new ComplaintID(value));
 
+            // 2. UserId
+            entity.Property(c => c.UserId)
+                .HasConversion(
+                    userId => userId.Value,
+                    value => new UserID(value));
 
-        modelBuilder.Entity<Complaint>()
-            .Property(c => c.TenantId)
-            .HasConversion(
-                id => id.Value,
-                value => new TenantID(value));
+            // 3. TenantId (nullable)
+            entity.Property(c => c.TenantId)
+                .HasConversion(
+                    tenantId => tenantId == null ? (Guid?)null : tenantId.Value.Value,
+                    value => value.HasValue ? new TenantID(value.Value) : null);
+
+            // 4. Category (enum)
+            entity.Property(c => c.Category)
+                .HasConversion<int>();
+
+            // 5. Title (Value Object)
+            entity.OwnsOne(c => c.Title, title =>
+            {
+                title.Property(t => t.Value)
+                    .HasColumnName("Title")
+                    .HasMaxLength(200)
+                    .IsRequired();
+            });
+
+            // 6. Description (Value Object)
+            entity.OwnsOne(c => c.Description, description =>
+            {
+                description.Property(d => d.Value)
+                    .HasColumnName("Description")
+                    .HasMaxLength(2000)
+                    .IsRequired();
+            });
+
+            // 7. ImageUrl
+            entity.Property(c => c.ImageUrl)
+                .HasMaxLength(500)
+                .IsRequired(false);
+
+            // 8. Status (enum)
+            entity.Property(c => c.Status)
+                .HasConversion<int>();
+
+            // 9. CreatedDate
+            entity.Property(c => c.CreatedDate)
+                .IsRequired();
+
+            // 10. UpdatedDate (nullable)
+            entity.Property(c => c.UpdatedDate)
+                .IsRequired(false);
+
+            // 11. ResolvedDate (nullable)
+            entity.Property(c => c.ResolvedDate)
+                .IsRequired(false);
+
+            // 12. AdminComment (nullable)
+            entity.Property(c => c.AdminComment)
+                .HasMaxLength(1000)
+                .IsRequired(false);
+        });
 
 
 
