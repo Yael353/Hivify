@@ -21,6 +21,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Feed> Feeds => Set<Feed>();
     public DbSet<Complaint> Complaints => Set<Complaint>();
 
+    public DbSet<Tenant> Tenants { get; set; }
+
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,12 +47,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .HasConversion(
                     userId => userId.Value,
                     value => new UserID(value));
-
-            // 3. TenantId (nullable)
-            entity.Property(c => c.TenantId)
-                .HasConversion(
-                    tenantId => tenantId == null ? (Guid?)null : tenantId.Value.Value,
-                    value => value.HasValue ? new TenantID(value.Value) : null);
 
             // 4. Category (enum)
             entity.Property(c => c.Category)

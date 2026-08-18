@@ -28,22 +28,19 @@ public sealed class CreateComplaintCommandHandler : ICommandHandler<CreateCompla
     {
         ArgumentNullException.ThrowIfNull(command);
 
-        // 1. Validera kommandot
         await _validator.ValidateAndThrowAsync(command, cancellationToken);
 
-        // 2. Hämta användarens ID
         var userId = await _currentUser.GetUserIdAsync();
 
-        // 4. Skapa complaint
+   
+
         var complaint = Complaint.Create(
             new UserID(userId),
-            null,
             command.Category,
             new Title(command.Title),
             new Description(command.Description),
             command.ImageUrl);
 
-        // 5. Spara i databasen
         await _complaintRepository.CreateComplaintAsync(complaint, cancellationToken);
 
         return complaint.Id.Value;

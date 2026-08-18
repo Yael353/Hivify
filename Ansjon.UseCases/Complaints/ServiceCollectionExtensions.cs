@@ -1,5 +1,4 @@
 ﻿using Ansjon.UseCases.Abstractions.Messaging;
-using Ansjon.UseCases.Abstractions.Presistence;
 using Ansjon.UseCases.Complaints.Commands.CreateComplaint;
 using Ansjon.UseCases.Complaints.DTOs;
 using Ansjon.UseCases.Complaints.Queries.GetComplaint;

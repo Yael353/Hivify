@@ -1,0 +1,60 @@
+﻿@page "/mina-arenden"
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Complaints.DTOs
+@using Ansjon.UseCases.Complaints.Queries.GetComplaint
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@inject IQuerySender QuerySender
+
+<PageTitle>Mina ärenden</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudPaper Class="pa-6" Elevation="3" Style="border-radius: 16px;">
+        <MudText Typo="Typo.h5" Color="Color.Primary" Class="font-weight-bold mb-3">
+            Mina felanmälningar
+        </MudText>
+
+        <MudDivider Class="mb-4" />
+
+        @if (_complaints == null)
+        {
+            <MudProgressCircular Indeterminate="true" Class="mx-auto my-8 d-flex" />
+        }
+        else if (!_complaints.Any())
+        {
+            <MudText Color="Color.Tertiary" Class="text-center pa-8">
+                Du har inga felanmälningar ännu.
+            </MudText>
+        }
+        else
+        {
+            <MudTable Items="@_complaints" Hover="true" Striped="true" Bordered="true">
+                <HeaderContent>
+                    <MudTh>Titel</MudTh>
+                    <MudTh>Kategori</MudTh>
+                    <MudTh>Status</MudTh>
+                    <MudTh>Skapad</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Title</MudTd>
+                    <MudTd>@context.Category</MudTd>
+                    <MudTd>@context.Status</MudTd>
+                    <MudTd>@context.CreatedDate.ToString("yyyy-MM-dd HH:mm")</MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private IReadOnlyList<ComplaintListItemDto>? _complaints;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var query = new GetUserComplaintsQuery();
+        _complaints = await QuerySender.Send(query);
+    }
+}

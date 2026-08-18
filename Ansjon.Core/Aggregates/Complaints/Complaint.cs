@@ -8,7 +8,6 @@ namespace Ansjon.Core.Aggregates.Complaints
     public class Complaint : BaseEntity<ComplaintID>, IAggregateRoot
     {
         public UserID UserId { get; private set; }
-        public TenantID? TenantId { get; private set; }
         public ComplaintCategory Category { get; private set; }
         public Title Title { get; private set; }
         public Description Description { get; private set; }
@@ -24,7 +23,6 @@ namespace Ansjon.Core.Aggregates.Complaints
         private Complaint(
             ComplaintID id,
             UserID userId,
-            TenantID? tenantId,
             ComplaintCategory category,
             Title title,
             Description description,
@@ -32,7 +30,6 @@ namespace Ansjon.Core.Aggregates.Complaints
             : base(id)
         {
             UserId = userId;
-            TenantId = tenantId;
             Category = category;
             Title = title;
             Description = description;
@@ -43,7 +40,6 @@ namespace Ansjon.Core.Aggregates.Complaints
 
         public static Complaint Create(
             UserID userId,
-            TenantID? tenantId,
             ComplaintCategory category,
             Title title,
             Description description,
@@ -52,7 +48,6 @@ namespace Ansjon.Core.Aggregates.Complaints
             return new Complaint(
                 new ComplaintID(Guid.NewGuid()),
                 userId,
-                tenantId,
                 category,
                 title,
                 description,

@@ -61,9 +61,6 @@ namespace Ansjon.Infrastructures.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("TenantId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
