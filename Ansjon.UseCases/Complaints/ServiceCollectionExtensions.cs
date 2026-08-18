@@ -1,8 +1,8 @@
 ﻿using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
-using Ansjon.UseCases.Complaints.Commands;
+using Ansjon.UseCases.Complaints.Commands.CreateComplaint;
 using Ansjon.UseCases.Complaints.DTOs;
-using Ansjon.UseCases.Complaints.Queries;
+using Ansjon.UseCases.Complaints.Queries.GetComplaint;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICommandHandler<CreateComplaintCommand, Guid>, CreateComplaintCommandHandler>();
 
         // Queries
-        services.AddScoped<IQueryHandler<GetMyComplaintsQuery, IReadOnlyList<ComplaintListItemDto>>, GetMyComplaintsQueryHandler>();
+        services.AddScoped<IQueryHandler<GetUserComplaintsQuery, IReadOnlyList<ComplaintListItemDto>>, GetUserComplaintsQueryHandler>();
 
         // Validators
         services.AddValidatorsFromAssemblyContaining<CreateComplaintCommandValidator>();

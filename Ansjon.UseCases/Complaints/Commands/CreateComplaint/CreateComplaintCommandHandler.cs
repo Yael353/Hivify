@@ -5,7 +5,7 @@ using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
 using FluentValidation;
 
-namespace Ansjon.UseCases.Complaints.Commands;
+namespace Ansjon.UseCases.Complaints.Commands.CreateComplaint;
 
 public sealed class CreateComplaintCommandHandler : ICommandHandler<CreateComplaintCommand, Guid>
 {

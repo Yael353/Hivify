@@ -1,6 +1,6 @@
 ﻿@using Ansjon.Core.SharedKernel.ValuesObjects
 @using Ansjon.UseCases.Abstractions.Messaging
-@using Ansjon.UseCases.Complaints.Commands
+@using Ansjon.UseCases.Complaints.Commands.CreateComplaint
 @using Ansjon.UseCases.Complaints.DTOs
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
@@ -9,6 +9,9 @@
 @inject ISender Sender
 @inject AuthenticationStateProvider AuthProvider
 @inject ISnackbar Snackbar
+
+
+
 
 <div class="complaint-form-wrapper">
     <MudPaper Class="pa-6" Elevation="2" Style="border-radius: 16px; border: 1px solid #e9edf2;">

@@ -1,5 +1,4 @@
 ﻿using Ansjon.Core.Aggregates.Complaints;
-using Ansjon.Core.Aggregates.Houses.Tenants;
 using Ansjon.Core.SharedKernel.ValuesObjects;
 
 namespace Ansjon.UseCases.Abstractions.Presistence

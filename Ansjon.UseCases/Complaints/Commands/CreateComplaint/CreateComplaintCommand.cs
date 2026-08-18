@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Ansjon.UseCases.Complaints.Commands
+namespace Ansjon.UseCases.Complaints.Commands.CreateComplaint
 {
     public sealed record CreateComplaintCommand(
     ComplaintCategory Category,

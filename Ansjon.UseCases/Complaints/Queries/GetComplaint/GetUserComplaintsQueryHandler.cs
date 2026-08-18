@@ -4,22 +4,22 @@ using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
 using Ansjon.UseCases.Complaints.DTOs;
 
-namespace Ansjon.UseCases.Complaints.Queries;
+namespace Ansjon.UseCases.Complaints.Queries.GetComplaint;
 
-public sealed class GetMyComplaintsQueryHandler
-    : IQueryHandler<GetMyComplaintsQuery, IReadOnlyList<ComplaintListItemDto>>
+public sealed class GetUserComplaintsQueryHandler
+    : IQueryHandler<GetUserComplaintsQuery, IReadOnlyList<ComplaintListItemDto>>
 {
     private readonly IComplaintRepo _complaintRepository;
     private readonly ICurrentUser _currentUser;
 
-    public GetMyComplaintsQueryHandler(IComplaintRepo complaintRepository, ICurrentUser currentUser)
+    public GetUserComplaintsQueryHandler(IComplaintRepo complaintRepository, ICurrentUser currentUser)
     {
         _complaintRepository = complaintRepository;
         _currentUser = currentUser;
     }
 
     public async Task<IReadOnlyList<ComplaintListItemDto>> Handle(
-        GetMyComplaintsQuery query,
+        GetUserComplaintsQuery query,
         CancellationToken cancellationToken)
     {
         var userId = await _currentUser.GetUserIdAsync();

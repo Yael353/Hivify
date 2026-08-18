@@ -20,7 +20,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Member> StaffMembers { get; set; }
     public DbSet<Feed> Feeds => Set<Feed>();
     public DbSet<Complaint> Complaints => Set<Complaint>();
-    public DbSet<Tenant> Tenants { get; set; }
+
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

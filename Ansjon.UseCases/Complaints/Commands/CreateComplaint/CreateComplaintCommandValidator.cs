@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Ansjon.UseCases.Complaints.Commands;
+namespace Ansjon.UseCases.Complaints.Commands.CreateComplaint;
 
 public sealed class CreateComplaintCommandValidator : AbstractValidator<CreateComplaintCommand>
 {
