@@ -2,7 +2,6 @@ using Ansjon.Components;
 using Ansjon.Components.Account;
 using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Infrastructure.Repositories.ComplaintRepos;
-using Ansjon.Infrastructure.Repositories.TenantRepo;
 using Ansjon.Infrastructures.ContextProviders;
 using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Identity;
@@ -19,10 +18,10 @@ using Ansjon.UseCases.Association.Commands;
 using Ansjon.UseCases.Association.Handlers;
 using Ansjon.UseCases.Common.Messaging;
 using Ansjon.UseCases.Common.Validators;
+using Ansjon.UseCases.Complaints;
 using Ansjon.UseCases.Complaints.DTOs;
 using Ansjon.UseCases.Feeds;
 using Ansjon.UseCases.Houses;
-using Ansjon.UseCases.Complaints;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -142,7 +141,7 @@ builder.Services.AddScoped<
 
 builder.Services.AddScoped<ISender, Sender>();
 builder.Services.AddScoped<IQuerySender, QuerySender>();
-builder.Services.AddScoped<ICurrentAssociationProvider, CurrentAssociationProvider>();
+
 #endregion
 
 #region AI Integration

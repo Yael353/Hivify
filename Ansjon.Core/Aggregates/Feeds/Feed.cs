@@ -16,22 +16,16 @@ namespace Ansjon.Core.Aggregates.Feeds
         public DateTime? DeletedAt { get; private set; }
         private Feed() { }  // Private constructor for EF Core
 
-        private Feed(FeedID id, MemberID authorId, Title title, Description content)
-        : base(id)
+        private Feed(FeedID id, MemberID authorId, Title title, Description content) : base(id)
         {
             CreatedDate = DateTime.UtcNow;
             AuthorId = authorId;
-
             SetTitle(title);
             SetContent(content);
         }
 
 
-        public static Feed CreateFeed(
-          MemberID authorId,
-          MemberRole role,
-          Title title,
-          Description content)
+        public static Feed CreateFeed(MemberID authorId, MemberRole role, Title title, Description content)
         {
             EnsureAdmin(role);
 

@@ -14,9 +14,7 @@ public class HouseRepo : IHouseRepo
         _context = context;
     }
 
-    public async Task<House?> GetByIdAsync(
-        HouseID id,
-        CancellationToken cancellationToken = default)
+    public async Task<House?> GetByIdAsync(HouseID id, CancellationToken cancellationToken = default)
     {
         return await _context.Houses
             .Include(h => h.Tenants)
@@ -33,17 +31,12 @@ public class HouseRepo : IHouseRepo
             .ToListAsync(cancellationToken);
     }
 
-    public async Task AddAsync(
-        House house,
-        CancellationToken cancellationToken = default)
+    public async Task AddAsync(House house, CancellationToken cancellationToken = default)
     {
-        await _context.Houses.AddAsync(
-            house,
-            cancellationToken);
+        await _context.Houses.AddAsync(house, cancellationToken);
     }
 
-    public async Task SaveChangesAsync(
-        CancellationToken cancellationToken = default)
+    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         await _context.SaveChangesAsync(cancellationToken);
     }

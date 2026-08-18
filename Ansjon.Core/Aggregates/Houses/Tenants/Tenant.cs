@@ -6,7 +6,6 @@ public class Tenant : BaseEntity<TenantID>
 {
     public UserID UserId { get; private set; }
     public Email Email { get; private set; }
-
     public DateTime CreatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
 
