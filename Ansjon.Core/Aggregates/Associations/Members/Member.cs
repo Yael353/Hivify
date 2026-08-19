@@ -1,6 +1,5 @@
-﻿using Ansjon.Core.Aggregates.Associations;
-using Ansjon.Core.Aggregates.Associations.Members;
-using Ansjon.Core.SharedKernel;
+﻿using Ansjon.Core.SharedKernel;
+namespace Ansjon.Core.Aggregates.Associations.Members;
 
 public class Member : BaseEntity<MemberID>
 {
@@ -11,17 +10,10 @@ public class Member : BaseEntity<MemberID>
     public MemberRole Role { get; private set; }
 
 
-    private Member()
-    {
-    }
+    private Member() { }
 
 
-    private Member(
-        MemberID id,
-        AssociationID associationId,
-        string fullName,
-        MemberRole role)
-        : base(id)
+    private Member(MemberID id, AssociationID associationId, string fullName, MemberRole role) : base(id)
     {
         AssociationId = associationId;
         FullName = fullName;
@@ -29,10 +21,7 @@ public class Member : BaseEntity<MemberID>
     }
 
 
-    public static Member Create(
-        AssociationID associationId,
-        string fullName,
-        MemberRole role)
+    public static Member Create(AssociationID associationId, string fullName, MemberRole role)
     {
         return new Member(
             new MemberID(Guid.NewGuid()),

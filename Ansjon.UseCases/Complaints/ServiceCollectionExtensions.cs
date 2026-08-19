@@ -1,4 +1,5 @@
 ﻿using Ansjon.UseCases.Abstractions.Messaging;
+using Ansjon.UseCases.Common.Validators;
 using Ansjon.UseCases.Complaints.Commands.CreateComplaint;
 using Ansjon.UseCases.Complaints.DTOs;
 using Ansjon.UseCases.Complaints.Queries.GetComplaint;
@@ -19,6 +20,9 @@ public static class ServiceCollectionExtensions
 
         // Validators
         services.AddValidatorsFromAssemblyContaining<CreateComplaintCommandValidator>();
+
+        services.AddScoped<IValidator<CreateComplaintDto>, ComplaintDtoValidator>();
+        services.AddScoped<IValidator<UpdateComplaintDto>, UpdateComplaintDtoValidator>();
 
         return services;
     }
