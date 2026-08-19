@@ -28,8 +28,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Ansjon.Core\Ansjon.Core.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Association\Commands\AddAssciation\" />
-  </ItemGroup>
 </Project>
