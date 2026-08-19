@@ -1,7 +1,0 @@
-.complaint-form-fields {
-    width: 100%;
-}
-
-.complaint-form-fields :deep(.mud-input-control) {
-    border-radius: 12px;
-}

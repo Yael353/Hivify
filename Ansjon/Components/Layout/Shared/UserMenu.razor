@@ -25,25 +25,29 @@
 			</div>
 		</li>
 		<li><hr class="dropdown-divider"></li>
-				<li>
-						<NavLink class="dropdown-item" href="Account/Manage">
-								Profile
-						</NavLink>
-				</li>
-		
+		<li>
+			<NavLink class="dropdown-item" href="Account/Manage">
+				Profile
+			</NavLink>
+		</li>
 
-				<li><hr class="dropdown-divider"></li>
+		<li>
+			<NavLink class="dropdown-item" href="/mina-arenden">
+				Mina ärenden
+			</NavLink>
+		</li>
 
-				<li>
-						<form action="Account/Logout" method="post">
-								<AntiforgeryToken />
-								<input type="hidden" name="ReturnUrl" value="@CurrentUrl" />
+		<li><hr class="dropdown-divider"></li>
 
-								<button class="dropdown-item" type="submit">
-										Logout
-								</button>
-						</form>
-				</li>
+		<li>
+			<form action="Account/Logout" method="post">
+				<AntiforgeryToken />
+				<input type="hidden" name="ReturnUrl" value="@CurrentUrl" />
+				<button class="dropdown-item" type="submit">
+					Logout
+				</button>
+			</form>
+		</li>
 		</ul>
 </li>
 

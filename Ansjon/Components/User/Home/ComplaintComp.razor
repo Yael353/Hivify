@@ -11,14 +11,10 @@
         Meddela oss genom att klicka på knappen nedan.
     </MudText>
 
-    <MudButton Variant="Variant.Filled"
-               Color="Color.Primary"
-               Size="Size.Medium"
-               FullWidth="true"
-               OnClick="@(() => NavigationManager.NavigateTo("/complaints"))"
-               Style="border-radius: 40px; font-weight: 500; text-transform: none; padding: 12px 0;">
-        Gå till Ärendehantering →
-    </MudButton>
+    <button @onclick="@(() => NavigationManager.NavigateTo("/complaint"))"
+            class="btn btn-primary w-100 mt-2">
+        Gå till Ärendehantering (HTML-test)
+    </button>
 
     <MudDivider Class="my-4" Style="opacity: 0.4;" />
 
