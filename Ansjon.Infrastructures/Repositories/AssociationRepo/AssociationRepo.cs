@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ansjon.Infrastructures.Repositories.AssociationRepo
 {
-    public sealed class AssociationRepository : IAssociationRepository
+    public sealed class AssociationRepo : IAssociationRepo
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public AssociationRepository(ApplicationDbContext dbContext)
+        public AssociationRepo(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -26,8 +26,7 @@ namespace Ansjon.Infrastructures.Repositories.AssociationRepo
                     cancellationToken);
         }
 
-        public async Task AddAsync(
-            Association association,
+        public async Task AddAsync(Association association,
             CancellationToken cancellationToken = default)
         {
             await _dbContext.Associations.AddAsync(association, cancellationToken);

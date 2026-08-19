@@ -4,7 +4,7 @@ using Ansjon.Infrastructures.SqlDatabase;
 using Ansjon.UseCases.Abstractions.Presistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ansjon.Infrastructure.Repositories.ComplaintRepos;
+namespace Ansjon.Infrastructures.Repositories.ComplaintRepos;
 
 public class ComplaintRepo : IComplaintRepo
 {

@@ -7,8 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AdminUserMgmt\Commands\**" />
+    <Compile Remove="Association\Queries\**" />
     <Compile Remove="House\**" />
+    <EmbeddedResource Remove="AdminUserMgmt\Commands\**" />
+    <EmbeddedResource Remove="Association\Queries\**" />
     <EmbeddedResource Remove="House\**" />
+    <None Remove="AdminUserMgmt\Commands\**" />
+    <None Remove="Association\Queries\**" />
     <None Remove="House\**" />
   </ItemGroup>
 
@@ -24,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AdminUserMgmt\Commands\" />
-    <Folder Include="Association\Queries\" />
+    <Folder Include="Association\Commands\AddAssciation\" />
   </ItemGroup>
 </Project>

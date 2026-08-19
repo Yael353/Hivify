@@ -1,15 +1,14 @@
 ﻿using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
-using Ansjon.UseCases.Association.Commands;
 
-namespace Ansjon.UseCases.Association.Handlers;
+namespace Ansjon.UseCases.Association.Commands.AddStaffMember;
 
 public sealed class AddStaffMemberCommandHandler : ICommandHandler<AddStaffMemberCommand, MemberID>
 {
-    private readonly IAssociationRepository _associationRepository;
+    private readonly IAssociationRepo _associationRepository;
 
-    public AddStaffMemberCommandHandler(IAssociationRepository associationRepository)
+    public AddStaffMemberCommandHandler(IAssociationRepo associationRepository)
     {
         _associationRepository = associationRepository;
     }

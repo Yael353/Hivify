@@ -1,11 +1,10 @@
 using Ansjon.Components;
 using Ansjon.Components.Account;
-using Ansjon.Core.Aggregates.Associations.Members;
-using Ansjon.Infrastructure.Repositories.ComplaintRepos;
 using Ansjon.Infrastructures.ContextProviders;
 using Ansjon.Infrastructures.Data;
 using Ansjon.Infrastructures.Identity;
 using Ansjon.Infrastructures.Repositories.AssociationRepo;
+using Ansjon.Infrastructures.Repositories.ComplaintRepos;
 using Ansjon.Infrastructures.Repositories.FeedRepo;
 using Ansjon.Infrastructures.Repositories.HouseRepo;
 using Ansjon.Infrastructures.Repositories.UsersRepo;
@@ -14,15 +13,11 @@ using Ansjon.UseCases.Abstractions.Context;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
 using Ansjon.UseCases.AdminUserMgmt;
-using Ansjon.UseCases.Association.Commands;
-using Ansjon.UseCases.Association.Handlers;
+using Ansjon.UseCases.Association;
 using Ansjon.UseCases.Common.Messaging;
-using Ansjon.UseCases.Common.Validators;
 using Ansjon.UseCases.Complaints;
-using Ansjon.UseCases.Complaints.DTOs;
 using Ansjon.UseCases.Feeds;
 using Ansjon.UseCases.Houses;
-using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
@@ -110,12 +105,11 @@ builder.Services.AddSingleton<
 #endregion
 
 #region Infrastructure
-
-builder.Services.AddScoped<IFeedRepo, FeedRepo>();
-builder.Services.AddScoped<IComplaintRepo, ComplaintRepo>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUserProvider>();
-builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
+builder.Services.AddScoped<IFeedRepo, FeedRepo>();
+builder.Services.AddScoped<IComplaintRepo, ComplaintRepo>();
+builder.Services.AddScoped<IAssociationRepo, AssociationRepo>();
 builder.Services.AddScoped<IHouseRepo, HouseRepo>();
 builder.Services.AddScoped<IUserRepo, UsersRepo>();
 
@@ -125,20 +119,11 @@ builder.Services.AddScoped<IUserRepo, UsersRepo>();
 #region Application
 
 builder.Services.AddFeedServices();
-builder.Services.AddComplaintServices();
 builder.Services.AddHouseServices();
 builder.Services.AddAdminServices();
+builder.Services.AddAssociationServices();
+builder.Services.AddComplaintServices();
 builder.Services.AddRazorComponents();
-builder.Services.AddScoped<IValidator<CreateComplaintDto>,
-    ComplaintDtoValidator>();
-
-builder.Services.AddScoped<IValidator<UpdateComplaintDto>,
-    UpdateComplaintDtoValidator>();
-
-builder.Services.AddScoped<
-    ICommandHandler<AddStaffMemberCommand, MemberID>,
-    AddStaffMemberCommandHandler>();
-
 builder.Services.AddScoped<ISender, Sender>();
 builder.Services.AddScoped<IQuerySender, QuerySender>();
 

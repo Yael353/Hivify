@@ -1,6 +1,7 @@
 ﻿using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.SharedKernel;
 
+
 namespace Ansjon.Core.Aggregates.Associations;
 
 public class Association : BaseEntity<AssociationID>, IAggregateRoot
@@ -9,20 +10,13 @@ public class Association : BaseEntity<AssociationID>, IAggregateRoot
 
     private readonly List<Member> _members = [];
 
-    public IReadOnlyCollection<Member> StaffMembers
-        => _members.AsReadOnly();
+    public IReadOnlyCollection<Member> StaffMembers => _members.AsReadOnly();
 
 
-    private Association()
-    {
-        // EF Core
-    }
+    private Association() { }
 
 
-    private Association(
-        AssociationID id,
-        string name)
-        : base(id)
+    private Association(AssociationID id, string name) : base(id)
     {
         Name = name;
     }
@@ -30,20 +24,13 @@ public class Association : BaseEntity<AssociationID>, IAggregateRoot
 
     public static Association Create(string name)
     {
-        return new Association(
-            new AssociationID(Guid.NewGuid()),
-            name);
+        return new Association(new AssociationID(Guid.NewGuid()), name);
     }
 
 
-    public Member CreateMember(
-        string fullName,
-        MemberRole role)
+    public Member CreateMember(string fullName, MemberRole role)
     {
-        var member = Member.Create(
-            Id,
-            fullName,
-            role);
+        var member = Member.Create(Id, fullName, role);
 
         _members.Add(member);
 
