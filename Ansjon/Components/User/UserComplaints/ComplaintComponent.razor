@@ -1,6 +1,4 @@
-﻿Är koden korrekt?
-
-@page "/simple-complaint"
+﻿@page "/complaint"
 @attribute [Authorize]
 @rendermode InteractiveServer
 
@@ -10,6 +8,7 @@
 @using Ansjon.UseCases.Complaints.Commands.CreateComplaint
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
 @using MudBlazor
 
 @inject ISender Sender
@@ -27,6 +26,19 @@
         <MudDivider Class="mb-4" />
 
         <MudStack Spacing="3">
+            <!-- Kategori -->
+            <div>
+                <label style="display: block; margin-bottom: 4px; font-weight: 500;">
+                    Kategori
+                </label>
+                <select @bind="_category" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #d9d9d9; font-size: 16px;">
+                    <option value="@ComplaintCategory.Väg">Väg</option>
+                    <option value="@ComplaintCategory.Vatten">Vatten</option>
+                    <option value="@ComplaintCategory.Trivsel">Trivsel</option>
+                    <option value="@ComplaintCategory.BryggaOchFörråd">Brygga & Förråd</option>
+                </select>
+            </div>
+
             <!-- Titel -->
             <MudTextField @bind-Value="_title"
                           Label="Titel"
@@ -42,6 +54,24 @@
                           Lines="4"
                           TextArea="true"
                           FullWidth="true" />
+
+            <!-- ⭐ BILDUPLADDNING – med InputFile -->
+            <div>
+                <label style="display: block; margin-bottom: 4px; font-weight: 500;">
+                    Bifoga bild (valfritt)
+                </label>
+                <InputFile OnChange="@OnFileSelected" accept="image/*" capture="environment" />
+
+                @if (!string.IsNullOrEmpty(_imageUrl))
+                {
+                    <div style="margin-top: 8px;">
+                        <img src="@_imageUrl" alt="Bifogad bild" style="max-height: 80px; border-radius: 8px; border: 1px solid #e9edf2;" />
+                        <button @onclick="RemoveImage" style="display: block; padding: 0; margin-top: 4px; background: none; border: none; color: #dc3545; cursor: pointer;">
+                            Ta bort bild
+                        </button>
+                    </div>
+                }
+            </div>
 
             <!-- Skicka-knapp -->
             <MudButton Variant="Variant.Filled"
@@ -65,8 +95,10 @@
 </MudContainer>
 
 @code {
+    private ComplaintCategory _category = ComplaintCategory.Väg;
     private string _title = string.Empty;
     private string _description = string.Empty;
+    private string? _imageUrl = null;
     private bool _isSubmitting = false;
 
     private async Task HandleSubmit()
@@ -96,10 +128,10 @@
 
             Console.WriteLine("🔍 3. Skapar kommando...");
             var command = new CreateComplaintCommand(
-                ComplaintCategory.Väg,
+                _category,
                 _title,
                 _description,
-                null
+                _imageUrl
             );
 
             Console.WriteLine("🔍 4. Skickar kommando...");
@@ -110,6 +142,8 @@
 
             _title = string.Empty;
             _description = string.Empty;
+            _imageUrl = null;
+            _category = ComplaintCategory.Väg;
         }
         catch (Exception ex)
         {
@@ -121,5 +155,34 @@
             _isSubmitting = false;
             StateHasChanged();
         }
+    }
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file is null) return;
+
+        try
+        {
+            using var stream = file.OpenReadStream(2 * 1024 * 1024);
+            using var memory = new MemoryStream();
+            await stream.CopyToAsync(memory);
+
+            _imageUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(memory.ToArray())}";
+            StateHasChanged();
+
+            Snackbar.Add("Bild tillagd!", Severity.Info);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Kunde inte ladda bild: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private void RemoveImage()
+    {
+        _imageUrl = null;
+        StateHasChanged();
+        Snackbar.Add("Bild borttagen.", Severity.Info);
     }
 }

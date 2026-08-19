@@ -9,6 +9,7 @@
 @using Microsoft.AspNetCore.Authorization
 
 @inject IQuerySender QuerySender
+@inject NavigationManager NavigationManager
 
 <PageTitle>Hem</PageTitle>
 
@@ -71,33 +72,23 @@
 
 
   <section class="card shadow-sm border-0 rounded-4">
-
     <div class="card-body p-4 p-md-5">
+        <div class="d-flex align-items-baseline justify-content-between mb-2 flex-wrap gap-2">
+            <h5 class="fw-bold text-dark mb-0">Ärendehantering</h5>
+            <span class="text-muted small">Något som inte fungerar?</span>
+        </div>
+        <hr class="my-3" />
 
-      <div class="d-flex align-items-baseline justify-content-between mb-2 flex-wrap gap-2">
-
-        <h5 class="fw-bold text-dark mb-0">
-          Ärendehantering
-        </h5>
-
-        <span class="text-muted small">
-          Något som inte fungerar?
-        </span>
-
-      </div>
-
-      <hr class="my-3" />
-
-      <ComplaintComp />
-
-
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Medium"
+                   FullWidth="true"
+                   OnClick="@(() => NavigationManager.NavigateTo("/complaint"))"
+                   Style="border-radius: 40px; font-weight: 500; text-transform: none; padding: 12px 0;">
+            Gå till Ärendehantering →
+        </MudButton>
     </div>
-
-    <div>
-        <MyComplaints/>
-    </div>
-
-  </section>
+</section>
 
 </div>
 
@@ -110,6 +101,7 @@
 
   protected override async Task OnInitializedAsync()
   {
+        
     try
     {
       _feeds = await QuerySender.Send(

@@ -16,6 +16,7 @@ public static class ServiceCollectionExtensions
 
         // Queries
         services.AddScoped<IQueryHandler<GetUserComplaintsQuery, IReadOnlyList<ComplaintListItemDto>>, GetUserComplaintsQueryHandler>();
+        services.AddScoped<IQueryHandler<GetAllComplaintsQuery, IReadOnlyList<ComplaintListItemDto>>, GetAllComplaintsQueryHandler>();
 
         // Validators
         services.AddValidatorsFromAssemblyContaining<CreateComplaintCommandValidator>();

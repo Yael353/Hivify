@@ -1,0 +1,63 @@
+﻿@using Ansjon.Core.Aggregates.Complaints
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Complaints.DTOs
+@using Ansjon.UseCases.Complaints.Queries.GetComplaint
+@using MudBlazor
+
+@inject IQuerySender QuerySender
+@inject ISnackbar Snackbar
+
+@if (_complaints == null)
+{
+    <MudProgressCircular Indeterminate="true" Class="mx-auto my-8 d-flex" />
+}
+else if (!_complaints.Any())
+{
+    <MudText Color="Color.Tertiary" Class="text-center pa-8">
+        Inga ärenden har kommit in ännu.
+    </MudText>
+}
+else
+{
+    <MudTable Items="@_complaints" Hover="true" Striped="true" Bordered="true" Elevation="0">
+        <HeaderContent>
+            <MudTh>Titel</MudTh>
+            <MudTh>Kategori</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh>Skapad</MudTh>
+            <MudTh>Åtgärd</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.Title</MudTd>
+            <MudTd>@context.Category</MudTd>
+            <MudTd>
+                <MudChip T="string"
+                         Color="@(context.Status == ComplaintStatus.New ? Color.Warning :
+                                                     context.Status == ComplaintStatus.InProgress ? Color.Info :
+                                                     context.Status == ComplaintStatus.Resolved ? Color.Success : Color.Default)"
+                         Size="Size.Small">
+                    @context.Status
+                </MudChip>
+            </MudTd>
+            <MudTd>@context.CreatedDate.ToString("yyyy-MM-dd HH:mm")</MudTd>
+            <MudTd>
+                <MudButton Variant="Variant.Outlined"
+                           Color="Color.Primary"
+                           Size="Size.Small"
+                           OnClick="@(() => Snackbar.Add($"Hantera: {context.Title}", Severity.Info))">
+                    Hantera
+                </MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+
+@code {
+    private IReadOnlyList<ComplaintListItemDto>? _complaints;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var query = new GetAllComplaintsQuery();
+        _complaints = await QuerySender.Send(query);
+    }
+}
