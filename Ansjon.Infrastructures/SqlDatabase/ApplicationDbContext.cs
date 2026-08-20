@@ -137,40 +137,39 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         // Association
         // =====================
 
-        modelBuilder.Entity<Association>()
-            .Property(a => a.Id)
-            .HasConversion(
-                id => id.Value,
-                value => new AssociationID(value));
+        modelBuilder.Entity<Association>(builder =>
+        {
+            builder.Property(a => a.Id)
+                .HasConversion(
+                    id => id.Value,
+                    value => new AssociationID(value));
 
+            builder.HasMany<Member>("_members")
+                .WithOne()
+                .HasForeignKey(m => m.AssociationId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-        // Association -> StaffMembers relationship
-
-        modelBuilder.Entity<Association>()
-            .HasMany(a => a.StaffMembers)
-            .WithOne()
-            .HasForeignKey(s => s.AssociationId)
-            .OnDelete(DeleteBehavior.Cascade);
-
+            builder.Navigation("_members")
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+        });
 
 
         // =====================
         // StaffMember
         // =====================
 
-        modelBuilder.Entity<Member>()
-            .Property(s => s.Id)
-            .HasConversion(
-                id => id.Value,
-                value => new MemberID(value));
+        modelBuilder.Entity<Member>(builder =>
+        {
+            builder.Property(m => m.Id)
+                .HasConversion(
+                    id => id.Value,
+                    value => new MemberID(value));
 
-
-        modelBuilder.Entity<Member>()
-            .Property(s => s.AssociationId)
-            .HasConversion(
-                id => id.Value,
-                value => new AssociationID(value));
-
+            builder.Property(m => m.AssociationId)
+                .HasConversion(
+                    id => id.Value,
+                    value => new AssociationID(value));
+        });
 
         // =====================
         // House
