@@ -2,12 +2,14 @@
 
 @if (TotalItems > 0)
 {
-    <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 gap-2">
-        <div class="text-muted small">
+    <div class="pagination-container">
+        <!-- Info om antal – dold på mobil, synlig på desktop -->
+        <div class="pagination-info d-none d-sm-block text-muted small">
             Visar @(Skip + 1) - @(Math.Min(Skip + PageSize, TotalItems)) av @TotalItems
         </div>
 
-        <div class="d-flex align-items-center gap-2">
+        <!-- Navigeringsknappar – centrerad på mobil -->
+        <div class="pagination-nav">
             <MudButton Variant="Variant.Outlined"
                        Size="Size.Small"
                        Disabled="@(Skip == 0)"
@@ -38,6 +40,49 @@
         </div>
     </div>
 }
+
+<style>
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .pagination-nav {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* Mobil – centrera allt */
+    @@media (max-width: 576px) {
+        .pagination-container {
+            justify-content: center;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .pagination-info {
+            text-align: center;
+        }
+
+        .pagination-nav {
+            gap: 0.25rem;
+        }
+    }
+
+    /* Tablet – info till vänster, knappar till höger */
+    @@media (min-width: 577px) and (max-width: 768px) {
+        .pagination-container {
+            justify-content: space-between;
+        }
+    }
+</style>
 
 @code {
     [Parameter]
