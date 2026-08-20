@@ -8,13 +8,10 @@
 
   <ItemGroup>
     <Compile Remove="AdminUserMgmt\Commands\**" />
-    <Compile Remove="Association\Queries\**" />
     <Compile Remove="House\**" />
     <EmbeddedResource Remove="AdminUserMgmt\Commands\**" />
-    <EmbeddedResource Remove="Association\Queries\**" />
     <EmbeddedResource Remove="House\**" />
     <None Remove="AdminUserMgmt\Commands\**" />
-    <None Remove="Association\Queries\**" />
     <None Remove="House\**" />
   </ItemGroup>
 

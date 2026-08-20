@@ -1,0 +1,120 @@
+﻿@page "/admin/associations/{AssociationId:guid}"
+@layout AdminLayout
+@rendermode InteractiveServer
+
+@using Ansjon.Components.Admin.AdminTabs.AssociationMgmt
+@using Ansjon.Core.Aggregates.Associations
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Association.Queries.GetAssociation
+@using Microsoft.AspNetCore.Authorization
+
+@inject IQuerySender QuerySender
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container py-4">
+
+  @if (_loading)
+  {
+    <div>
+      <p>Laddar förening...</p>
+    </div>
+  }
+  else if (_association is null)
+  {
+    <div>
+
+      <h2>Föreningen kunde inte hittas</h2>
+
+      <button type="button"
+        class="btn btn-outline-secondary mt-3"
+        @onclick="GoBack">
+
+        Tillbaka
+
+      </button>
+
+    </div>
+  }
+  else
+  {
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+      <div>
+
+        <h1 class="h4 mb-1">
+          @_association.Name
+        </h1>
+
+        <p class="text-muted mb-0">
+          Förening
+        </p>
+
+      </div>
+
+      <button type="button"
+        class="btn btn-outline-secondary"
+        @onclick="GoBack">
+
+        Tillbaka
+
+      </button>
+
+    </div>
+
+    <hr class="mb-4" />
+
+    <Association AssociationId="new AssociationID(AssociationId)" />
+
+  }
+
+</div>
+
+@code {
+
+  [Parameter]
+  public Guid AssociationId { get; set; }
+
+  private Core.Aggregates.Associations.Association? _association;
+
+  private bool _loading;
+
+  private Guid _loadedAssociationId;
+
+  protected override async Task OnParametersSetAsync()
+  {
+    if (AssociationId == Guid.Empty)
+      return;
+
+    if (_loadedAssociationId == AssociationId)
+      return;
+
+    _loadedAssociationId = AssociationId;
+
+    await LoadAssociationAsync();
+  }
+
+  private async Task LoadAssociationAsync()
+  {
+    _loading = true;
+    _association = null;
+
+    try
+    {
+      var associationId = new AssociationID(AssociationId);
+
+      _association = await QuerySender.Send(
+          new GetAssociationQuery(associationId));
+    }
+    finally
+    {
+      _loading = false;
+    }
+  }
+
+  private void GoBack()
+  {
+    NavigationManager.NavigateTo("/admin/associations");
+  }
+}

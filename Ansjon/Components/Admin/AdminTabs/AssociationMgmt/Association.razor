@@ -1,0 +1,99 @@
+﻿@using Ansjon.Core.Aggregates.Associations
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Association.DTOs
+@using Ansjon.UseCases.Association.Queries.GetAssociation
+@using MudBlazor
+
+@inject IQuerySender QuerySender
+
+<MudPaper Class="pa-4">
+
+  <MudText Typo="Typo.h5"
+    Color="Color.Primary"
+    Class="font-weight-bold mb-3">
+
+    Styrelsemedlemmar
+
+  </MudText>
+
+  <MudText Typo="Typo.body2"
+    Color="Color.Tertiary"
+    Class="mb-4">
+
+    Hantera styrelsemedlemmarna i denna förening.
+
+  </MudText>
+
+  <MudDivider Class="mb-4" />
+
+  <AddAssociationMember AssociationId="AssociationId"
+    OnMemberAdded="RefreshMembers" />
+
+  <MudDivider Class="my-4" />
+
+  @if (_loading)
+  {
+    <MudProgressCircular Indeterminate="true" />
+  }
+  else if (_members.Count == 0)
+  {
+    <MudText Color="Color.Secondary">
+      Det finns inga styrelsemedlemmar.
+    </MudText>
+  }
+  else
+  {
+    <StaffMembersList Members="_members" />
+  }
+
+</MudPaper>
+
+@code {
+
+  [Parameter]
+  public AssociationID AssociationId { get; set; }
+
+  private List<StaffMemberDto> _members = [];
+
+  private bool _loading;
+
+  protected override async Task OnInitializedAsync()
+  {
+    await LoadMembersAsync();
+  }
+
+  private async Task LoadMembersAsync()
+  {
+    _loading = true;
+
+    try
+    {
+      var association =
+          await QuerySender.Send(
+              new GetAssociationQuery(
+                  AssociationId));
+
+      if (association is null)
+      {
+        _members = [];
+        return;
+      }
+
+      _members = association.StaffMembers
+          .Select(member => new StaffMemberDto(
+              member.Id.Value,
+              member.FullName,
+              member.Role))
+          .ToList();
+    }
+    finally
+    {
+      _loading = false;
+    }
+  }
+
+  private async Task RefreshMembers()
+  {
+    await LoadMembersAsync();
+  }
+}
