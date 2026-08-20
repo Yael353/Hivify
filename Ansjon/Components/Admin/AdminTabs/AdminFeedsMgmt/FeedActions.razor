@@ -1,5 +1,4 @@
-﻿
-@using Ansjon.UseCases.Abstractions.Messaging
+﻿@using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Feeds.Commands.DeleteFeed
 @using MudBlazor
 
@@ -8,54 +7,41 @@
 @inject ILogger<FeedActions> Logger
 
 <MudIconButton Icon="@Icons.Material.Filled.Delete"
-  Color="Color.Error"
-  Disabled="_deleting"
-  OnClick="DeleteAsync" />
+               Color="Color.Error"
+               Disabled="_deleting"
+               OnClick="DeleteAsync" />
 
 @code {
+    [Parameter]
+    public Guid FeedId { get; set; }
 
-  [Parameter]
-  public Guid FeedId { get; set; }
+    [Parameter]
+    public EventCallback OnDeleted { get; set; }
 
-  [Parameter]
-  public EventCallback OnDeleted { get; set; }
+    private bool _deleting;
 
-  private bool _deleting;
-
-  private async Task DeleteAsync()
-  {
-    if (_deleting)
-      return;
-
-    try
+    private async Task DeleteAsync()
     {
-      _deleting = true;
+        if (_deleting) return;
 
-      var command = new DeleteFeedCommand(FeedId);
+        try
+        {
+            _deleting = true;
 
-      await Sender.Send(command);
+            var command = new DeleteFeedCommand(FeedId);
+            await Sender.Send(command);
 
-      Snackbar.Add(
-          "Feed borttagen.",
-          Severity.Success);
-
-      await OnDeleted.InvokeAsync();
+            Snackbar.Add("Nyheten borttagen.", Severity.Success);
+            await OnDeleted.InvokeAsync();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error deleting feed {FeedId}", FeedId);
+            Snackbar.Add("Kunde inte ta bort nyheten.", Severity.Error);
+        }
+        finally
+        {
+            _deleting = false;
+        }
     }
-    catch (Exception ex)
-    {
-      Logger.LogError(
-          ex,
-          "Error deleting feed {FeedId}",
-          FeedId);
-
-      Snackbar.Add(
-          "Kunde inte ta bort feed.",
-          Severity.Error);
-    }
-    finally
-    {
-      _deleting = false;
-    }
-  }
 }
-

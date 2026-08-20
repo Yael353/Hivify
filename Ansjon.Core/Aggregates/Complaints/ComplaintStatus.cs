@@ -3,10 +3,10 @@
 
     public enum ComplaintStatus
     {
-        New,
-        InReview,
-        InProgress,
-        Resolved,
+        Ny,          
+        Granskas,
+        Pågår,
+        Löst
     }
 
 }

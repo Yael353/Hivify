@@ -1,25 +1,67 @@
 ﻿@using MudBlazor
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
-    <AIFeedGenerator />
-    <MudDivider Class="my-6" />
-    <CreateFeedForm OnCreated="RefreshFeeds" />
-    <MudDivider Class="my-6" />
-    <AdminFeedList @ref="_feedList" />
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
+
+    <div class="section-wrapper mb-6">
+        <MudText Typo="Typo.h5" Color="Color.Default" Class="font-weight-medium mb-3" Style="letter-spacing: -0.2px;">
+            ✎ Skapa en nyhet
+        </MudText>
+        <MudPaper Class="pa-5" Elevation="1" Style="border-radius: 12px;">
+            <CreateFeedForm OnCreated="RefreshFeeds" />
+        </MudPaper>
+    </div>
+
+    
+    <div class="section-wrapper mb-6">
+        <MudText Typo="Typo.h5" Color="Color.Default" Class="font-weight-medium mb-3" Style="letter-spacing: -0.2px;">
+            ✨ Skapa med AI
+        </MudText>
+        <MudPaper Class="pa-5" Elevation="1" Style="border-radius: 12px;">
+            <AIFeedGenerator />
+        </MudPaper>
+    </div>
+
+    <!-- ⭐ Befintliga nyheter -->
+    <div class="section-wrapper">
+        <MudText Typo="Typo.h5" Color="Color.Default" Class="font-weight-medium mb-3" Style="letter-spacing: -0.2px;">
+            📋 Befintliga nyheter
+        </MudText>
+        <MudPaper Class="pa-5" Elevation="1" Style="border-radius: 12px;">
+            <AdminFeedList @ref="_feedList" />
+        </MudPaper>
+    </div>
 </MudContainer>
 
-@code
-{
+<style>
+    .section-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
 
+    .mud-paper {
+        transition: all 0.2s ease;
+        background: #ffffff;
+    }
+
+        .mud-paper:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+        }
+</style>
+
+@code {
     private AdminFeedList? _feedList;
 
-    public async Task RefreshFeeds()
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshFeeds();
+    }
 
+    public async Task RefreshFeeds()
     {
         if (_feedList is not null)
         {
             await _feedList.Refresh();
+            StateHasChanged();
         }
     }
-
 }

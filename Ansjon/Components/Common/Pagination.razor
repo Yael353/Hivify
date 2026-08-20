@@ -1,0 +1,57 @@
+﻿@using MudBlazor
+
+@if (TotalItems > 0)
+{
+    <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 gap-2">
+        <div class="text-muted small">
+            Visar @(Skip + 1) - @(Math.Min(Skip + PageSize, TotalItems)) av @TotalItems
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <MudButton Variant="Variant.Outlined"
+                       Size="Size.Small"
+                       Disabled="@(Skip == 0)"
+                       OnClick="@(() => OnPageChanged.InvokeAsync(Skip - PageSize))">
+                <MudIcon Icon="@Icons.Material.Filled.ChevronLeft" Size="Size.Small" />
+            </MudButton>
+
+            @for (int i = 0; i < TotalPages; i++)
+            {
+                var pageNumber = i + 1;
+                var isActive = i == CurrentPageIndex;
+
+                <MudButton Variant="@(isActive ? Variant.Filled : Variant.Outlined)"
+                           Color="@(isActive ? Color.Primary : Color.Default)"
+                           Size="Size.Small"
+                           Style="@(isActive ? "min-width: 32px; cursor: default;" : "min-width: 32px;")"
+                           OnClick="@(() => !isActive ? OnPageChanged.InvokeAsync(i * PageSize) : Task.CompletedTask)">
+                    @pageNumber
+                </MudButton>
+            }
+
+            <MudButton Variant="Variant.Outlined"
+                       Size="Size.Small"
+                       Disabled="@(Skip + PageSize >= TotalItems)"
+                       OnClick="@(() => OnPageChanged.InvokeAsync(Skip + PageSize))">
+                <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+            </MudButton>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int TotalItems { get; set; }
+
+    [Parameter]
+    public int PageSize { get; set; } = 10;
+
+    [Parameter]
+    public int Skip { get; set; } = 0;
+
+    [Parameter]
+    public EventCallback<int> OnPageChanged { get; set; }
+
+    private int CurrentPageIndex => Skip / PageSize;
+    private int TotalPages => (int)Math.Ceiling((double)TotalItems / PageSize);
+}
