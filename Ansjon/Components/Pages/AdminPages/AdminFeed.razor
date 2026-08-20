@@ -7,13 +7,22 @@
 
 <PageTitle>Admin – Nyheter</PageTitle>
 
-<MudText Typo="Typo.h5" Color="Color.Primary" Class="font-weight-bold mb-3">
-    Hantera nyheter
-</MudText>
-<MudText Typo="Typo.body2" Color="Color.Tertiary" Class="mb-4">
-    Här kan du skapa, redigera och ta bort nyheter.
-</MudText>
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
+    <div class="mb-6">
+        <MudText Typo="Typo.h4" Color="Color.Primary" Class="font-weight-medium" Style="letter-spacing: -0.3px;">
+            Hantera nyheter
+        </MudText>
+        <MudText Typo="Typo.body1" Color="Color.Tertiary" Class="mt-1">
+            Skapa, redigera och administrera alla nyheter i communityn.
+        </MudText>
+    </div>
 
-<MudDivider Class="mb-4" />
+    <AdminFeed />
+</MudContainer>
 
-<AdminFeed />
+<style>
+    .mud-container {
+        background: #ffffff;
+        min-height: 100vh;
+    }
+</style>

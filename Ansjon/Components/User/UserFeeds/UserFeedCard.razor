@@ -1,17 +1,37 @@
-﻿@using Ansjon.Core.Aggregates.Feeds
-@using Ansjon.UseCases.Feeds.DTOs
+﻿@using Ansjon.UseCases.Feeds.DTOs
 
 <div class="card feed-card mb-4 shadow-sm" style="border-radius: 12px; border-left: 4px solid #3f51b5; transition: all 0.2s ease;">
-    <div class="card-header bg-transparent border-0 pb-0">
+
+    <!-- ⭐ RUBRIK + VISA MER (höger) -->
+    <div class="card-header bg-transparent border-0 pb-0 d-flex justify-content-between align-items-center">
         <h5 class="card-title text-dark fw-bold mb-0">
             @Feed.Title
         </h5>
+
+        @if (Feed.Content.Length > _maxLength)
+        {
+            <button @onclick="ToggleExpand"
+                    class="btn btn-link text-primary p-0"
+                    style="text-decoration: none; font-size: 0.8rem; font-weight: 500;">
+                @(_isExpanded ? "Visa mindre" : "Visa mer")
+            </button>
+        }
     </div>
 
     <div class="card-body pt-2">
-        <p class="card-text text-primary" style="white-space: pre-wrap; line-height: 1.6;">
-            @Feed.Content
-        </p>
+        <div>
+            <p class="card-text text-primary" style="white-space: pre-wrap; line-height: 1.6;">
+                @if (_isExpanded || Feed.Content.Length <= _maxLength)
+                {
+                    @Feed.Content
+                }
+                else
+                {
+                    @Feed.Content.Substring(0, _maxLength)
+                    <span class="text-muted">...</span>
+                }
+            </p>
+        </div>
 
         <div class="d-flex align-items-center mt-3">
             <small class="text-secondary">
@@ -26,9 +46,22 @@
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(0,0,0,0.10) !important;
     }
+
+    .btn-link {
+        cursor: pointer;
+    }
 </style>
 
 @code {
-  [Parameter, EditorRequired]
-  public FeedListItemDto Feed { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public FeedListItemDto Feed { get; set; } = default!;
+
+    private bool _isExpanded = false;
+    private const int _maxLength = 150;
+
+    private void ToggleExpand()
+    {
+        _isExpanded = !_isExpanded;
+        StateHasChanged();
+    }
 }

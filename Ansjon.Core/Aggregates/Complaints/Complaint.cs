@@ -33,7 +33,7 @@ namespace Ansjon.Core.Aggregates.Complaints
             Title = title;
             Description = description;
             ImageUrl = imageUrl;
-            Status = ComplaintStatus.New;
+            Status = ComplaintStatus.Ny;
             CreatedDate = DateTime.UtcNow;
         }
 
@@ -73,7 +73,7 @@ namespace Ansjon.Core.Aggregates.Complaints
             Status = newStatus;
             UpdatedDate = DateTime.UtcNow;
 
-            if (newStatus == ComplaintStatus.Resolved)
+            if (newStatus == ComplaintStatus.Löst)
             {
                 ResolvedDate = DateTime.UtcNow;
             }
