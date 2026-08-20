@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.SharedKernel.ValuesObjects;
+﻿using Ansjon.Core.Aggregates.Complaints;
 using System.ComponentModel.DataAnnotations;
 
 namespace Ansjon.UseCases.Complaints.DTOs;
