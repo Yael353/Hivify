@@ -1,20 +1,29 @@
 ﻿@page "/admin/arandehantering"
 @layout AdminLayout
 
-
 @using MudBlazor
 @using Ansjon.Components.Admin.AdminTabs.AdminComplaintsMgmt
 
-
 <PageTitle>Admin – Ärendehantering</PageTitle>
 
-<MudText Typo="Typo.h5" Color="Color.Primary" Class="font-weight-bold mb-3">
-    Ärendehantering
-</MudText>
-<MudText Typo="Typo.body2" Color="Color.Tertiary" Class="mb-4">
-    Här kan du hantera inkomna ärenden.
-</MudText>
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-4 py-md-6">
+    <div class="mb-4 mb-md-6">
+        <MudText Typo="Typo.h4" Color="Color.Primary" Class="font-weight-medium" Style="letter-spacing: -0.3px;">
+            📩 Ärendehantering
+        </MudText>
+        <MudText Typo="Typo.body1" Color="Color.Tertiary" Class="mt-1">
+            Hantera och besvara alla inkomna ärenden från communityn.
+        </MudText>
+    </div>
 
-<MudDivider Class="mb-4" />
+    <AdminComplaints />
+</MudContainer>
 
-<AdminComplaints/>
+<style>
+    @@media (max-width: 768px) {
+        .mud-container {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+    }
+</style>
