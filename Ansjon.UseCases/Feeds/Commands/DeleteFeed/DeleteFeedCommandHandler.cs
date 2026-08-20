@@ -48,7 +48,7 @@ public sealed class DeleteFeedCommandHandler
         }
 
         // Domain operation
-        feed.Delete(MemberRole.GeneralMember);
+        feed.Delete(MemberRole.CommiteAnsvarig);
 
         // Persist aggregate
         await _feedRepository.UpdateFeedAsync(

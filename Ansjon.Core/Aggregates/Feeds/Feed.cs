@@ -72,7 +72,7 @@ namespace Ansjon.Core.Aggregates.Feeds
         }
         private static void EnsureAdmin(MemberRole role)
         {
-            if (role != MemberRole.GeneralMember)
+            if (role != MemberRole.StyrelseLedamot)
                 throw new DomainException(
                     "Only administrators can manage feeds.");
         }

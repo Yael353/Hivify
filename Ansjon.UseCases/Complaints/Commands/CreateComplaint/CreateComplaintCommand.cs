@@ -1,4 +1,4 @@
-﻿using Ansjon.Core.SharedKernel.ValuesObjects;
+﻿using Ansjon.Core.Aggregates.Complaints;
 using Ansjon.UseCases.Abstractions.Messaging;
 using System;
 using System.Collections.Generic;

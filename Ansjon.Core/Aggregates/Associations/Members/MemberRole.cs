@@ -2,7 +2,7 @@
 {
     public enum MemberRole
     {
-        Admin,
-        GeneralMember
+        StyrelseLedamot,
+        CommiteAnsvarig
     }
 }

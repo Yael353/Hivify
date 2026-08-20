@@ -1,4 +1,4 @@
-﻿namespace Ansjon.Core.SharedKernel.ValuesObjects
+﻿namespace Ansjon.Core.Aggregates.Complaints
 {
     public enum ComplaintCategory
     {

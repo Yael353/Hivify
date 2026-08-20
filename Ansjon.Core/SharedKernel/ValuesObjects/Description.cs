@@ -1,5 +1,4 @@
 ﻿using Ansjon.Core.Exceptions;
-using Ansjon.Core.SharedKernel;
 
 namespace Ansjon.Core.SharedKernel.ValuesObjects
 {
