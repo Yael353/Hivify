@@ -2,52 +2,135 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
+@using Ansjon.Core.Aggregates.Complaints
 @using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Complaints.DTOs
 @using Ansjon.UseCases.Complaints.Queries.GetComplaint
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
+
 @inject IQuerySender QuerySender
 
 <PageTitle>Mina ärenden</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
-    <MudPaper Class="pa-6" Elevation="3" Style="border-radius: 16px;">
-        <MudText Typo="Typo.h5" Color="Color.Primary" Class="font-weight-bold mb-3">
-            Mina felanmälningar
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4 py-4">
+    <MudPaper Class="pa-4 pa-md-6" Elevation="2" Style="border-radius: 16px;">
+        <MudText Typo="Typo.h5" Color="Color.Primary" Class="font-weight-bold mb-2">
+            📋 Mina felanmälningar
+        </MudText>
+        <MudText Typo="Typo.body2" Color="Color.Tertiary" Class="mb-4">
+            Här ser du alla dina skickade ärenden och deras status.
         </MudText>
 
         <MudDivider Class="mb-4" />
 
         @if (_complaints == null)
         {
-            <MudProgressCircular Indeterminate="true" Class="mx-auto my-8 d-flex" />
+            <div class="text-center py-8">
+                <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+                <MudText Class="mt-3" Color="Color.Tertiary">Laddar dina ärenden...</MudText>
+            </div>
         }
         else if (!_complaints.Any())
         {
-            <MudText Color="Color.Tertiary" Class="text-center pa-8">
-                Du har inga felanmälningar ännu.
-            </MudText>
+            <div class="text-center py-8">
+                <MudIcon Icon="@Icons.Material.Filled.Inbox" Size="Size.Large" Color="Color.Tertiary" />
+                <MudText Typo="Typo.h5" Color="Color.Tertiary" Class="mt-3">
+                    Du har inga felanmälningar ännu.
+                </MudText>
+                <MudText Color="Color.Tertiary" Class="mt-1">
+                    Gå till <a href="/complaint" class="text-primary">felanmälan</a> för att skicka in ett ärende.
+                </MudText>
+            </div>
         }
         else
         {
-            <MudTable Items="@_complaints" Hover="true" Striped="true" Bordered="true">
-                <HeaderContent>
-                    <MudTh>Titel</MudTh>
-                    <MudTh>Kategori</MudTh>
-                    <MudTh>Status</MudTh>
-                    <MudTh>Skapad</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd>@context.Title</MudTd>
-                    <MudTd>@context.Category</MudTd>
-                    <MudTd>@context.Status</MudTd>
-                    <MudTd>@context.CreatedDate.ToString("yyyy-MM-dd HH:mm")</MudTd>
-                </RowTemplate>
-            </MudTable>
+            <MudStack Spacing="4">
+                @foreach (var complaint in _complaints)
+                {
+                    <MudCard Elevation="1" Style="border-radius: 12px; border-left: 4px solid #3f51b5; transition: all 0.2s ease;">
+                        <MudCardContent Class="pa-4">
+                            <!-- Rad 1: Titel + Status -->
+                            <MudGrid>
+                                <MudItem xs="12" sm="8">
+                                    <MudText Typo="Typo.h6" Color="Color.Default" Class="font-weight-medium">
+                                        @complaint.Title
+                                    </MudText>
+                                </MudItem>
+                                <MudItem xs="12" sm="4" Class="d-flex justify-content-start justify-content-sm-end align-items-center">
+                                    <MudChip T="string"
+                                             Color="@(complaint.Status == ComplaintStatus.Ny ? Color.Warning :
+                                                                                             complaint.Status == ComplaintStatus.Granskas ? Color.Info :
+                                                                                             complaint.Status == ComplaintStatus.Pågår ? Color.Info :
+                                                                                             complaint.Status == ComplaintStatus.Löst ? Color.Success : Color.Default)"
+                                             Size="Size.Small">
+                                        @complaint.Status
+                                    </MudChip>
+                                </MudItem>
+                            </MudGrid>
+
+                            <MudDivider Class="my-2" Style="opacity: 0.4;" />
+
+                            <!-- Rad 2: Kategori + Skapad datum -->
+                            <MudGrid>
+                                <MudItem xs="12" sm="6">
+                                    <MudText Typo="Typo.caption" Color="Color.Tertiary">
+                                        <MudIcon Icon="@Icons.Material.Filled.Label" Size="Size.Small" />
+                                        @complaint.Category
+                                    </MudText>
+                                </MudItem>
+                                <MudItem xs="12" sm="6" Class="d-flex justify-content-start justify-content-sm-end">
+                                    <MudText Typo="Typo.caption" Color="Color.Tertiary">
+                                        <MudIcon Icon="@Icons.Material.Filled.Schedule" Size="Size.Small" />
+                                        @complaint.CreatedDate.ToString("dd MMM yyyy, HH:mm")
+                                    </MudText>
+                                </MudItem>
+                            </MudGrid>
+
+                            <!-- Beskrivning -->
+                            <MudDivider Class="my-2" Style="opacity: 0.3;" />
+                            <MudText Typo="Typo.body2" Color="Color.Default" Style="color: #555; white-space: pre-wrap; line-height: 1.6;">
+                                @(complaint.Description.Length > 120 ? complaint.Description.Substring(0, 120) + "..." : complaint.Description)
+                            </MudText>
+
+                            <!-- Admin-kommentar (om den finns) -->
+                            @if (!string.IsNullOrEmpty(complaint.AdminComment))
+                            {
+                                <MudDivider Class="my-2" Style="opacity: 0.3;" />
+                                <MudPaper Class="pa-3" Elevation="0" Style="background: #f8faff; border-radius: 8px; border-left: 4px solid #3f51b5;">
+                                    <MudText Typo="Typo.caption" Color="Color.Tertiary" Class="font-weight-medium">
+                                        <MudIcon Icon="@Icons.Material.Filled.Message" Size="Size.Small" />
+                                        Admin-kommentar:
+                                    </MudText>
+                                    <MudText Typo="Typo.body2" Color="Color.Default" Class="mt-1">
+                                        @complaint.AdminComment
+                                    </MudText>
+                                </MudPaper>
+                            }
+                        </MudCardContent>
+                    </MudCard>
+                }
+            </MudStack>
         }
     </MudPaper>
 </MudContainer>
+
+<style>
+    .mud-card {
+        transition: all 0.2s ease;
+    }
+
+        .mud-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(63, 81, 181, 0.08) !important;
+            border-color: #c5cae9;
+        }
+
+    .mud-container {
+        background: #ffffff;
+        min-height: 100vh;
+    }
+</style>
 
 @code {
     private IReadOnlyList<ComplaintListItemDto>? _complaints;

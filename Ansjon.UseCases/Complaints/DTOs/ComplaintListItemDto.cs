@@ -10,5 +10,7 @@ public sealed record ComplaintListItemDto(
     ComplaintCategory Category,
     ComplaintStatus Status,
     DateTime CreatedDate,
-    string? ImageUrl
+    string? ImageUrl,
+    string? AdminComment = null,
+    string? UserId = null
 );

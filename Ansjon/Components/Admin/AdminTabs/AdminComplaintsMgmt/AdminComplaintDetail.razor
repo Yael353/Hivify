@@ -1,0 +1,190 @@
+﻿@using Ansjon.Core.Aggregates.Complaints
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Complaints.Commands.UpdateComplaintStatus
+@using Ansjon.UseCases.Complaints.DTOs
+@using Ansjon.UseCases.Complaints.Queries.GetComplaintById
+
+@inject ISender Sender
+@inject ISnackbar Snackbar
+@inject IQuerySender QuerySender
+@inject NavigationManager NavigationManager
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4 p-md-5">
+
+            <!-- Tillbaka-knapp -->
+            <button class="btn btn-outline-primary btn-sm mb-4"
+                    onclick="@(() => NavigationManager.NavigateTo("/admin/arandehantering"))">
+                ← Tillbaka
+            </button>
+
+            @if (_complaint == null)
+            {
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Laddar...</span>
+                    </div>
+                    <p class="text-muted mt-3">Laddar ärende...</p>
+                </div>
+            }
+            else
+            {
+                <!-- Titel -->
+                <h4 class="text-primary fw-bold">@_complaint.Title</h4>
+                <hr />
+
+                <!-- Avsändare -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <span class="badge bg-secondary me-2">Avsändare</span>
+                        <span class="text-muted">@_complaint.UserId</span>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="row align-items-center mb-3">
+                    <div class="col-12 col-sm-6">
+                        <span class="fw-medium text-secondary">Status:</span>
+                        <select class="form-select form-select-sm d-inline-block w-auto ms-2"
+                                @bind="_selectedStatus"
+                                @bind:event="oninput">
+                            @foreach (ComplaintStatus status in Enum.GetValues(typeof(ComplaintStatus)))
+                            {
+                                <option value="@status">@status</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-6 mt-2 mt-sm-0">
+                        <span class="badge @(_selectedStatus == ComplaintStatus.Ny ? "bg-warning" :
+                                            _selectedStatus == ComplaintStatus.Granskas ? "bg-info" :
+                                            _selectedStatus == ComplaintStatus.Pågår ? "bg-info" :
+                                            _selectedStatus == ComplaintStatus.Löst ? "bg-success" : "bg-secondary")">
+                            @_selectedStatus
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Kategori + Datum -->
+                <div class="row mb-3">
+                    <div class="col-12 col-sm-6">
+                        <span class="text-secondary">🏷️ Kategori:</span>
+                        <span>@_complaint.Category</span>
+                    </div>
+                    <div class="col-12 col-sm-6 text-sm-end">
+                        <span class="text-secondary">📅 Skapad:</span>
+                        <span>@_complaint.CreatedDate.ToString("dd MMM yyyy, HH:mm")</span>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- Beskrivning -->
+                <h6 class="fw-semibold text-primary">Beskrivning</h6>
+                <p class="text-dark" style="white-space: pre-wrap; line-height: 1.8;">
+                    @_complaint.Description
+                </p>
+
+                @if (!string.IsNullOrEmpty(_complaint.ImageUrl))
+                {
+                    <hr />
+                    <h6 class="fw-semibold text-primary">Bifogad bild</h6>
+                    <img src="@_complaint.ImageUrl" alt="Bifogad bild" style="max-height: 200px; border-radius: 8px; border: 1px solid #dee2e6;" />
+                }
+
+                <hr />
+
+                <!-- Admin-kommentar -->
+                <h6 class="fw-semibold text-primary">Admin-kommentar</h6>
+
+                @if (!string.IsNullOrEmpty(_complaint.AdminComment))
+                {
+                    <div class="p-3 mb-3 bg-light rounded-3 border-start border-4 border-primary">
+                        <p class="mb-0">@_complaint.AdminComment</p>
+                        <small class="text-muted">Admin</small>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-2">Ingen kommentar har lagts till ännu.</p>
+                }
+
+                <!-- Skriv kommentar -->
+                <textarea class="form-control mt-2" rows="3"
+                          placeholder="Lägg till kommentar..."
+                          @bind="_adminComment"></textarea>
+
+                <button class="btn btn-primary rounded-pill px-4 mt-3"
+                        disabled="@_saving"
+                        @onclick="SaveChanges">
+                    @(_saving ? "Sparar..." : "Spara ändringar")
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid ComplaintId { get; set; }
+
+    private ComplaintListItemDto? _complaint;
+    private ComplaintStatus _selectedStatus;
+    private string _adminComment = string.Empty;
+    private bool _saving;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadComplaint();
+    }
+
+    private async Task LoadComplaint()
+    {
+        var query = new GetComplaintByIdQuery(ComplaintId);
+        _complaint = await QuerySender.Send(query);
+
+        if (_complaint != null)
+        {
+            _selectedStatus = _complaint.Status;
+            _adminComment = _complaint.AdminComment ?? string.Empty;
+        }
+    }
+
+    private async Task OnStatusChanged(ChangeEventArgs e)
+    {
+        if (Enum.TryParse<ComplaintStatus>(e.Value?.ToString(), out var newStatus))
+        {
+            _selectedStatus = newStatus;
+            await SaveChanges();
+        }
+    }
+
+    private async Task SaveChanges()
+    {
+        if (_saving) return;
+
+        try
+        {
+            _saving = true;
+
+            var command = new UpdateComplaintStatusCommand(
+                ComplaintId,
+                _selectedStatus,
+                _adminComment
+            );
+
+            await Sender.Send(command);
+
+            Snackbar.Add("Ärendet uppdaterades!", Severity.Success);
+            await LoadComplaint();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Fel: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+}

@@ -6,17 +6,10 @@
 
 @inject IQuerySender QuerySender
 @inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
-    <!-- Rubrik & introduktion -->
-    <div class="mb-6">
-        <MudText Typo="Typo.h4" Color="Color.Primary" Class="font-weight-medium" Style="letter-spacing: -0.3px;">
-            📩 Ärendehantering
-        </MudText>
-        <MudText Typo="Typo.body1" Color="Color.Tertiary" Class="mt-1">
-            Hantera och besvara alla inkomna ärenden från communityn.
-        </MudText>
-    </div>
+ 
 
     <!-- Innehåll -->
     <MudPaper Class="pa-5" Elevation="1" Style="border-radius: 12px;">
@@ -67,7 +60,7 @@
                                     <MudButton Variant="Variant.Outlined"
                                                Color="Color.Primary"
                                                Size="Size.Small"
-                                               OnClick="@(() => Snackbar.Add($"Hantera: {complaint.Title}", Severity.Info))"
+                                               OnClick="@(() => NavigationManager.NavigateTo($"/admin/arandehantering/{complaint.Id}"))"
                                                Style="border-radius: 40px; padding: 4px 16px; text-transform: none; font-weight: 400;">
                                         Hantera
                                     </MudButton>

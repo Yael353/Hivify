@@ -37,7 +37,8 @@ public sealed class GetUserComplaintsQueryHandler
                 c.Category,
                 c.Status,
                 c.CreatedDate,
-                c.ImageUrl))
+                c.ImageUrl,
+                 c.AdminComment))
             .ToList();
     }
 }

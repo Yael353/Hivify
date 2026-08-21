@@ -126,6 +126,7 @@ builder.Services.AddComplaintServices();
 builder.Services.AddRazorComponents();
 builder.Services.AddScoped<ISender, Sender>();
 builder.Services.AddScoped<IQuerySender, QuerySender>();
+builder.Services.AddComplaintServices();
 
 #endregion
 
