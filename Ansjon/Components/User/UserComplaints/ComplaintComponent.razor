@@ -60,7 +60,7 @@
                 <label style="display: block; margin-bottom: 4px; font-weight: 500;">
                     Bifoga bild (valfritt)
                 </label>
-                <InputFile OnChange="@OnFileSelected" accept="image/*" capture="environment" />
+                <InputFile OnChange="@OnFileSelected" accept="image/*" />
 
                 @if (!string.IsNullOrEmpty(_imageUrl))
                 {
@@ -102,82 +102,89 @@
     private bool _isSubmitting = false;
 
     private async Task HandleSubmit()
-    {
-        Console.WriteLine("🔍 1. HandleSubmit startar!");
+{
+    Console.WriteLine("🔍 1. HandleSubmit startar!");
 
-        if (string.IsNullOrWhiteSpace(_title))
+    if (string.IsNullOrWhiteSpace(_title))
+    {
+        Snackbar.Add("Titel är obligatorisk!", Severity.Warning);
+        return;
+    }
+
+    _isSubmitting = true;
+    StateHasChanged();
+
+    try
+    {
+        Console.WriteLine("🔍 2. Hämtar användare...");
+        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (!user.Identity?.IsAuthenticated ?? true)
         {
-            Snackbar.Add("Titel är obligatorisk!", Severity.Warning);
+            Snackbar.Add("Du måste vara inloggad.", Severity.Warning);
             return;
         }
 
-        _isSubmitting = true;
+        Console.WriteLine($"🔍 3. Skapar kommando... Bild: {_imageUrl?.Length ?? 0} tecken");
+        var command = new CreateComplaintCommand(
+            _category,
+            _title,
+            _description,
+            _imageUrl
+        );
+
+        Console.WriteLine("🔍 4. Skickar kommando...");
+        await Sender.Send(command);
+
+        Console.WriteLine("✅ 5. Klart!");
+        Snackbar.Add("Felanmälan skickades!", Severity.Success);
+
+        _title = string.Empty;
+        _description = string.Empty;
+        _imageUrl = null;
+        _category = ComplaintCategory.Väg;
         StateHasChanged();
-
-        try
-        {
-            Console.WriteLine("🔍 2. Hämtar användare...");
-            var authState = await AuthProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-
-            if (!user.Identity?.IsAuthenticated ?? true)
-            {
-                Snackbar.Add("Du måste vara inloggad.", Severity.Warning);
-                return;
-            }
-
-            Console.WriteLine("🔍 3. Skapar kommando...");
-            var command = new CreateComplaintCommand(
-                _category,
-                _title,
-                _description,
-                _imageUrl
-            );
-
-            Console.WriteLine("🔍 4. Skickar kommando...");
-            await Sender.Send(command);
-
-            Console.WriteLine("✅ 5. Klart!");
-            Snackbar.Add("Felanmälan skickades!", Severity.Success);
-
-            _title = string.Empty;
-            _description = string.Empty;
-            _imageUrl = null;
-            _category = ComplaintCategory.Väg;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ FEL: {ex.Message}");
-            Snackbar.Add($"Fel: {ex.Message}", Severity.Error);
-        }
-        finally
-        {
-            _isSubmitting = false;
-            StateHasChanged();
-        }
     }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ FEL: {ex.Message}");
+        Console.WriteLine($"Stacktrace: {ex.StackTrace}");
+        Snackbar.Add($"Fel: {ex.Message}", Severity.Error);
+    }
+    finally
+    {
+        _isSubmitting = false;
+        StateHasChanged();
+    }
+}
 
     private async Task OnFileSelected(InputFileChangeEventArgs e)
+{
+    var file = e.File;
+    if (file is null) return;
+
+    if (file.Size > 1 * 1024 * 1024)
     {
-        var file = e.File;
-        if (file is null) return;
-
-        try
-        {
-            using var stream = file.OpenReadStream(2 * 1024 * 1024);
-            using var memory = new MemoryStream();
-            await stream.CopyToAsync(memory);
-
-            _imageUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(memory.ToArray())}";
-            StateHasChanged();
-
-            Snackbar.Add("Bild tillagd!", Severity.Info);
-        }
-        catch (Exception ex)
-        {
-            Snackbar.Add($"Kunde inte ladda bild: {ex.Message}", Severity.Error);
-        }
+        Snackbar.Add("Bilden är för stor – max 1 MB.", Severity.Warning);
+        return;
     }
+
+    try
+    {
+        using var stream = file.OpenReadStream(1 * 1024 * 1024);
+        using var memory = new MemoryStream();
+        await stream.CopyToAsync(memory);
+
+        _imageUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(memory.ToArray())}";
+        StateHasChanged();
+        Snackbar.Add("Bild tillagd!", Severity.Info);
+    }
+    catch (Exception ex)
+    {
+        Snackbar.Add($"Kunde inte ladda bild: {ex.Message}", Severity.Error);
+    }
+}
 
     private void RemoveImage()
     {

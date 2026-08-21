@@ -72,7 +72,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
             // 7. ImageUrl
             entity.Property(c => c.ImageUrl)
-                .HasMaxLength(500)
+                .HasMaxLength(5000)
                 .IsRequired(false);
 
             // 8. Status (enum)
