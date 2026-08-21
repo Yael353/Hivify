@@ -1,5 +1,4 @@
 ﻿using Ansjon.Core.Aggregates.Complaints;
-using Ansjon.Core.SharedKernel.ValuesObjects;
 
 namespace Ansjon.UseCases.Complaints.DTOs;
 
@@ -13,4 +12,5 @@ public sealed record ComplaintListItemDto(
     string? ImageUrl,
     string? AdminComment = null,
     string? UserId = null
+
 );

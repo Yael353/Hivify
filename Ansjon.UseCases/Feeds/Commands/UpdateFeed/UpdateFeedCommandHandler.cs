@@ -42,7 +42,7 @@ public sealed class UpdateFeedCommandHandler : ICommandHandler<UpdateFeedCommand
         feed.Update(
             new Title(command.Title),
             new Description(command.Content),
-            MemberRole.GeneralMember);
+            MemberRole.CommiteAnsvarig);
 
         await _feedRepository.UpdateFeedAsync(
             feed,

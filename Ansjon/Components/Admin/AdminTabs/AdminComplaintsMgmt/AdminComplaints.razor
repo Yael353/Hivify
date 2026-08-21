@@ -38,7 +38,7 @@
                 @foreach (var complaint in _complaints)
                 {
                     <MudCard Elevation="1" Style="border-radius: 12px; border-left: 4px solid #3f51b5; transition: all 0.2s ease;">
-                        <MudCardContent Class="pa-4">
+                        <MudCardContent Class="pa-3 pa-md-4">
                             <!-- Rad 1: Titel + Status + Åtgärd -->
                             <MudGrid>
                                 <MudItem xs="12" sm="7">
@@ -46,17 +46,15 @@
                                         @complaint.Title
                                     </MudText>
                                 </MudItem>
-                                <MudItem xs="12" sm="5" Class="d-flex justify-content-start justify-content-sm-end align-items-center gap-2">
-                                    <!-- Status -->
+                                <MudItem xs="12" sm="5" Class="d-flex flex-wrap justify-content-start justify-content-sm-end align-items-center gap-2">
                                     <MudChip T="string"
                                              Color="@(complaint.Status == ComplaintStatus.Ny ? Color.Warning :
-                                                         complaint.Status == ComplaintStatus.Granskas ? Color.Info :
-                                                         complaint.Status == ComplaintStatus.Pågår ? Color.Info :
-                                                         complaint.Status == ComplaintStatus.Löst ? Color.Success : Color.Default)"
+                                                     complaint.Status == ComplaintStatus.Granskas ? Color.Info :
+                                                     complaint.Status == ComplaintStatus.Pågår ? Color.Info :
+                                                     complaint.Status == ComplaintStatus.Löst ? Color.Success : Color.Default)"
                                              Size="Size.Small">
                                         @complaint.Status
                                     </MudChip>
-                                    <!-- Åtgärd -->
                                     <MudButton Variant="Variant.Outlined"
                                                Color="Color.Primary"
                                                Size="Size.Small"
@@ -108,22 +106,46 @@
         transition: all 0.2s ease;
     }
 
-        .mud-paper:hover {
-            box-shadow: 0 4px 16px rgba(63, 81, 181, 0.06) !important;
-        }
+    .mud-paper:hover {
+        box-shadow: 0 4px 16px rgba(63, 81, 181, 0.06) !important;
+    }
 
     .mud-card {
         transition: all 0.2s ease;
     }
 
-        .mud-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(63, 81, 181, 0.08) !important;
-            border-color: #c5cae9;
-        }
+    .mud-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(63, 81, 181, 0.08) !important;
+        border-color: #c5cae9;
+    }
 
     .gap-2 {
         gap: 8px;
+    }
+
+    /* Responsivt – mobil */
+    @@media (max-width: 768px) {
+        .mud-container {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+
+        .mud-paper {
+            padding: 16px !important;
+        }
+
+        .mud-card-content {
+            padding: 12px !important;
+        }
+
+        .mud-card {
+            border-left-width: 3px !important;
+        }
+
+        .mud-text-h6 {
+            font-size: 1rem !important;
+        }
     }
 </style>
 

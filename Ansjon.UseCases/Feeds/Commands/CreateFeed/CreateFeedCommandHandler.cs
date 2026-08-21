@@ -48,7 +48,7 @@ public sealed class CreateFeedCommandHandler : ICommandHandler<CreateFeedCommand
         // 4. Convert application data into domain value objects
         var feed = Feed.CreateFeed(
             new MemberID(userId),
-            MemberRole.GeneralMember,
+            MemberRole.CommiteAnsvarig,
             new Title(command.Title),
             new Description(command.Content));
 

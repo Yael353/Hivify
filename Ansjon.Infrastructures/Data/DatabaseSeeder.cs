@@ -18,7 +18,7 @@ public static class DatabaseSeeder
             context.Feeds.Add(
                 Feed.CreateFeed(
                     new MemberID(Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")),
-                    MemberRole.GeneralMember,
+                    MemberRole.CommiteAnsvarig,
                     new Title("Welcome to Ansjon"),
                     new Description("This is the first seeded feed.")));
 
@@ -26,7 +26,7 @@ public static class DatabaseSeeder
             context.Feeds.Add(
                 Feed.CreateFeed(
                     new MemberID(Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc")),
-                    MemberRole.GeneralMember,
+                    MemberRole.CommiteAnsvarig,
                     new Title("Getting Started"),
                     new Description("Learn how to use the platform.")));
         }
