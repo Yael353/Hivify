@@ -11,6 +11,16 @@
 @inject IQuerySender QuerySender
 @inject NavigationManager NavigationManager
 
+
+<MudDialogProvider FullWidth="true"
+  MaxWidth="MaxWidth.ExtraSmall"
+  CloseButton="true"
+  BackdropClick="false"
+  NoHeader="true"
+  Position="DialogPosition.Center"
+  CloseOnEscapeKey="true"
+  BackgroundClass="my-custom-class"
+  ReverseMessageBoxButtonOrder="true" />
 <div class="container py-4">
 
   @if (_loading)
@@ -89,8 +99,7 @@
 
     try
     {
-      _house = await QuerySender.Send(
-          new GetHouseQuery(HouseId));
+      _house = await QuerySender.Send(new GetHouseQuery(HouseId));
     }
     finally
     {
