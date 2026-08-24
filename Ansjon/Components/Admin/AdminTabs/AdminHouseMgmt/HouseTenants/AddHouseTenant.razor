@@ -1,10 +1,11 @@
 ﻿@using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.AdminUserMgmt.DTOs
-@using Ansjon.UseCases.AdminUserMgmt.Queries
 @using Ansjon.UseCases.Houses.Commands.AddTenant
+@using Ansjon.Components.Admin.AdminTabs.AdminUserMgmt
+@using MudBlazor
 
-@inject IQuerySender QuerySender
 @inject ISender Sender
+@inject IDialogService DialogService
 @inject ILogger<AddHouseTenant> Logger
 
 <div class="mb-4">
@@ -18,117 +19,84 @@
     användaren som boende i detta hus.
   </p>
 
-  @if (_loadingUsers)
-  {
-    <div class="d-flex align-items-center gap-2">
-      <div class="spinner-border spinner-border-sm"
-        role="status"
-        aria-hidden="true">
-      </div>
-
-      <span>
-        Laddar användare...
-      </span>
-    </div>
-  }
-  else if (_errorMessage is not null)
+  @if (_errorMessage is not null)
   {
     <div class="alert alert-danger">
       @_errorMessage
     </div>
   }
-  else
+
+  @if (_selectedUser is not null)
   {
-    <div class="mb-3">
+    <div class="border rounded p-3 mb-3">
 
-      <label for="tenantUser"
-        class="form-label">
-        Användare
-      </label>
+      <div class="d-flex align-items-center gap-3">
 
-      <select id="tenantUser"
-        class="form-select"
-        value="@SelectedUserIdString"
-        @onchange="OnUserChanged">
+        <div class="rounded-circle bg-primary text-white
+          d-flex align-items-center justify-content-center"
+          style="width: 40px; height: 40px;">
 
-        <option value="">
-          -- Välj användare --
-        </option>
+          @GetInitials(_selectedUser)
 
-        @foreach (var user in _users)
-        {
-          <option value="@user.Id">
-            @GetUserDisplayName(user)
-            @if (!string.IsNullOrWhiteSpace(user.Email))
-            {
-              @($" ({user.Email})")
-            }
-          </option>
-        }
+        </div>
 
-      </select>
+        <div>
 
-    </div>
-
-    @if (_selectedUser is not null)
-    {
-      <div class="border rounded p-3 mb-3">
-
-        <div class="d-flex align-items-center gap-3">
-
-          <div class="rounded-circle bg-primary text-white
-            d-flex align-items-center justify-content-center"
-            style="width: 40px; height: 40px;">
-
-            @GetInitials(_selectedUser)
-
+          <div class="fw-semibold">
+            @GetUserDisplayName(_selectedUser)
           </div>
 
-          <div>
-
-            <div class="fw-semibold">
-              @GetUserDisplayName(_selectedUser)
+          @if (!string.IsNullOrWhiteSpace(_selectedUser.Email))
+          {
+            <div class="text-muted small">
+              @_selectedUser.Email
             </div>
-
-            @if (!string.IsNullOrWhiteSpace(_selectedUser.Email))
-            {
-              <div class="text-muted small">
-                @_selectedUser.Email
-              </div>
-            }
-
-          </div>
+          }
 
         </div>
 
       </div>
 
-      <button type="button"
-        class="btn btn-primary"
-        disabled="@_saving"
-        @onclick="AddTenantAsync">
-
-        @if (_saving)
-        {
-          <span class="spinner-border spinner-border-sm me-2"
-            role="status"
-            aria-hidden="true">
-          </span>
-
-          <span>
-            Lägger till...
-          </span>
-        }
-        else
-        {
-          <span>
-            Lägg till
-          </span>
-        }
-
-      </button>
-    }
+    </div>
   }
+
+  <div class="d-flex justify-content-end gap-2 mt-3">
+
+    <MudButton Variant="Variant.Outlined"
+      Color="Color.Primary"
+      StartIcon="@Icons.Material.Filled.PersonSearch"
+      OnClick="OpenUserPickerAsync">
+
+      Välj användare
+
+    </MudButton>
+
+    <MudButton Variant="Variant.Filled"
+      Color="Color.Success"
+      StartIcon="@Icons.Material.Filled.Add"
+      Disabled="@(_selectedUser is null || _saving)"
+      OnClick="AddTenantAsync">
+
+      @if (_saving)
+      {
+        <MudProgressCircular Indeterminate="true"
+          Size="Size.Small"
+          Class="me-2" />
+
+        <span>
+          Lägger till...
+        </span>
+      }
+      else
+      {
+        <span>
+          Lägg till som boende
+        </span>
+      }
+
+    </MudButton>
+
+  </div>
 
 </div>
 
@@ -136,68 +104,48 @@
 
   [Parameter, EditorRequired]
   public Guid HouseId { get; set; }
-  public string Email { get; set; } = string.Empty;
 
   [Parameter]
   public EventCallback OnTenantAdded { get; set; }
 
-  private IReadOnlyList<UserListItem> _users = [];
-
   private UserListItem? _selectedUser;
 
-  private bool _loadingUsers;
   private bool _saving;
 
   private string? _errorMessage;
 
-  private string SelectedUserIdString =>
-      _selectedUser?.Id.ToString() ?? string.Empty;
 
-  protected override async Task OnInitializedAsync()
+  private async Task OpenUserPickerAsync()
   {
-    await LoadUsersAsync();
-  }
-
-  private async Task LoadUsersAsync()
-  {
-    _loadingUsers = true;
     _errorMessage = null;
 
-    try
+    var options = new DialogOptions
     {
-      _users = await QuerySender.Send(
-          new GetUsersQuery());
-    }
-    catch (Exception ex)
-    {
-      Logger.LogError(
-          ex,
-          "Failed to load Identity users");
+      CloseOnEscapeKey = true,
+      MaxWidth = MaxWidth.Small,
+      FullWidth = true
+    };
 
-      _errorMessage =
-          "Kunde inte ladda användare.";
-    }
-    finally
-    {
-      _loadingUsers = false;
-    }
-  }
+    var dialog =
+        await DialogService.ShowAsync<UserPickerDialog>(
+            "Välj användare",
+            options);
 
-  private void OnUserChanged(ChangeEventArgs args)
-  {
-    var value = args.Value?.ToString();
+    var result =
+        await dialog.Result;
 
-    if (!Guid.TryParse(value, out var userId))
-    {
-      _selectedUser = null;
+    if (result.Canceled)
       return;
-    }
 
-    _selectedUser =
-        _users.FirstOrDefault(user => user.Id == userId);
+    var selectedUser =
+        result.Data as UserListItem;
 
-    _errorMessage = null;
+    if (selectedUser is null)
+      return;
+
+    _selectedUser = selectedUser;
   }
+
 
   private async Task AddTenantAsync()
   {
@@ -239,23 +187,40 @@
     }
   }
 
+
   private static string GetUserDisplayName(
       UserListItem user)
   {
-    return user.UserName
+    return user.FullName
+        ?? user.UserName
         ?? user.Email
         ?? user.Id.ToString();
   }
+
 
   private static string GetInitials(
       UserListItem user)
   {
     var value =
-        user.UserName
+        user.FullName
+        ?? user.UserName
         ?? user.Email;
 
     if (string.IsNullOrWhiteSpace(value))
       return "?";
+
+    var parts =
+        value.Split(
+            ' ',
+            StringSplitOptions.RemoveEmptyEntries);
+
+    if (parts.Length >= 2)
+    {
+      return string.Concat(
+              parts[0][0],
+              parts[^1][0])
+          .ToUpperInvariant();
+    }
 
     return value[..1].ToUpperInvariant();
   }

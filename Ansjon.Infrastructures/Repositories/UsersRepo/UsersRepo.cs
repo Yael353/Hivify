@@ -26,6 +26,7 @@ public sealed class UsersRepo : IUserRepo
             .AsNoTracking()
             .Select(user => new UserListItem(
                 user.Id,
+                user.FullName,
                 user.UserName,
                 user.Email,
                 user.PhoneNumber,
@@ -46,6 +47,7 @@ public sealed class UsersRepo : IUserRepo
             .Where(user => user.Id == userId)
             .Select(user => new UserListItem(
                 user.Id,
+                user.FullName,
                 user.UserName,
                 user.Email,
                 user.PhoneNumber,
