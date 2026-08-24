@@ -1,25 +1,33 @@
 ﻿@using Ansjon.UseCases.Association.DTOs
-<MudCard>
+@using MudBlazor
 
-  <MudCardContent>
+<MudCard Elevation="0"
+         Style="border: 1px solid #e9edf2; border-radius: 10px;">
 
-    <MudText Typo="Typo.h6">
-      @Member.FullName
-    </MudText>
+    <MudCardContent>
 
-    <MudText Color="Color.Secondary">
+        <MudText Typo="Typo.body1"
+                 Class="fw-semibold">
 
-      @Member.Role
+            @Member.FullName
 
-    </MudText>
+        </MudText>
 
-  </MudCardContent>
+        <MudText Typo="Typo.body2"
+                 Color="Color.Secondary"
+                 Class="mt-1">
+
+            @Member.Role
+
+        </MudText>
+
+    </MudCardContent>
 
 </MudCard>
 
+
 @code {
 
-  [Parameter]
-  public StaffMemberDto Member { get; set; } = default!;
-
+    [Parameter, EditorRequired]
+    public StaffMemberDto Member { get; set; } = default!;
 }

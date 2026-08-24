@@ -1,21 +1,36 @@
 ﻿@using Ansjon.UseCases.Association.DTOs
+@using MudBlazor
 
-<MudGrid>
+@if (Members.Count == 0)
+{
+    <MudAlert Severity="Severity.Info"
+              Variant="Variant.Outlined">
 
-    @foreach(var member in Members)
-    {
-        <MudItem xs="12" md="6">
+        Det finns inga styrelsemedlemmar.
 
-            <StaffMemberCard Member="member"/>
+    </MudAlert>
+}
+else
+{
+    <MudGrid>
 
-        </MudItem>
-    }
+        @foreach (var member in Members)
+        {
+            <MudItem xs="12"
+                     sm="6"
+                     md="4">
 
-</MudGrid>
+                <StaffMemberCard Member="member" />
 
-@code{
+            </MudItem>
+        }
+
+    </MudGrid>
+}
+
+
+@code {
 
     [Parameter]
-    public List<StaffMemberDto> Members { get; set; } = [];
-
+    public IReadOnlyList<StaffMemberDto> Members { get; set; } = [];
 }
