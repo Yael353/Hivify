@@ -86,11 +86,14 @@
                 </p>
 
                 @if (!string.IsNullOrEmpty(_complaint.ImageUrl))
-                {
-                    <hr />
-                    <h6 class="fw-semibold text-primary">Bifogad bild</h6>
-                    <img src="@_complaint.ImageUrl" alt="Bifogad bild" style="max-height: 200px; border-radius: 8px; border: 1px solid #dee2e6;" />
-                }
+{
+    <hr />
+    <h6 class="fw-semibold text-primary">Bifogad bild</h6>
+    <img src="@_complaint.ImageUrl" alt="Bifogad bild"
+         style="max-height: @(_imageExpanded ? "1000px" : "200px"); max-width: @(_imageExpanded ? "800px" : "200px"); border-radius: 8px; border: 1px solid #dee2e6; cursor: pointer; transition: max-height 0.3s ease;"
+         @onclick="ToggleImage" />
+    <small class="text-muted d-block mt-1">@(_imageExpanded ? "Klicka för att minska" : "Klicka för att förstora")</small>
+}
 
                 <hr />
 
@@ -132,6 +135,7 @@
     private ComplaintStatus _selectedStatus;
     private string _adminComment = string.Empty;
     private bool _saving;
+     private bool _imageExpanded = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -186,5 +190,9 @@
         {
             _saving = false;
         }
+    }
+    private void ToggleImage()
+    {
+        _imageExpanded = !_imageExpanded;
     }
 }

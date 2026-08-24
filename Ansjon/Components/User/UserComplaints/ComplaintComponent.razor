@@ -60,7 +60,7 @@
                 <label style="display: block; margin-bottom: 4px; font-weight: 500;">
                     Bifoga bild (valfritt)
                 </label>
-                <InputFile OnChange="@OnFileSelected" accept="image/*" />
+                <InputFile OnChange="@OnFileSelected" accept="image/* capture=" />
 
                 @if (!string.IsNullOrEmpty(_imageUrl))
                 {
