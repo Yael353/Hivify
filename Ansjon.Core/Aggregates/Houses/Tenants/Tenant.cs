@@ -26,4 +26,12 @@ public class Tenant : BaseEntity<TenantID>
     {
         return new Tenant(id, userId, fullName, email, phoneNumber);
     }
+
+    public void Delete()
+    {
+        if (DeletedAt != null)
+            return;
+
+        DeletedAt = DateTime.UtcNow;
+    }
 }

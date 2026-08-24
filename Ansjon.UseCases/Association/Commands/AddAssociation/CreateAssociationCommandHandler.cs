@@ -1,4 +1,5 @@
 ﻿using Ansjon.Core.Aggregates.Associations;
+using Ansjon.Core.SharedKernel.ValuesObjects;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
 
@@ -8,15 +9,14 @@ public sealed class CreateAssociationCommandHandler : ICommandHandler<AddAssocia
 {
     private readonly IAssociationRepo _associationRepository;
 
-    public CreateAssociationCommandHandler(
-        IAssociationRepo associationRepository)
+    public CreateAssociationCommandHandler(IAssociationRepo associationRepository)
     {
         _associationRepository = associationRepository;
     }
 
     public async Task<AssociationID> Handle(AddAssociationCommand command, CancellationToken cancellationToken)
     {
-        var association = Core.Aggregates.Associations.Association.Create(command.Name);
+        var association = Core.Aggregates.Associations.Association.Create(new Name(command.Name));
 
         await _associationRepository.AddAsync(association, cancellationToken);
 

@@ -133,16 +133,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasMaxLength(1000);
 
 
-        // =====================
-        // Association
-        // =====================
-
         modelBuilder.Entity<Association>(builder =>
         {
             builder.Property(a => a.Id)
                 .HasConversion(
                     id => id.Value,
                     value => new AssociationID(value));
+
+            builder.Property(a => a.Name)
+                .HasConversion(
+                    name => name.Value,
+                    value => new Name(value));
 
             builder.HasMany<Member>("_members")
                 .WithOne()
@@ -160,6 +161,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         modelBuilder.Entity<Member>(builder =>
         {
+            builder.HasKey(m => m.Id);
+
             builder.Property(m => m.Id)
                 .HasConversion(
                     id => id.Value,
@@ -169,6 +172,35 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .HasConversion(
                     id => id.Value,
                     value => new AssociationID(value));
+
+            builder.Property(m => m.UserId)
+                .HasConversion(
+                    userId => userId.Value,
+                    value => new UserID(value))
+                .HasColumnName("UserId")
+                .IsRequired();
+
+            builder.Property(m => m.FullName)
+                .HasConversion(
+                    name => name.Value,
+                    value => new Name(value))
+                .HasColumnName("FullName")
+                .IsRequired();
+
+            builder.Property(m => m.Role)
+                .HasConversion<int>()
+                .IsRequired();
+
+            builder.Property(m => m.DeletedAt)
+                .HasColumnName("DeletedAt");
+
+            builder.HasIndex(m => new
+            {
+                m.AssociationId,
+                m.UserId
+            })
+            .IsUnique()
+            .HasFilter("[DeletedAt] IS NULL");
         });
 
         // =====================

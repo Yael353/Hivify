@@ -7,11 +7,12 @@
 @using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Houses.DTOs
 @using Ansjon.UseCases.Houses.Queries.GetHouse
+@using MudBlazor
 
 @inject IQuerySender QuerySender
 @inject NavigationManager NavigationManager
 
-
+<MudPopoverProvider />
 <MudDialogProvider FullWidth="true"
   MaxWidth="MaxWidth.ExtraSmall"
   CloseButton="true"
@@ -25,72 +26,83 @@
 
   @if (_loading)
   {
-    <div>
-      <p>Laddar hus...</p>
+    <div class="d-flex justify-content-center py-5">
+
+      <MudProgressCircular Indeterminate="true"
+        Color="Color.Primary" />
+
     </div>
   }
   else if (_house is null)
   {
-    <div>
-      <h2>Huset kunde inte hittas</h2>
+    <MudAlert Severity="Severity.Error"
+      Variant="Variant.Outlined">
 
-      <button type="button"
-        class="btn btn-outline-secondary mt-3"
-        @onclick="GoBack">
-        Tillbaka
-      </button>
-    </div>
+      Huset kunde inte hittas.
+
+    </MudAlert>
+
+    <MudButton Variant="Variant.Outlined"
+      Class="mt-3"
+      OnClick="GoBack">
+
+      Tillbaka
+
+    </MudButton>
   }
   else
   {
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between
+      align-items-center
+      mb-4">
 
       <div>
-        <h1 class="h4 mb-1">
-          @_house.Address
-        </h1>
 
-        <p class="text-muted mb-0">
-          Hus
-        </p>
+        <MudText Typo="Typo.h5">
+          @_house.Address @_house.HouseNumber
+        </MudText>
+
       </div>
 
-      <button type="button"
-        class="btn btn-outline-secondary"
-        @onclick="GoBack">
+
+      <MudButton Variant="Variant.Outlined"
+        StartIcon="@Icons.Material.Filled.ArrowBack"
+        OnClick="GoBack">
+
         Tillbaka
-      </button>
+
+      </MudButton>
 
     </div>
 
-    <hr class="mb-4" />
+
+    <MudDivider Class="mb-4" />
+
 
     <HouseTenants HouseId="HouseId" />
   }
 
 </div>
 
+
 @code {
 
-  [Parameter]
+  [Parameter, EditorRequired]
   public Guid HouseId { get; set; }
 
   private HouseListItemDto? _house;
+
   private bool _loading;
-  private Guid _loadedHouseId;
+
 
   protected override async Task OnParametersSetAsync()
   {
     if (HouseId == Guid.Empty)
       return;
 
-    if (_loadedHouseId == HouseId)
-      return;
-
-    _loadedHouseId = HouseId;
-
     await LoadHouseAsync();
   }
+
 
   private async Task LoadHouseAsync()
   {
@@ -99,13 +111,21 @@
 
     try
     {
-      _house = await QuerySender.Send(new GetHouseQuery(HouseId));
+      _house = await QuerySender.Send(
+          new GetHouseQuery(HouseId));
+    }
+    catch (Exception ex)
+    {
+      Console.Error.WriteLine(ex);
+
+      _house = null;
     }
     finally
     {
       _loading = false;
     }
   }
+
 
   private void GoBack()
   {

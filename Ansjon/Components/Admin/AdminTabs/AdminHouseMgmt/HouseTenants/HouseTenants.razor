@@ -5,27 +5,59 @@
 
 @inject IQuerySender QuerySender
 
-<AddHouseTenant HouseId="HouseId" OnTenantAdded="RefreshAsync" />
+<AddHouseTenant HouseId="HouseId"
+  OnTenantAdded="LoadTenantsAsync" />
 
 <MudDivider Class="my-4" />
 
 @if (_loading)
 {
-  <MudProgressCircular Indeterminate="true"
-    Size="Size.Small" />
+  <div class="d-flex justify-center pa-4">
+    <MudProgressCircular Indeterminate="true"
+      Color="Color.Primary" />
+  </div>
 }
 else if (_errorMessage is not null)
 {
-  <MudAlert Severity="Severity.Error">
+  <MudAlert Severity="Severity.Error"
+    Variant="Variant.Outlined">
+
     @_errorMessage
+
+  </MudAlert>
+}
+else if (_tenants.Count == 0)
+{
+  <MudAlert Severity="Severity.Info"
+    Variant="Variant.Outlined">
+
+    Inga boende är registrerade i detta hus ännu.
+
   </MudAlert>
 }
 else
 {
-  <HouseTenantList Tenants="_tenants" />
+  <MudStack Spacing="2">
+
+    <MudText Typo="Typo.body2"
+      Color="Color.Tertiary">
+
+      Boende (@_tenants.Count)
+
+    </MudText>
+
+    @foreach (var tenant in _tenants)
+    {
+      <TenantCard Tenant="tenant"
+        HouseId="HouseId"
+        OnTenantRemoved="LoadTenantsAsync" />
+    }
+
+  </MudStack>
 }
 
 @code {
+
   [Parameter, EditorRequired]
   public Guid HouseId { get; set; }
 
@@ -35,21 +67,22 @@ else
 
   private string? _errorMessage;
 
-  private Guid _loadedHouseId;
+  private Guid _lastLoadedHouseId;
+
 
   protected override async Task OnParametersSetAsync()
   {
     if (HouseId == Guid.Empty)
       return;
 
-    // Don't reload simply because the parent rerendered.
-    if (_loadedHouseId == HouseId)
+    if (_lastLoadedHouseId == HouseId)
       return;
 
-    _loadedHouseId = HouseId;
+    _lastLoadedHouseId = HouseId;
 
     await LoadTenantsAsync();
   }
+
 
   private async Task LoadTenantsAsync()
   {
@@ -58,22 +91,20 @@ else
 
     try
     {
-      _tenants = await QuerySender.Send(new GetHouseTenantsQuery(HouseId));
+      _tenants =
+          await QuerySender.Send(
+              new GetHouseTenantsQuery(HouseId));
     }
     catch (Exception ex)
     {
-      _errorMessage = "Kunde inte ladda boende.";
-
       Console.Error.WriteLine(ex);
+
+      _errorMessage =
+          "Kunde inte ladda boende.";
     }
     finally
     {
       _loading = false;
     }
-  }
-
-  private async Task RefreshAsync()
-  {
-    await LoadTenantsAsync();
   }
 }

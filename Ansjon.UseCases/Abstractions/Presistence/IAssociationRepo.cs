@@ -1,7 +1,5 @@
 ﻿using Ansjon.Core.Aggregates.Associations;
 
-
-
 namespace Ansjon.UseCases.Abstractions.Presistence
 {
     public interface IAssociationRepo

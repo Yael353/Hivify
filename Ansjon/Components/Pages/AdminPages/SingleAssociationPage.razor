@@ -1,120 +1,150 @@
 ﻿@page "/admin/associations/{AssociationId:guid}"
+
 @layout AdminLayout
 @rendermode InteractiveServer
 
 @using Ansjon.Components.Admin.AdminTabs.AssociationMgmt
-@using Ansjon.Core.Aggregates.Associations
 @using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Association.Queries.GetAssociation
+@using Ansjon.UseCases.Association.DTOs
+
 @using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@attribute [Authorize(Roles = "Admin")]
 
 @inject IQuerySender QuerySender
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize(Roles = "Admin")]
+<MudPopoverProvider />
+<MudDialogProvider FullWidth="true"
+                  MaxWidth="MaxWidth.ExtraSmall"
+                  CloseButton="true"
+                  BackdropClick="false"
+                  NoHeader="true"
+                  Position="DialogPosition.Center"
+                  CloseOnEscapeKey="true"
+                  ReverseMessageBoxButtonOrder="true" />
+
 
 <div class="container py-4">
 
-  @if (_loading)
-  {
-    <div>
-      <p>Laddar förening...</p>
-    </div>
-  }
-  else if (_association is null)
-  {
-    <div>
+    @if (_loading)
+    {
+        <div class="d-flex justify-content-center py-5">
 
-      <h2>Föreningen kunde inte hittas</h2>
+            <MudProgressCircular Indeterminate="true"
+                                 Color="Color.Primary" />
 
-      <button type="button"
-        class="btn btn-outline-secondary mt-3"
-        @onclick="GoBack">
+        </div>
+    }
+    else if (_association is null)
+    {
+        <MudAlert Severity="Severity.Error"
+                  Variant="Variant.Outlined">
 
-        Tillbaka
+            Föreningen kunde inte hittas.
 
-      </button>
+        </MudAlert>
 
-    </div>
-  }
-  else
-  {
-    <div class="d-flex justify-content-between align-items-center mb-4">
+        <MudButton Variant="Variant.Outlined"
+                   Class="mt-3"
+                   StartIcon="@Icons.Material.Filled.ArrowBack"
+                   OnClick="GoBack">
 
-      <div>
+            Tillbaka
 
-        <h1 class="h4 mb-1">
-          @_association.Name
-        </h1>
+        </MudButton>
+    }
+    else
+    {
+        <div class="d-flex justify-content-between
+                    align-items-center
+                    mb-4">
 
-        <p class="text-muted mb-0">
-          Förening
-        </p>
+            <div>
 
-      </div>
+                <MudText Typo="Typo.h5">
 
-      <button type="button"
-        class="btn btn-outline-secondary"
-        @onclick="GoBack">
+                    @_association.Name
 
-        Tillbaka
+                </MudText>
 
-      </button>
+                <MudText Typo="Typo.body2"
+                         Color="Color.Secondary">
 
-    </div>
+                    Förening
 
-    <hr class="mb-4" />
+                </MudText>
 
-    <Association AssociationId="new AssociationID(AssociationId)" />
+            </div>
 
-  }
+
+            <MudButton Variant="Variant.Outlined"
+                       StartIcon="@Icons.Material.Filled.ArrowBack"
+                       OnClick="GoBack">
+
+                Tillbaka
+
+            </MudButton>
+
+        </div>
+
+
+        <MudDivider Class="mb-4" />
+
+
+        <AssociationMembers AssociationId="AssociationId" />
+    }
 
 </div>
 
+
 @code {
 
-  [Parameter]
-  public Guid AssociationId { get; set; }
+    [Parameter, EditorRequired]
+    public Guid AssociationId { get; set; }
 
-  private Core.Aggregates.Associations.Association? _association;
 
-  private bool _loading;
+    private AssociationListDto ? _association;
 
-  private Guid _loadedAssociationId;
+    private bool _loading;
 
-  protected override async Task OnParametersSetAsync()
-  {
-    if (AssociationId == Guid.Empty)
-      return;
 
-    if (_loadedAssociationId == AssociationId)
-      return;
-
-    _loadedAssociationId = AssociationId;
-
-    await LoadAssociationAsync();
-  }
-
-  private async Task LoadAssociationAsync()
-  {
-    _loading = true;
-    _association = null;
-
-    try
+    protected override async Task OnParametersSetAsync()
     {
-      var associationId = new AssociationID(AssociationId);
+        if (AssociationId == Guid.Empty)
+            return;
 
-      _association = await QuerySender.Send(
-          new GetAssociationQuery(associationId));
+        await LoadAssociationAsync();
     }
-    finally
+
+
+    private async Task LoadAssociationAsync()
     {
-      _loading = false;
-    }
-  }
+        _loading = true;
+        _association = null;
 
-  private void GoBack()
-  {
-    NavigationManager.NavigateTo("/admin/associations");
-  }
+        try
+        {
+            _association = await QuerySender.Send(new GetAssociationQuery(AssociationId));
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex);
+
+            _association = null;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo(
+            "/admin/associations");
+    }
 }

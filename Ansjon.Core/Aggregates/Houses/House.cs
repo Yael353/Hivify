@@ -90,11 +90,15 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
     {
         EnsureNotDeleted();
 
-        var tenant = _tenants.FirstOrDefault(t => t.Id == tenantId);
-        if (tenant == null)
-            throw new DomainException("Boende kunde inte hittas i detta hus.");
+        var tenant = _tenants.FirstOrDefault(
+            t => t.Id == tenantId &&
+                 t.DeletedAt == null);
 
-        _tenants.Remove(tenant);
+        if (tenant == null)
+            throw new DomainException(
+                "Boende kunde inte hittas i detta hus.");
+
+        tenant.Delete();
     }
 
     public Tenant? GetTenant(TenantID tenantId)

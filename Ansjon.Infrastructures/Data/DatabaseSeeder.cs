@@ -1,5 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Associations;
-using Ansjon.Core.Aggregates.Associations.Members;
+﻿using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.SharedKernel.ValuesObjects;
 using Ansjon.Infrastructures.SqlDatabase;
@@ -29,19 +28,7 @@ public static class DatabaseSeeder
                     new Description("Learn how to use the platform.")));
         }
 
-        // Seed Association
-        Association? association = null;
 
-        if (!await context.Associations.AnyAsync())
-        {
-            association = Association.Create("Ansjon Housing Association");
-
-            context.Associations.Add(association);
-        }
-        else
-        {
-            association = await context.Associations.FirstAsync();
-        }
 
         await context.SaveChangesAsync();
 

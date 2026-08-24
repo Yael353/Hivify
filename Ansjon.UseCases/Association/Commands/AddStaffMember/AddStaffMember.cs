@@ -1,11 +1,8 @@
-﻿using Ansjon.Core.Aggregates.Associations;
-using Ansjon.Core.Aggregates.Associations.Members;
+﻿using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.UseCases.Abstractions.Messaging;
 
-namespace Ansjon.UseCases.Association.Commands.AddStaffMember;
-
 public sealed record AddStaffMemberCommand(
-    AssociationID AssociationId,
+    Guid AssociationId,
+    Guid UserId,
     string FullName,
-    MemberRole Role
-) : ICommand<MemberID>;
+    MemberRole Role) : ICommand<MemberID>;
