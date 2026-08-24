@@ -2,53 +2,35 @@
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
 
-    <div class="section-wrapper mb-6">
-        <MudText Typo="Typo.h5" Color="Color.Default" Class="font-weight-medium mb-3" Style="letter-spacing: -0.2px;">
-            ✎ Skapa en nyhet
-        </MudText>
-        <MudPaper Class="pa-5" Elevation="1" Style="border-radius: 12px;">
-            <CreateFeedForm OnCreated="RefreshFeeds" />
-        </MudPaper>
-    </div>
+    <MudStack Spacing="4">
 
-    
-    <div class="section-wrapper mb-6">
-        <MudText Typo="Typo.h5" Color="Color.Default" Class="font-weight-medium mb-3" Style="letter-spacing: -0.2px;">
-            ✨ Skapa med AI
-        </MudText>
-        <MudPaper Class="pa-5" Elevation="1" Style="border-radius: 12px;">
-            <AIFeedGenerator />
-        </MudPaper>
-    </div>
+        <CreateFeedForm OnCreated="RefreshFeeds" />
 
-    <!-- ⭐ Befintliga nyheter -->
-    <div class="section-wrapper">
-        <MudText Typo="Typo.h5" Color="Color.Default" Class="font-weight-medium mb-3" Style="letter-spacing: -0.2px;">
-            📋 Befintliga nyheter
-        </MudText>
-        <MudPaper Class="pa-5" Elevation="1" Style="border-radius: 12px;">
+        <AIFeedGenerator />
+
+        <MudPaper Class="pa-4"
+                  Elevation="0"
+                  Style="border: 1px solid #e9edf2; border-radius: 12px;">
+
+            <MudText Typo="Typo.h6"
+                     Class="mb-3">
+
+                Befintliga nyheter
+
+            </MudText>
+
+            <MudDivider Class="mb-4" />
+
             <AdminFeedList @ref="_feedList" />
+
         </MudPaper>
-    </div>
+
+    </MudStack>
+
 </MudContainer>
 
-<style>
-    .section-wrapper {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .mud-paper {
-        transition: all 0.2s ease;
-        background: #ffffff;
-    }
-
-        .mud-paper:hover {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
-        }
-</style>
-
 @code {
+
     private AdminFeedList? _feedList;
 
     protected override async Task OnInitializedAsync()
@@ -56,12 +38,11 @@
         await RefreshFeeds();
     }
 
-    public async Task RefreshFeeds()
+    private async Task RefreshFeeds()
     {
         if (_feedList is not null)
         {
             await _feedList.Refresh();
-            StateHasChanged();
         }
     }
 }

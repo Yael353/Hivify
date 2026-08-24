@@ -1,11 +1,11 @@
-﻿@using Ansjon.UseCases.Abstractions.Messaging
+﻿@using Ansjon.Components.Common
+@using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Houses.DTOs
 @using Ansjon.UseCases.Houses.Queries.GetHouses
 @using MudBlazor
 
 @inject IQuerySender QuerySender
 @inject NavigationManager NavigationManager
-
 
 @if (_loading)
 {
@@ -16,7 +16,9 @@
 
     <MudText Class="mt-3"
       Color="Color.Tertiary">
+
       Laddar hus...
+
     </MudText>
 
   </div>
@@ -31,18 +33,22 @@ else if (_houses.Count == 0)
 
     <MudText Typo="Typo.h6"
       Class="mt-2">
+
       Inga hus ännu
+
     </MudText>
 
     <MudText Color="Color.Tertiary">
+
       Lägg till ditt första hus ovan.
+
     </MudText>
 
   </div>
 }
 else
 {
-  <MudTable Items="_houses"
+  <MudTable Items="_displayedHouses"
     Hover="true"
     Striped="true"
     Bordered="true"
@@ -69,7 +75,6 @@ else
       </MudTh>
 
     </HeaderContent>
-
 
     <RowTemplate>
 
@@ -101,14 +106,24 @@ else
     </RowTemplate>
 
   </MudTable>
-}
 
+  <Pagination TotalItems="@_totalItems"
+    PageSize="@_pageSize"
+    Skip="@_skip"
+    OnPageChanged="ChangePage" />
+}
 
 @code {
 
-  private IReadOnlyList<HouseListItemDto> _houses = [];
+  private List<HouseListItemDto> _houses = [];
+  private List<HouseListItemDto> _displayedHouses = [];
 
-  private bool _loading = true;
+  private const int _pageSize = 10;
+
+  private int _totalItems;
+  private int _skip;
+
+  private bool _loading;
 
 
   protected override async Task OnInitializedAsync()
@@ -121,19 +136,46 @@ else
   {
     _loading = true;
 
-    await InvokeAsync(StateHasChanged);
-
     try
     {
-      _houses = await QuerySender.Send(
+      var houses = await QuerySender.Send(
           new GetHousesQuery());
+
+      _houses = houses.ToList();
+
+      _totalItems = _houses.Count;
+
+      _skip = 0;
+
+      UpdateDisplayedHouses();
     }
     finally
     {
       _loading = false;
-
-      await InvokeAsync(StateHasChanged);
     }
+  }
+
+
+  private void ChangePage(int skip)
+  {
+    if (skip < 0)
+      return;
+
+    if (skip >= _totalItems)
+      return;
+
+    _skip = skip;
+
+    UpdateDisplayedHouses();
+  }
+
+
+  private void UpdateDisplayedHouses()
+  {
+    _displayedHouses = _houses
+        .Skip(_skip)
+        .Take(_pageSize)
+        .ToList();
   }
 
 
