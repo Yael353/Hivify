@@ -42,10 +42,45 @@ else
           Justify="Justify.SpaceBetween">
 
           <MudStack Spacing="0">
+<div class="d-flex flex-column gap-2">
 
-            <MudText Typo="Typo.body1">
-              Tenant: @tenant.Email
-            </MudText>
+    <div>
+        <MudText Typo="Typo.caption"
+                 Color="Color.Secondary">
+            Namn
+        </MudText>
+
+        <MudText Typo="Typo.body1"
+                 Class="fw-semibold">
+            @tenant.FullName
+        </MudText>
+    </div>
+
+    <div>
+        <MudText Typo="Typo.caption"
+                 Color="Color.Secondary">
+            E-post
+        </MudText>
+
+        <MudText Typo="Typo.body2">
+            @tenant.Email
+        </MudText>
+    </div>
+
+    <div>
+        <MudText Typo="Typo.caption"
+                 Color="Color.Secondary">
+            Telefonnummer
+        </MudText>
+
+        <MudText Typo="Typo.body2">
+            @tenant.PhoneNumber
+        </MudText>
+    </div>
+
+</div>
+
+
 
             <MudText Typo="Typo.caption"
               Color="Color.Tertiary">

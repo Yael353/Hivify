@@ -218,7 +218,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                         .HasColumnName("PostalCode")
                         .HasMaxLength(20);
                 });
-
         // =====================
         // Tenant – Entity
         // =====================
@@ -253,7 +252,32 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
             tenant.Property(t => t.DeletedAt)
                 .HasColumnName("DeletedAt");
-        });
 
+
+            // =====================
+            // Tenant Value Objects
+            // =====================
+
+            tenant.OwnsOne(
+                t => t.FullName,
+                fullName =>
+                {
+                    fullName.Property(n => n.Value)
+                        .HasColumnName("FullName")
+                        .HasMaxLength(200)
+                        .IsRequired();
+                });
+
+            tenant.OwnsOne(
+                t => t.PhoneNumber,
+                phoneNumber =>
+                {
+                    phoneNumber.Property(p => p.Value)
+                        .HasColumnName("PhoneNumber")
+                        .HasMaxLength(30)
+                        .IsRequired();
+                });
+        });
     }
+
 }

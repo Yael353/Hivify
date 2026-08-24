@@ -30,6 +30,8 @@ public sealed class GetHouseTenantsQueryHandler : IQueryHandler<GetHouseTenantsQ
                 t.Id.Value,
                 t.UserId.Value,
                 t.Email.Value,
+                t.FullName.Value,
+                t.PhoneNumber.Value,
                 t.CreatedAt))
             .ToList();
     }

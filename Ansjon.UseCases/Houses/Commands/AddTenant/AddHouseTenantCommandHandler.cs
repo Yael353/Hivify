@@ -29,7 +29,7 @@ public sealed class AddHouseTenantCommandHandler : ICommandHandler<AddHouseTenan
             throw new InvalidOperationException(
                 "House could not be found.");
 
-        var tenant = house.AddTenant(new UserID(command.UserId), new Email(command.Email));
+        var tenant = house.AddTenant(new UserID(command.UserId), new Email(command.Email), new Name(command.FullName), new PhoneNumber(command.PhoneNumber));
 
         await _houseRepo.SaveChangesAsync(cancellationToken);
 
