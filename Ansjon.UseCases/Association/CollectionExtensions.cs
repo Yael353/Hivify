@@ -1,11 +1,10 @@
 ﻿using Ansjon.Core.Aggregates.Associations;
 using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.UseCases.Abstractions.Messaging;
+using Ansjon.UseCases.Association.Commands.AddAssociation;
 using Ansjon.UseCases.Association.Commands.AddStaffMember;
 using Ansjon.UseCases.Association.Queries.GetAssociation;
 using Ansjon.UseCases.Association.Queries.GetAssociations;
-using Ansjon.UseCases.AssociationUseCases.Commands.AddAssociation;
-using Ansjon.UseCases.AssociationUseCases.Commands.CreateAssociation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Ansjon.UseCases.Association;

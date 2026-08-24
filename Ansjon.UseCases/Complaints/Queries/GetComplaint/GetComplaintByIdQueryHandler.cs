@@ -4,7 +4,7 @@ using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
 using Ansjon.UseCases.Complaints.DTOs;
 
-namespace Ansjon.UseCases.Complaints.Queries.GetComplaintById;
+namespace Ansjon.UseCases.Complaints.Queries.GetComplaint;
 
 public sealed class GetComplaintByIdQueryHandler
     : IQueryHandler<GetComplaintByIdQuery, ComplaintListItemDto?>

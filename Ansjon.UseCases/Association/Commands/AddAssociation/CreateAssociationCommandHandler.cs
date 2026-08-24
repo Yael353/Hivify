@@ -1,9 +1,8 @@
 ﻿using Ansjon.Core.Aggregates.Associations;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
-using Ansjon.UseCases.AssociationUseCases.Commands.AddAssociation;
 
-namespace Ansjon.UseCases.AssociationUseCases.Commands.CreateAssociation;
+namespace Ansjon.UseCases.Association.Commands.AddAssociation;
 
 public sealed class CreateAssociationCommandHandler : ICommandHandler<AddAssociationCommand, AssociationID>
 {

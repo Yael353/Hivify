@@ -4,7 +4,6 @@ using Ansjon.UseCases.Complaints.Commands.CreateComplaint;
 using Ansjon.UseCases.Complaints.Commands.UpdateComplaintStatus;
 using Ansjon.UseCases.Complaints.DTOs;
 using Ansjon.UseCases.Complaints.Queries.GetComplaint;
-using Ansjon.UseCases.Complaints.Queries.GetComplaintById;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
