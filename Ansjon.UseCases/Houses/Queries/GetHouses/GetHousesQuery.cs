@@ -3,5 +3,4 @@ using Ansjon.UseCases.Houses.DTOs;
 
 namespace Ansjon.UseCases.Houses.Queries.GetHouses;
 
-public sealed record GetHousesQuery
-    : IQuery<IReadOnlyList<HouseListItemDto>>;
+public sealed record GetHousesQuery : IQuery<IReadOnlyList<HouseListItemDto>>;

@@ -1,8 +1,8 @@
-﻿using Ansjon.Core.Aggregates.Associations;
-using Ansjon.UseCases.Abstractions.Messaging;
+﻿using Ansjon.UseCases.Abstractions.Messaging;
+using Ansjon.UseCases.Association.DTOs;
 
 namespace Ansjon.UseCases.Association.Queries.GetAssociation;
 
 public sealed record GetAssociationQuery(
-    AssociationID AssociationId
-) : IQuery<Core.Aggregates.Associations.Association?>;
+    Guid AssociationId)
+    : IQuery<AssociationListDto>;

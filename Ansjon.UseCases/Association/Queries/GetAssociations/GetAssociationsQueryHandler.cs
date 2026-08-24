@@ -1,19 +1,37 @@
 ﻿using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
+using Ansjon.UseCases.Association.DTOs;
 
 namespace Ansjon.UseCases.Association.Queries.GetAssociations;
 
-public sealed class GetAssociationsQueryHandler : IQueryHandler<GetAssociationsQuery, IReadOnlyList<Core.Aggregates.Associations.Association>>
+public sealed class GetAssociationsQueryHandler
+    : IQueryHandler<
+        GetAssociationsQuery,
+        IReadOnlyList<AssociationListDto>>
 {
     private readonly IAssociationRepo _associationRepository;
 
-    public GetAssociationsQueryHandler(IAssociationRepo associationRepository)
+    public GetAssociationsQueryHandler(
+        IAssociationRepo associationRepository)
     {
         _associationRepository = associationRepository;
     }
 
-    public async Task<IReadOnlyList<Core.Aggregates.Associations.Association>> Handle(GetAssociationsQuery query, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<AssociationListDto>> Handle(
+        GetAssociationsQuery query,
+        CancellationToken cancellationToken)
     {
-        return await _associationRepository.GetAllAsync(cancellationToken);
+        var associations =
+            await _associationRepository.GetAllAsync(
+                cancellationToken);
+
+        return associations
+            .Select(association =>
+                new AssociationListDto
+                {
+                    Id = association.Id.Value,
+                    Name = association.Name.Value
+                })
+            .ToList();
     }
 }
