@@ -9,8 +9,7 @@ namespace Ansjon.UseCases.Abstractions.Storage
             string fileName,
             string contentType,
             CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<FileDocumentResult>> GetAllAsync(
-    CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<FileDocumentResult>> GetAllAsync(CancellationToken cancellationToken = default);
     }
 
 
