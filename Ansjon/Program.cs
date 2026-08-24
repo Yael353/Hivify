@@ -9,6 +9,8 @@ using Ansjon.Infrastructures.Repositories.FeedRepo;
 using Ansjon.Infrastructures.Repositories.HouseRepo;
 using Ansjon.Infrastructures.Repositories.UsersRepo;
 using Ansjon.Infrastructures.SqlDatabase;
+using Ansjon.Infrastructures.Storage;
+using Ansjon.Infrastructures.Storage.CloudinaryStorage;
 using Ansjon.UseCases.Abstractions.Context;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
@@ -16,6 +18,7 @@ using Ansjon.UseCases.AdminUserMgmt;
 using Ansjon.UseCases.Association;
 using Ansjon.UseCases.Common.Messaging;
 using Ansjon.UseCases.Complaints;
+using Ansjon.UseCases.Documents;
 using Ansjon.UseCases.Feeds;
 using Ansjon.UseCases.Houses;
 using Microsoft.AspNetCore.Identity;
@@ -80,6 +83,11 @@ builder.Services.AddScoped<ApplicationDbContext>(sp =>
 
 #endregion
 
+#region Storage
+builder.Services.Configure<CloudinaryOptions>(builder.Configuration.GetSection("Cloudinary"));
+builder.Services.AddStorageServices();
+#endregion
+
 #region Identity
 
 builder.Services
@@ -117,16 +125,17 @@ builder.Services.AddScoped<IUserRepo, UsersRepo>();
 #endregion
 
 #region Application
-
+builder.Services.AddScoped<ISender, Sender>();
+builder.Services.AddScoped<IQuerySender, QuerySender>();
 builder.Services.AddFeedServices();
 builder.Services.AddHouseServices();
 builder.Services.AddAdminServices();
 builder.Services.AddAssociationServices();
 builder.Services.AddComplaintServices();
 builder.Services.AddRazorComponents();
-builder.Services.AddScoped<ISender, Sender>();
-builder.Services.AddScoped<IQuerySender, QuerySender>();
 builder.Services.AddComplaintServices();
+builder.Services.AddDocumentServices();
+
 
 #endregion
 
