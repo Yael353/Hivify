@@ -1,12 +1,19 @@
-﻿@using Ansjon.UseCases.Houses.DTOs
+﻿@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Houses.Commands.DeleteTenant
+@using Ansjon.UseCases.Houses.DTOs
 @using MudBlazor
 
-<MudPaper Class="tenant-card pa-4"
-  Elevation="0">
+@inject ISender Sender
+@inject IDialogService DialogService
+@inject ILogger<TenantCard> Logger
 
-  <div class="tenant-card-content">
+<MudPaper Class="pa-4"
+  Elevation="0"
+  Style="border: 1px solid #e9edf2; border-radius: 12px;">
 
-    <div class="tenant-content">
+  <div class="d-flex align-items-start gap-3">
+
+    <div class="flex-grow-1 min-width-0">
 
       <MudText Typo="Typo.body1"
         Class="fw-semibold mb-3">
@@ -78,41 +85,130 @@
         Class="d-block mt-3">
 
         Tillagd:
-        @Tenant.CreatedAt
-        .ToLocalTime()
-        .ToString("yyyy-MM-dd HH:mm")
+        @Tenant.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
 
       </MudText>
 
     </div>
 
-    <div class="tenant-actions">
+    <MudTooltip Text="Ta bort från huset">
 
-      <MudTooltip Text="Ta bort från huset">
+      <MudIconButton Icon="@Icons.Material.Filled.PersonRemove"
+        Color="Color.Error"
+        Size="Size.Medium"
+        Disabled="_removing"
+        OnClick="RemoveAsync" />
 
-        <MudIconButton Icon="@Icons.Material.Filled.PersonRemove"
-          Color="Color.Error"
-          Size="Size.Medium"
-          Disabled="@Removing"
-          OnClick="OnRemove" />
-
-      </MudTooltip>
-
-    </div>
+    </MudTooltip>
 
   </div>
 
 </MudPaper>
+
+<style>
+
+  .tenant-info-grid {
+    display: grid;
+    grid-template-columns: minmax(160px, 1fr) minmax(200px, 1.5fr) minmax(160px, 1fr);
+    gap: 24px;
+    width: 100%;
+  }
+
+  .tenant-info {
+    min-width: 0;
+  }
+
+  @@media (max-width: 900px) {
+
+    .tenant-info-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+  }
+
+  @@media (max-width: 600px) {
+
+    .tenant-info-grid {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+  }
+
+</style>
 
 @code {
 
   [Parameter, EditorRequired]
   public TenantListItemDto Tenant { get; set; } = default!;
 
-  [Parameter]
-  public bool Removing { get; set; }
+  [Parameter, EditorRequired]
+  public Guid HouseId { get; set; }
 
   [Parameter]
-  public EventCallback OnRemove { get; set; }
+  public EventCallback OnTenantRemoved { get; set; }
 
+  private bool _removing;
+
+
+  private async Task RemoveAsync()
+  {
+    if (_removing)
+      return;
+
+    var confirmed = await ConfirmRemoveAsync();
+
+    if (!confirmed)
+      return;
+
+    _removing = true;
+
+    try
+    {
+      await Sender.Send(
+          new RemoveHouseTenantCommand(
+              HouseId,
+              Tenant.TenantId));
+
+      await OnTenantRemoved.InvokeAsync();
+    }
+    catch (Exception ex)
+    {
+      Logger.LogError(
+          ex,
+          "Failed to remove tenant {TenantId} from house {HouseId}",
+          Tenant.TenantId,
+          HouseId);
+    }
+    finally
+    {
+      _removing = false;
+    }
+  }
+
+
+  private async Task<bool> ConfirmRemoveAsync()
+  {
+    var parameters = new DialogParameters
+    {
+      ["TenantName"] = Tenant.FullName
+    };
+
+    var options = new DialogOptions
+    {
+      CloseOnEscapeKey = true,
+      MaxWidth = MaxWidth.ExtraSmall,
+      FullWidth = true
+    };
+
+    var dialog =
+        await DialogService.ShowAsync<ConfirmRemoveTenantDialog>(
+            "Ta bort boende",
+            parameters,
+            options);
+
+    var result = await dialog.Result;
+
+    return !result.Canceled &&
+           result.Data is true;
+  }
 }
