@@ -164,7 +164,9 @@
           new AddHouseTenantCommand(
               HouseId,
               userId,
-              email));
+              email,
+              _selectedUser.FullName ?? string.Empty,
+              _selectedUser.PhoneNumber ?? string.Empty));
 
       _selectedUser = null;
 
