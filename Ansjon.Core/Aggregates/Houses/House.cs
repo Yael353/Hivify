@@ -79,7 +79,7 @@ public class House : BaseEntity<HouseID>, IAggregateRoot
             throw new DomainException("Användaren är redan boende i detta hus.");
         }
 
-        var tenant = Tenant.Create(new TenantID(Guid.NewGuid()), userId, new Name("John Doe"), email, new PhoneNumber("1234567890"));
+        var tenant = Tenant.Create(new TenantID(Guid.NewGuid()), userId, fullName, email, phoneNumber);
 
         _tenants.Add(tenant);
 
