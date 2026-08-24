@@ -1,0 +1,118 @@
+﻿@using Ansjon.UseCases.Houses.DTOs
+@using MudBlazor
+
+<MudPaper Class="tenant-card pa-4"
+  Elevation="0">
+
+  <div class="tenant-card-content">
+
+    <div class="tenant-content">
+
+      <MudText Typo="Typo.body1"
+        Class="fw-semibold mb-3">
+
+        @Tenant.FullName
+
+      </MudText>
+
+      <div class="tenant-info-grid">
+
+        <div class="tenant-info">
+
+          <MudText Typo="Typo.caption"
+            Color="Color.Secondary">
+
+            Namn
+
+          </MudText>
+
+          <MudText Typo="Typo.body2"
+            Class="fw-medium text-break">
+
+            @Tenant.FullName
+
+          </MudText>
+
+        </div>
+
+        <div class="tenant-info">
+
+          <MudText Typo="Typo.caption"
+            Color="Color.Secondary">
+
+            E-post
+
+          </MudText>
+
+          <MudText Typo="Typo.body2"
+            Class="text-break">
+
+            @Tenant.Email
+
+          </MudText>
+
+        </div>
+
+        <div class="tenant-info">
+
+          <MudText Typo="Typo.caption"
+            Color="Color.Secondary">
+
+            Telefonnummer
+
+          </MudText>
+
+          <MudText Typo="Typo.body2"
+            Class="text-break">
+
+            @Tenant.PhoneNumber
+
+          </MudText>
+
+        </div>
+
+      </div>
+
+      <MudText Typo="Typo.caption"
+        Color="Color.Tertiary"
+        Class="d-block mt-3">
+
+        Tillagd:
+        @Tenant.CreatedAt
+        .ToLocalTime()
+        .ToString("yyyy-MM-dd HH:mm")
+
+      </MudText>
+
+    </div>
+
+    <div class="tenant-actions">
+
+      <MudTooltip Text="Ta bort från huset">
+
+        <MudIconButton Icon="@Icons.Material.Filled.PersonRemove"
+          Color="Color.Error"
+          Size="Size.Medium"
+          Disabled="@Removing"
+          OnClick="OnRemove" />
+
+      </MudTooltip>
+
+    </div>
+
+  </div>
+
+</MudPaper>
+
+@code {
+
+  [Parameter, EditorRequired]
+  public TenantListItemDto Tenant { get; set; } = default!;
+
+  [Parameter]
+  public bool Removing { get; set; }
+
+  [Parameter]
+  public EventCallback OnRemove { get; set; }
+
+}
