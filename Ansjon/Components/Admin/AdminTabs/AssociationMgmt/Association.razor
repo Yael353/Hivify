@@ -7,90 +7,72 @@
 
 <MudPaper Class="pa-4">
 
-    <MudText Typo="Typo.h5"
-             Color="Color.Primary"
-             Class="font-weight-bold mb-3">
+  <MudText Typo="Typo.h5"
+    Color="Color.Primary"
+    Class="font-weight-bold mb-3">
 
-        Styrelsemedlemmar
+    Förening
+
+  </MudText>
+
+  @if (_loading)
+  {
+    <div class="d-flex justify-content-center py-4">
+
+      <MudProgressCircular Indeterminate="true"
+        Color="Color.Primary" />
+
+    </div>
+  }
+  else if (_association is null)
+  {
+    <MudAlert Severity="Severity.Error">
+
+      Föreningen kunde inte hittas.
+
+    </MudAlert>
+  }
+  else
+  {
+    <MudText Typo="Typo.h6"
+      Class="mb-4">
+
+      @_association.Name
 
     </MudText>
 
-    <MudText Typo="Typo.body2"
-             Color="Color.Tertiary"
-             Class="mb-4">
-
-        Hantera styrelsemedlemmarna i denna förening.
-
-    </MudText>
-
-    <MudDivider Class="mb-4" />
-
-    <AddAssociationMember AssociationId="AssociationId"
-                          OnMemberAdded="RefreshMembers" />
-
-    <MudDivider Class="my-4" />
-
-    @if (_loading)
-    {
-        <div class="d-flex justify-content-center py-4">
-
-            <MudProgressCircular Indeterminate="true"
-                                 Color="Color.Primary" />
-
-        </div>
-    }
-    else if (_association is null)
-    {
-        <MudAlert Severity="Severity.Error">
-            Föreningen kunde inte hittas.
-        </MudAlert>
-    }
-    else if (_association.StaffMembers.Count == 0)
-    {
-        <MudText Color="Color.Secondary">
-            Det finns inga styrelsemedlemmar.
-        </MudText>
-    }
-    else
-    {
-        <StaffMembersList Members="_association.StaffMembers" />
-    }
+    <AssociationMembers AssociationId="AssociationId" />
+  }
 
 </MudPaper>
 
 @code {
 
-    [Parameter, EditorRequired]
-    public Guid AssociationId { get; set; }
+  [Parameter, EditorRequired]
+  public Guid AssociationId { get; set; }
 
-    private AssociationListDto? _association;
+  private AssociationListDto? _association;
 
-    private bool _loading;
+  private bool _loading;
 
 
-    protected override async Task OnInitializedAsync()
+  protected override async Task OnInitializedAsync()
+  {
+    await LoadAssociationAsync();
+  }
+
+
+  private async Task LoadAssociationAsync()
+  {
+    _loading = true;
+
+    try
     {
-        await LoadMembersAsync();
+      _association = await QuerySender.Send( new GetAssociationQuery(AssociationId));
     }
-
-
-    private async Task LoadMembersAsync()
+    finally
     {
-        _loading = true;
-
-        try
-        {
-            _association =await QuerySender.Send( new GetAssociationQuery(AssociationId));
-        }
-        finally
-        {
-            _loading = false;
-        }
+      _loading = false;
     }
-
-
-    private Task RefreshMembers()
-    {
-        return LoadMembersAsync();
-    }
+  }
 }

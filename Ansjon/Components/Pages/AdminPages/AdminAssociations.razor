@@ -3,10 +3,11 @@
 @layout AdminLayout
 @rendermode InteractiveServer
 
+@using Ansjon.Components.Admin.AdminTabs.AssociationMgmt
 @using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Association.DTOs
 @using Ansjon.UseCases.Association.Queries.GetAssociations
-@using Ansjon.Components.Admin.AdminTabs.AssociationMgmt
+
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
@@ -42,9 +43,8 @@
 
                 <MudItem xs="12">
 
-                    <AddAssociationButton
-                        OnAssociationAdded="RefreshAssociations" />
-
+<AddAssociation
+    OnAssociationAdded="RefreshAssociations" />
                 </MudItem>
 
 

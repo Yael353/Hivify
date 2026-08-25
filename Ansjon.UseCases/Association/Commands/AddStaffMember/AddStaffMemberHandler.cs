@@ -22,7 +22,7 @@ public sealed class AddStaffMemberCommandHandler : ICommandHandler<AddStaffMembe
         if (association is null)
             throw new InvalidOperationException("Association was not found.");
 
-        var member = association.CreateMember(new UserID(command.UserId), new Name(command.FullName), command.Role);
+        var member = association.CreateMember(new UserID(command.UserId), new Name(command.FullName), new Email(command.Email), command.Role);
 
         await _associationRepository.SaveChangesAsync(cancellationToken);
 

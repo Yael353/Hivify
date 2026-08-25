@@ -1,239 +1,97 @@
-﻿@using Ansjon.UseCases.Abstractions.Messaging
-@using Ansjon.UseCases.AdminUserMgmt.DTOs
+﻿
+@using Ansjon.UseCases.Abstractions.Messaging
 @using Ansjon.UseCases.Association.DTOs
 @using Ansjon.UseCases.Association.Queries.GetAssociation
-@using Ansjon.Core.Aggregates.Associations.Members
-@using Ansjon.Components.Admin.AdminTabs.AdminUserMgmt
 @using MudBlazor
 
 @inject IQuerySender QuerySender
-@inject ISender Sender
-@inject IDialogService DialogService
-@inject ILogger<AssociationMembers> Logger
 
-<MudPaper Class="pa-4"
-          Elevation="0"
-          Style="border: 1px solid #e9edf2; border-radius: 12px;">
+<MudPaper Class="pa-4">
 
-    <div class="d-flex justify-content-between align-items-start mb-4">
+  <MudText Typo="Typo.h5"
+    Color="Color.Primary"
+    Class="font-weight-bold mb-3">
 
-        <div>
+    Styrelsemedlemmar
 
-            <MudText Typo="Typo.h6"
-                     Class="mb-1">
+  </MudText>
 
-                Styrelsemedlemmar
+  <MudText Typo="Typo.body2"
+    Color="Color.Tertiary"
+    Class="mb-4">
 
-            </MudText>
+    Hantera styrelsemedlemmarna i denna förening.
 
-            <MudText Typo="Typo.body2"
-                     Color="Color.Secondary">
+  </MudText>
 
-                Hantera styrelsemedlemmarna i denna förening.
+  <MudDivider Class="mb-4" />
 
-            </MudText>
+  <AddAssociationMember AssociationId="AssociationId"
+    OnMemberAdded="RefreshMembersAsync" />
 
-        </div>
+  <MudDivider Class="my-4" />
 
-        <MudButton Variant="Variant.Filled"
-                   Color="Color.Primary"
-                   StartIcon="@Icons.Material.Filled.PersonAdd"
-                   Disabled="_saving"
-                   OnClick="OpenUserPickerAsync">
+  @if (_loading)
+  {
+    <div class="d-flex justify-content-center py-4">
 
-            Lägg till
-
-        </MudButton>
+      <MudProgressCircular Indeterminate="true"
+        Color="Color.Primary" />
 
     </div>
+  }
+  else if (_association is null)
+  {
+    <MudAlert Severity="Severity.Error">
 
-    <MudDivider Class="mb-4" />
+      Föreningen kunde inte hittas.
 
-    @if (_errorMessage is not null)
-    {
-        <MudAlert Severity="Severity.Error"
-                  Variant="Variant.Outlined"
-                  Class="mb-4">
-
-            @_errorMessage
-
-        </MudAlert>
-    }
-
-    @if (_loading)
-    {
-        <div class="d-flex justify-content-center py-4">
-
-            <MudProgressCircular Indeterminate="true"
-                                 Color="Color.Primary" />
-
-        </div>
-    }
-    else if (_members.Count == 0)
-    {
-        <MudAlert Severity="Severity.Info"
-                  Variant="Variant.Outlined">
-
-            Det finns inga styrelsemedlemmar i denna förening.
-
-        </MudAlert>
-    }
-    else
-    {
-        <StaffMembersList Members="_members" />
-    }
+    </MudAlert>
+  }
+  else
+  {
+    <StaffMembersList Members="_association.StaffMembers"
+      AssociationId="AssociationId"
+      OnMemberDeleted="RefreshMembersAsync" />
+  }
 
 </MudPaper>
 
 @code {
 
-    [Parameter, EditorRequired]
-    public Guid AssociationId { get; set; }
+  [Parameter, EditorRequired]
+  public Guid AssociationId { get; set; }
 
-    private List<StaffMemberDto> _members = [];
+  private AssociationListDto? _association;
 
-    private bool _loading;
-    private bool _saving;
-
-    private string? _errorMessage;
+  private bool _loading;
 
 
-    protected override async Task OnInitializedAsync()
+  protected override async Task OnInitializedAsync()
+  {
+    await LoadMembersAsync();
+  }
+
+
+  private async Task LoadMembersAsync()
+  {
+    _loading = true;
+
+    try
     {
-        await LoadMembersAsync();
+      _association = await QuerySender.Send(
+          new GetAssociationQuery(AssociationId));
     }
-
-
-    private async Task LoadMembersAsync()
+    finally
     {
-        _loading = true;
-        _errorMessage = null;
-
-        try
-        {
-            var association =
-                await QuerySender.Send(
-                    new GetAssociationQuery(
-                        AssociationId));
-
-            if (association is null)
-            {
-                _members = [];
-                return;
-            }
-
-            _members = association.StaffMembers
-                .Select(member =>
-                    new StaffMemberDto(
-                        member.Id,
-                        member.FullName,
-                        member.Role))
-                .ToList();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(
-                ex,
-                "Failed to load members for association {AssociationId}",
-                AssociationId);
-
-            _errorMessage =
-                "Kunde inte hämta styrelsemedlemmarna.";
-
-            _members = [];
-        }
-        finally
-        {
-            _loading = false;
-        }
+      _loading = false;
     }
+  }
 
 
-    private async Task OpenUserPickerAsync()
-    {
-        if (_saving)
-            return;
-
-        _errorMessage = null;
-
-        var options = new DialogOptions
-        {
-            CloseOnEscapeKey = true,
-            MaxWidth = MaxWidth.Small,
-            FullWidth = true
-        };
-
-        var dialog =
-            await DialogService.ShowAsync<UserPickerDialog>(
-                "Välj användare",
-                options);
-
-        var result =
-            await dialog.Result;
-
-        if (result.Canceled)
-            return;
-
-        var selectedUser =
-            result.Data as UserListItem;
-
-        if (selectedUser is null)
-            return;
-
-        await AddMemberAsync(selectedUser);
-    }
-
-
-    private async Task AddMemberAsync(
-        UserListItem user)
-    {
-        if (_saving)
-            return;
-
-        _saving = true;
-        _errorMessage = null;
-
-        try
-        {
-            var fullName =
-                GetUserDisplayName(user);
-
-            // Default role when adding directly.
-            var role = MemberRole.StyrelseLedamot;
-
-            await Sender.Send(
-                new AddStaffMemberCommand(
-                    AssociationId,
-                    user.Id,
-                    fullName,
-                    role));
-
-            await LoadMembersAsync();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(
-                ex,
-                "Failed to add user {UserId} to association {AssociationId}",
-                user.Id,
-                AssociationId);
-
-            _errorMessage =
-                "Kunde inte lägga till användaren som styrelsemedlem.";
-        }
-        finally
-        {
-            _saving = false;
-        }
-    }
-
-
-    private static string GetUserDisplayName(
-        UserListItem user)
-    {
-        return user.FullName
-            ?? user.UserName
-            ?? user.Email
-            ?? user.Id.ToString();
-    }
+  private async Task RefreshMembersAsync()
+  {
+    await LoadMembersAsync();
+  }
 }
+

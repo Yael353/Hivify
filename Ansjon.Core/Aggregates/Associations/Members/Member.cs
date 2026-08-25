@@ -1,4 +1,5 @@
-﻿using Ansjon.Core.SharedKernel;
+﻿using Ansjon.Core.Exceptions;
+using Ansjon.Core.SharedKernel;
 using Ansjon.Core.SharedKernel.ValuesObjects;
 namespace Ansjon.Core.Aggregates.Associations.Members;
 
@@ -8,6 +9,7 @@ public class Member : BaseEntity<MemberID>
     public UserID UserId { get; private set; }
 
     public Name FullName { get; private set; }
+    public Email Email { get; private set; }
 
     public MemberRole Role { get; private set; }
 
@@ -17,22 +19,40 @@ public class Member : BaseEntity<MemberID>
     private Member() { }
 
 
-    private Member(MemberID id, AssociationID associationId, UserID userId, Name fullName, MemberRole role) : base(id)
+    private Member(MemberID id, AssociationID associationId, UserID userId, Name fullName, Email email, MemberRole role) : base(id)
     {
         AssociationId = associationId;
         UserId = userId;
         FullName = fullName;
+        Email = email;
         Role = role;
     }
 
 
-    public static Member Create(AssociationID associationId, UserID userId, Name fullName, MemberRole role)
+    public static Member Create(AssociationID associationId, UserID userId, Name fullName, Email email, MemberRole role)
     {
         return new Member(
             new MemberID(Guid.NewGuid()),
             associationId,
             userId,
             fullName,
+            email,
             role);
+    }
+    public void ChangeRole(MemberRole role)
+    {
+        if (DeletedAt != null)
+        {
+            throw new DomainException(
+                "Styrelsemedlemmen är borttagen.");
+        }
+
+        Role = role;
+    }
+
+
+    public void Delete()
+    {
+        DeletedAt = DateTime.UtcNow;
     }
 }
