@@ -16,7 +16,7 @@ public sealed class AssociationRepo : IAssociationRepo
 
     public async Task<Association?> GetByIdAsync(
         AssociationID associationId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         return await _dbContext.Associations
             .Include(a => a.StaffMembers)

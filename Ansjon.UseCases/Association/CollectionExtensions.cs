@@ -3,6 +3,8 @@ using Ansjon.Core.Aggregates.Associations.Members;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Association.Commands.AddAssociation;
 using Ansjon.UseCases.Association.Commands.AddStaffMember;
+using Ansjon.UseCases.Association.Commands.RemoveStaffMember;
+using Ansjon.UseCases.Association.Commands.UpdateStaffMemberRole;
 using Ansjon.UseCases.Association.DTOs;
 using Ansjon.UseCases.Association.Queries.GetAssociation;
 using Ansjon.UseCases.Association.Queries.GetAssociations;
@@ -20,6 +22,10 @@ public static class ServiceCollectionExtensions
             services.AddScoped<ICommandHandler<AddAssociationCommand, AssociationID>, CreateAssociationCommandHandler>();
             services.AddScoped<IQueryHandler<GetAssociationsQuery, IReadOnlyList<AssociationListDto>>, GetAssociationsQueryHandler>();
             services.AddScoped<IQueryHandler<GetAssociationQuery, AssociationListDto>, GetAssociationQueryHandler>();
+            services.AddScoped<ICommandHandler<RemoveStaffMemberCommand, bool>, RemoveStaffMemberCommandHandler>();
+            services.AddScoped<
+    ICommandHandler<UpdateStaffMemberRoleCommand, bool>,
+    UpdateStaffMemberRoleCommandHandler>();
 
             return services;
         }

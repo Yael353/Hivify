@@ -31,6 +31,7 @@ public static class IdentitySeeder
         {
             adminUser = new ApplicationUser
             {
+                FullName = adminEmail,
                 UserName = adminEmail,
                 Email = adminEmail,
                 EmailConfirmed = true

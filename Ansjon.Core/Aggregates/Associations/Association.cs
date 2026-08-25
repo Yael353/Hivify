@@ -11,13 +11,18 @@ public class Association : BaseEntity<AssociationID>, IAggregateRoot
 
     private readonly List<Member> _members = [];
 
-    public IReadOnlyCollection<Member> StaffMembers => _members.AsReadOnly();
+    public IReadOnlyCollection<Member> StaffMembers =>
+        _members.AsReadOnly();
 
 
-    private Association() { }
+    private Association()
+    {
+    }
 
 
-    private Association(AssociationID id, Name name) : base(id)
+    private Association(
+        AssociationID id,
+        Name name) : base(id)
     {
         Name = name;
     }
@@ -25,24 +30,56 @@ public class Association : BaseEntity<AssociationID>, IAggregateRoot
 
     public static Association Create(Name name)
     {
-        return new Association(new AssociationID(Guid.NewGuid()), name);
+        return new Association(
+            new AssociationID(Guid.NewGuid()),
+            name);
     }
 
 
-    public Member CreateMember(UserID userId, Name fullName, MemberRole role)
+    public Member CreateMember(
+        UserID userId,
+        Name fullName,
+        Email email,
+        MemberRole role)
     {
         EnsureMemberDoesNotExist(userId);
 
-        var member =
-            Member.Create(
-                Id,
-                userId,
-                fullName,
-                role);
+        var member = Member.Create(
+            Id,
+            userId,
+            fullName,
+            email,
+            role);
 
         _members.Add(member);
 
         return member;
+    }
+
+
+    public void UpdateMemberRole(
+        MemberID memberId,
+        MemberRole role)
+    {
+        var member = _members.FirstOrDefault(member =>
+            member.Id == memberId &&
+            member.DeletedAt == null);
+
+        if (member is null)
+        {
+            throw new DomainException(
+                "Styrelsemedlemmen finns inte i denna förening.");
+        }
+
+        member.ChangeRole(role);
+    }
+
+
+    public void RemoveMember(Member member)
+    {
+        EnsureMemberExists(member);
+
+        member.Delete();
     }
 
 
@@ -54,6 +91,16 @@ public class Association : BaseEntity<AssociationID>, IAggregateRoot
         {
             throw new DomainException(
                 "Användaren är redan styrelsemedlem i denna förening.");
+        }
+    }
+
+
+    private void EnsureMemberExists(Member member)
+    {
+        if (!_members.Contains(member))
+        {
+            throw new DomainException(
+                "Styrelsemedlemmen finns inte i denna förening.");
         }
     }
 }

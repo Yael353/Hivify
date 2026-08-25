@@ -1,33 +1,221 @@
-﻿@using Ansjon.UseCases.Association.DTOs
+﻿
+@using Ansjon.UseCases.Abstractions.Messaging
+@using Ansjon.UseCases.Association.Commands.RemoveStaffMember
+@using Ansjon.UseCases.Association.Commands.UpdateStaffMemberRole
+@using Ansjon.UseCases.Association.DTOs
+@using Ansjon.Core.Aggregates.Associations.Members
 @using MudBlazor
 
-<MudCard Elevation="0"
-         Style="border: 1px solid #e9edf2; border-radius: 10px;">
+@inject ISender Sender
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
-    <MudCardContent>
+<MudCard Elevation="0"
+  Style="border: 1px solid #e9edf2; border-radius: 10px;">
+
+  <MudCardContent>
+
+    <div class="d-flex justify-content-between align-items-start">
+
+      <div>
 
         <MudText Typo="Typo.body1"
-                 Class="fw-semibold">
+          Class="fw-semibold">
 
-            @Member.FullName
+          @Member.FullName
 
         </MudText>
+
+        <div class="d-flex align-items-center gap-2 mt-1">
+
+          <MudText Typo="Typo.body2"
+            Color="Color.Secondary">
+
+            @GetRoleName(Member.Role)
+
+          </MudText>
+
+          <MudIconButton Icon="@Icons.Material.Filled.Edit"
+            Size="Size.Small"
+            Color="Color.Primary"
+            Disabled="_updatingRole"
+            OnClick="ChangeRoleAsync"
+            Title="Ändra roll" />
+
+        </div>
 
         <MudText Typo="Typo.body2"
-                 Color="Color.Secondary"
-                 Class="mt-1">
+          Color="Color.Secondary"
+          Class="mt-1">
 
-            @Member.Role
+          @Member.Email
 
         </MudText>
 
-    </MudCardContent>
+      </div>
+
+      <MudIconButton Icon="@Icons.Material.Filled.Delete"
+        Color="Color.Error"
+        Size="Size.Small"
+        Disabled="_deleting"
+        OnClick="ConfirmDeleteAsync"
+        Title="Ta bort" />
+
+    </div>
+
+  </MudCardContent>
 
 </MudCard>
 
-
 @code {
 
-    [Parameter, EditorRequired]
-    public StaffMemberDto Member { get; set; } = default!;
+  [Parameter, EditorRequired]
+  public StaffMemberDto Member { get; set; } = default!;
+
+  [Parameter, EditorRequired]
+  public Guid AssociationId { get; set; }
+
+  [Parameter]
+  public EventCallback OnDeleted { get; set; }
+
+  private bool _deleting;
+  private bool _updatingRole;
+
+
+  private async Task ChangeRoleAsync()
+  {
+    if (_updatingRole)
+      return;
+
+    var options = new DialogOptions
+    {
+      CloseOnEscapeKey = true,
+      MaxWidth = MaxWidth.Small,
+      FullWidth = true
+    };
+
+    var dialog =
+        await DialogService.ShowAsync<SelectMemberRoleDialog>(
+            "Ändra medlemsroll",
+            options);
+
+    var result = await dialog.Result;
+
+    if (result.Canceled)
+      return;
+
+    if (result.Data is not MemberRole role)
+      return;
+
+    if (role == Member.Role)
+      return;
+
+    await UpdateRoleAsync(role);
+  }
+
+
+  private async Task UpdateRoleAsync(
+      MemberRole role)
+  {
+    if (_updatingRole)
+      return;
+
+    _updatingRole = true;
+
+    try
+    {
+      await Sender.Send(
+          new UpdateStaffMemberRoleCommand(
+              AssociationId,
+              Member.Id,
+              role));
+
+      Snackbar.Add(
+          "Medlemsrollen uppdaterades.",
+          Severity.Success);
+
+      await OnDeleted.InvokeAsync();
+    }
+    catch (Exception ex)
+    {
+      Snackbar.Add(
+          "Kunde inte uppdatera medlemsrollen.",
+          Severity.Error);
+    }
+    finally
+    {
+      _updatingRole = false;
+    }
+  }
+
+
+  private async Task ConfirmDeleteAsync()
+  {
+    var parameters = new DialogParameters
+    {
+      ["MemberName"] = Member.FullName
+    };
+
+    var options = new DialogOptions
+    {
+      CloseOnEscapeKey = true,
+      MaxWidth = MaxWidth.Small,
+      FullWidth = true
+    };
+
+    var dialog =
+        await DialogService.ShowAsync<
+            ConfirmDeleteMemberDialog>(
+                "Ta bort styrelsemedlem",
+                parameters,
+                options);
+
+    var result = await dialog.Result;
+
+    if (result.Canceled)
+      return;
+
+    await DeleteAsync();
+  }
+
+
+  private async Task DeleteAsync()
+  {
+    if (_deleting)
+      return;
+
+    _deleting = true;
+
+    try
+    {
+      await Sender.Send(
+          new RemoveStaffMemberCommand(
+              AssociationId,
+              Member.Id));
+
+      await OnDeleted.InvokeAsync();
+    }
+    finally
+    {
+      _deleting = false;
+    }
+  }
+
+
+  private static string GetRoleName(
+      MemberRole role)
+  {
+    return role switch
+    {
+      MemberRole.StyrelseLedamot =>
+          "Styrelseledamot",
+
+      MemberRole.CommiteAnsvarig =>
+          "Kommittéansvarig",
+
+      _ =>
+          role.ToString()
+    };
+  }
 }
+

@@ -146,6 +146,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                     name => name.Value,
                     value => new Name(value));
 
+
             builder.HasMany<Member>("_members")
                 .WithOne()
                 .HasForeignKey(m => m.AssociationId)
@@ -187,6 +188,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                     value => new Name(value))
                 .HasColumnName("FullName")
                 .IsRequired();
+
+            builder.Property(m => m.Email)
+             .HasConversion(
+                 email => email.Value,
+                 value => new Email(value))
+             .HasColumnName("Email")
+             .IsRequired();
 
             builder.Property(m => m.Role)
                 .HasConversion<int>()
