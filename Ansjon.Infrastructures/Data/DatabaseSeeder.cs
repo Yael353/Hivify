@@ -1,5 +1,4 @@
-﻿using Ansjon.Core.Aggregates.Associations.Members;
-using Ansjon.Core.Aggregates.Feeds;
+﻿using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.SharedKernel.ValuesObjects;
 using Ansjon.Infrastructures.SqlDatabase;
 using Microsoft.EntityFrameworkCore;
@@ -15,20 +14,18 @@ public static class DatabaseSeeder
         {
             context.Feeds.Add(
                 Feed.CreateFeed(
-                    new MemberID(Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")),
-                    MemberRole.StyrelseLedamot,
+                    new UserID(Guid.Parse(
+                        "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")),
                     new Title("Welcome to Ansjon"),
                     new Description("This is the first seeded feed.")));
 
             context.Feeds.Add(
                 Feed.CreateFeed(
-                    new MemberID(Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc")),
-                    MemberRole.StyrelseLedamot,
+                    new UserID(Guid.Parse(
+                        "cccccccc-cccc-cccc-cccc-cccccccccccc")),
                     new Title("Getting Started"),
                     new Description("Learn how to use the platform.")));
         }
-
-
 
         await context.SaveChangesAsync();
 

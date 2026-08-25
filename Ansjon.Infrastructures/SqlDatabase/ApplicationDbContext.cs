@@ -109,13 +109,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 id => id.Value,
                 value => new FeedID(value));
 
-
         modelBuilder.Entity<Feed>()
             .Property(f => f.AuthorId)
             .HasConversion(
                 id => id.Value,
-                value => new MemberID(value));
-
+                value => new UserID(value));
 
         modelBuilder.Entity<Feed>()
             .Property(f => f.Title)
@@ -124,7 +122,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 value => new Title(value))
             .HasMaxLength(200);
 
-
         modelBuilder.Entity<Feed>()
             .Property(f => f.Content)
             .HasConversion(
@@ -132,6 +129,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 value => new Description(value))
             .HasMaxLength(1000);
 
+
+        // =====================
+        // Association
+        // =====================
 
         modelBuilder.Entity<Association>(builder =>
         {
