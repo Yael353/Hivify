@@ -1,12 +1,13 @@
-﻿using Ansjon.Core.Aggregates.Associations.Members;
-using Ansjon.Core.Aggregates.Feeds;
+﻿using Ansjon.Core.Aggregates.Feeds;
 using Ansjon.Core.SharedKernel.ValuesObjects;
 using Ansjon.UseCases.Abstractions.Messaging;
 using Ansjon.UseCases.Abstractions.Presistence;
-using Ansjon.UseCases.Feeds.Commands.UpdateFeed;
 using FluentValidation;
 
-public sealed class UpdateFeedCommandHandler : ICommandHandler<UpdateFeedCommand, bool>
+namespace Ansjon.UseCases.Feeds.Commands.UpdateFeed;
+
+public sealed class UpdateFeedCommandHandler
+    : ICommandHandler<UpdateFeedCommand, bool>
 {
     private readonly IFeedRepo _feedRepository;
     private readonly IValidator<UpdateFeedCommand> _validator;
@@ -41,8 +42,7 @@ public sealed class UpdateFeedCommandHandler : ICommandHandler<UpdateFeedCommand
 
         feed.Update(
             new Title(command.Title),
-            new Description(command.Content),
-            MemberRole.CommiteAnsvarig);
+            new Description(command.Content));
 
         await _feedRepository.UpdateFeedAsync(
             feed,
