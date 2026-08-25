@@ -12,6 +12,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Components\Admin\AdminTabs\AdminFeedsMgmt\AdminFeed.razor~RF3685003.TMP" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\Ansjon.AI\Ansjon.AI.csproj" />
 		<ProjectReference Include="..\Ansjon.Core\Ansjon.Core.csproj" />
 		<ProjectReference Include="..\Ansjon.Infrastructures\Ansjon.Infrastructures.csproj" />
