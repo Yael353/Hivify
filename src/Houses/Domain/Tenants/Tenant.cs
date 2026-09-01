@@ -1,6 +1,6 @@
-﻿using Ansjon.Core.SharedKernel;
-using Ansjon.Core.SharedKernel.ValuesObjects;
-using Houses.Domain.Tenants;
+﻿using Houses.Domain.Tenants;
+using SharedKernel;
+using SharedKernel.ValuesObjects;
 
 public class Tenant : BaseEntity<TenantID>
 {

@@ -1,6 +1,6 @@
-﻿using Ansjon.Core.SharedKernel;
+﻿using SharedKernel;
 
-namespace Ansjon.Core.Aggregates.Houses
+namespace Houses.Domain.Houses
 {
     public sealed record Facility : BaseValue<string>
     {

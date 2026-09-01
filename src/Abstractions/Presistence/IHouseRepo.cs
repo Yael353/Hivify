@@ -1,4 +1,4 @@
-using Hivify.Core.Houses;
+using Houses.Domain.Houses;
 
 
 namespace Hivify.UseCases.Abstractions.Presistence

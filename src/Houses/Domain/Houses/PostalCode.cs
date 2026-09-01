@@ -1,7 +1,7 @@
-﻿using global::Ansjon.Core.Exceptions;
-using global::Ansjon.Core.SharedKernel;
+﻿using SharedKernel;
+using SharedKernel.Exceptions;
 
-namespace Ansjon.Core.Aggregates.Houses
+namespace Houses.Domain.Houses
 {
 
     public sealed record PostalCode : BaseValue<string>

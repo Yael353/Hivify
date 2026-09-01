@@ -1,9 +1,9 @@
-﻿using Ansjon.Core.Exceptions;
-using Ansjon.Core.SharedKernel;
-using Ansjon.Core.SharedKernel.ValuesObjects;
-using Houses.Domain.Tenants;
+﻿using Houses.Domain.Tenants;
+using SharedKernel;
+using SharedKernel.Exceptions;
+using SharedKernel.ValuesObjects;
 
-namespace Ansjon.Core.Aggregates.Houses;
+namespace Houses.Domain.Houses;
 
 public class House : BaseEntity<HouseID>, IAggregateRoot
 {

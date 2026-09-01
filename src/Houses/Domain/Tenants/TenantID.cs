@@ -1,5 +1,5 @@
-﻿using Ansjon.Core.Exceptions;
-using Ansjon.Core.SharedKernel;
+﻿using SharedKernel;
+using SharedKernel.Exceptions;
 
 namespace Houses.Domain.Tenants;
 

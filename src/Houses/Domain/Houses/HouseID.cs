@@ -1,7 +1,7 @@
-﻿using Ansjon.Core.Exceptions;
-using Ansjon.Core.SharedKernel;
+﻿using SharedKernel;
+using SharedKernel.Exceptions;
 
-namespace Ansjon.Core.Aggregates.Houses
+namespace Houses.Domain.Houses
 {
     public readonly record struct HouseID : IValue
     {
