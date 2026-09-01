@@ -1,5 +1,5 @@
 var builder = DistributedApplication.CreateBuilder(args);
-builder.AddProject<Projects.Ansjon>("web");
+builder.AddProject<Projects.Hivify>("web");
 
 
 

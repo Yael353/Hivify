@@ -1,0 +1,306 @@
+@using Hivify.UseCases.Abstractions.Presistence
+@using Hivify.UseCases.AdminUserMgmt.DTOs
+@using MudBlazor
+
+@inject IUserRepo UserManagementService
+@inject ILogger<UserPickerDialog> Logger
+
+<MudDialog>
+
+  <DialogContent>
+
+    <MudText Typo="Typo.h6" Class="mb-3">
+      @Title
+    </MudText>
+
+    <MudTextField @bind-Value="_searchText"
+      Placeholder="Sök efter namn eller e-post..."
+      Variant="Variant.Outlined"
+      Adornment="Adornment.Start"
+      AdornmentIcon="@Icons.Material.Filled.Search"
+      Immediate="true"
+      Clearable="true"
+      Class="mb-4" />
+
+    @if (_loading)
+    {
+      <div class="d-flex justify-center pa-6">
+
+        <MudProgressCircular Indeterminate="true"
+          Color="Color.Primary" />
+
+      </div>
+    }
+    else if (_errorMessage is not null)
+    {
+      <MudAlert Severity="Severity.Error"
+        Variant="Variant.Outlined">
+
+        @_errorMessage
+
+      </MudAlert>
+    }
+    else if (_filteredUsers.Count == 0)
+    {
+      <MudAlert Severity="Severity.Info"
+        Variant="Variant.Outlined">
+
+        Inga användare hittades.
+
+      </MudAlert>
+    }
+    else
+    {
+      <MudList T="UserListItem">
+
+        @foreach (var user in PagedUsers)
+        {
+          <MudListItem T="UserListItem"
+            OnClick="@(() => SelectUser(user))"
+            Class="@GetUserClass(user)">
+
+            <div class="d-flex align-items-center w-100 gap-3">
+
+              <MudAvatar Color="Color.Primary"
+                Size="Size.Medium">
+
+                @GetInitials(user)
+
+              </MudAvatar>
+
+              <div class="flex-grow-1">
+
+                <MudText Typo="Typo.body1">
+                  @GetDisplayName(user)
+                </MudText>
+
+                @if (!string.IsNullOrWhiteSpace(user.Email))
+                {
+                  <MudText Typo="Typo.caption"
+                    Color="Color.Secondary">
+
+                    @user.Email
+
+                  </MudText>
+                }
+
+              </div>
+
+              @if (IsSelected(user))
+              {
+                <MudIcon Icon="@Icons.Material.Filled.Check"
+                  Color="Color.Primary" />
+              }
+
+            </div>
+
+          </MudListItem>
+        }
+
+      </MudList>
+
+      <MudDivider Class="my-3" />
+
+      <div class="d-flex justify-end">
+
+        <MudPagination Count="@PageCount"
+          Selected="@_page"
+          SelectedChanged="OnPageChanged"
+          Size="Size.Small" />
+
+      </div>
+    }
+
+  </DialogContent>
+
+  <DialogActions>
+
+    <MudButton OnClick="Cancel">
+      Avbryt
+    </MudButton>
+
+    <MudButton Variant="Variant.Filled"
+      Color="Color.Primary"
+      Disabled="@(_selectedUser is null)"
+      OnClick="Confirm">
+
+      Välj
+
+    </MudButton>
+
+  </DialogActions>
+
+</MudDialog>
+
+
+@code {
+
+  [CascadingParameter]
+  private IMudDialogInstance MudDialog { get; set; } = default!;
+
+
+  [Parameter]
+  public string Title { get; set; } = "Välj användare";
+
+
+  private IReadOnlyList<UserListItem> _users = [];
+
+  private UserListItem? _selectedUser;
+
+  private string _searchText = string.Empty;
+
+  private bool _loading;
+
+  private string? _errorMessage;
+
+  private int _page = 1;
+
+  private const int PageSize = 7;
+
+
+  private IReadOnlyList<UserListItem> _filteredUsers =>
+      string.IsNullOrWhiteSpace(_searchText)
+          ? _users
+          : _users
+              .Where(user =>
+                  Contains(user.FullName, _searchText) ||
+                  Contains(user.UserName, _searchText) ||
+                  Contains(user.Email, _searchText))
+              .ToList();
+
+
+  private IReadOnlyList<UserListItem> PagedUsers =>
+      _filteredUsers
+          .Skip((_page - 1) * PageSize)
+          .Take(PageSize)
+          .ToList();
+
+
+  private int PageCount =>
+      Math.Max(
+          1,
+          (int)Math.Ceiling(
+              _filteredUsers.Count / (double)PageSize));
+
+
+  protected override async Task OnInitializedAsync()
+  {
+    await LoadUsersAsync();
+  }
+
+
+  private async Task LoadUsersAsync()
+  {
+    _loading = true;
+    _errorMessage = null;
+
+    try
+    {
+      _users =
+          await UserManagementService.GetUsersAsync(
+              CancellationToken.None);
+    }
+    catch (Exception ex)
+    {
+      Logger.LogError(
+          ex,
+          "Failed to load Identity users");
+
+      _errorMessage =
+          "Kunde inte ladda användare.";
+    }
+    finally
+    {
+      _loading = false;
+    }
+  }
+
+
+  private void SelectUser(UserListItem user)
+  {
+    _selectedUser = user;
+  }
+
+
+  private bool IsSelected(UserListItem user)
+  {
+    return _selectedUser?.Id == user.Id;
+  }
+
+
+  private string GetUserClass(UserListItem user)
+  {
+    return IsSelected(user)
+        ? "cursor-pointer mud-selected-item"
+        : "cursor-pointer";
+  }
+
+
+  private void OnPageChanged(int page)
+  {
+    _page = page;
+  }
+
+
+  private void Confirm()
+  {
+    if (_selectedUser is null)
+      return;
+
+    MudDialog.Close(
+        DialogResult.Ok(_selectedUser));
+  }
+
+
+  private void Cancel()
+  {
+    MudDialog.Cancel();
+  }
+
+
+  private static bool Contains(
+      string? value,
+      string searchText)
+  {
+    return value?.Contains(
+        searchText,
+        StringComparison.OrdinalIgnoreCase) == true;
+  }
+
+
+  private static string GetDisplayName(
+      UserListItem user)
+  {
+    return user.FullName
+        ?? user.UserName
+        ?? user.Email
+        ?? user.Id.ToString();
+  }
+
+
+  private static string GetInitials(
+      UserListItem user)
+  {
+    var name =
+        user.FullName
+        ?? user.UserName
+        ?? user.Email;
+
+    if (string.IsNullOrWhiteSpace(name))
+      return "?";
+
+    var parts = name.Split(
+        ' ',
+        StringSplitOptions.RemoveEmptyEntries);
+
+    if (parts.Length >= 2)
+    {
+      return string.Concat(
+          parts[0][0],
+          parts[^1][0])
+          .ToUpperInvariant();
+    }
+
+    return name[..1].ToUpperInvariant();
+  }
+}

@@ -1,0 +1,100 @@
+
+@using Hivify.UseCases.Abstractions.Presistence
+@using Hivify.UseCases.AdminUserMgmt.DTOs
+
+
+@inject IUserRepo UserManagementService
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
+
+    <MudStack Spacing="3">
+
+        <UserManagementHeader OnRefresh="LoadUsersAsync" />
+
+        <UserSearch
+            SearchText="_searchText"
+            SearchTextChanged="OnSearchChanged" />
+
+        @if (!string.IsNullOrWhiteSpace(_errorMessage))
+        {
+            <MudAlert Severity="Severity.Error"
+                      Variant="Variant.Outlined"
+                      ShowCloseIcon="true">
+
+                @_errorMessage
+
+            </MudAlert>
+        }
+
+        <UserTable Users="_filteredUsers" />
+
+
+    </MudStack>
+
+</MudContainer>
+
+@code {
+
+    private IReadOnlyList<UserListItem> _users = [];
+
+    private string _searchText = string.Empty;
+
+    private string? _errorMessage;
+
+    private IReadOnlyList<UserListItem> _filteredUsers =>
+        string.IsNullOrWhiteSpace(_searchText)
+            ? _users
+            : _users
+                .Where(UserMatchesSearch)
+                .ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsersAsync();
+    }
+
+    private async Task LoadUsersAsync()
+    {
+        _errorMessage = null;
+
+        try
+        {
+            _users =
+                await UserManagementService
+                    .GetUsersAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+
+            _errorMessage =
+                $"Unable to load users: {ex.Message}";
+        }
+    }
+
+    private void OnSearchChanged(string value)
+    {
+        _searchText = value;
+    }
+
+    private bool UserMatchesSearch(UserListItem user)
+    {
+        if (string.IsNullOrWhiteSpace(_searchText))
+            return true;
+
+        return
+            (user.UserName?.Contains(
+                _searchText,
+                StringComparison.OrdinalIgnoreCase) ?? false)
+            ||
+            (user.Email?.Contains(
+                _searchText,
+                StringComparison.OrdinalIgnoreCase) ?? false)
+            ||
+            user.Id
+                .ToString()
+                .Contains(
+                    _searchText,
+                    StringComparison.OrdinalIgnoreCase);
+    }
+}

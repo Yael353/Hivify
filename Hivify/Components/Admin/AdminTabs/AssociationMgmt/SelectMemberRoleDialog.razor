@@ -1,0 +1,93 @@
+
+@using Hivify.Core.Aggregates.Associations.Members
+@using MudBlazor
+
+<MudDialog>
+
+  <DialogContent>
+
+    <MudText Typo="Typo.body2"
+      Color="Color.Secondary"
+      Class="mb-4">
+
+      Välj vilken roll användaren ska ha i föreningen.
+
+    </MudText>
+
+    <MudSelect T="MemberRole"
+      @bind-Value="_selectedRole"
+      Label="Roll"
+      Variant="Variant.Outlined"
+      FullWidth="true">
+
+      @foreach (var role in Enum.GetValues<MemberRole>())
+      {
+        <MudSelectItem Value="@role">
+          @GetRoleName(role)
+        </MudSelectItem>
+      }
+
+    </MudSelect>
+
+  </DialogContent>
+
+  <DialogActions>
+
+    <MudButton Variant="Variant.Text"
+      OnClick="Cancel">
+
+      Avbryt
+
+    </MudButton>
+
+    <MudButton Variant="Variant.Filled"
+      Color="Color.Primary"
+      OnClick="Confirm">
+
+      Lägg till
+
+    </MudButton>
+
+  </DialogActions>
+
+</MudDialog>
+
+@code {
+
+  [CascadingParameter]
+  private IMudDialogInstance MudDialog { get; set; } = default!;
+
+  private MemberRole _selectedRole =
+      MemberRole.StyrelseLedamot;
+
+
+  private void Cancel()
+  {
+    MudDialog.Cancel();
+  }
+
+
+  private void Confirm()
+  {
+    MudDialog.Close(
+        DialogResult.Ok(_selectedRole));
+  }
+
+
+  private static string GetRoleName(
+      MemberRole role)
+  {
+    return role switch
+    {
+      MemberRole.StyrelseLedamot =>
+          "Styrelseledamot",
+
+      MemberRole.CommiteAnsvarig =>
+          "Kommittéansvarig",
+
+      _ =>
+          role.ToString()
+    };
+  }
+}
+

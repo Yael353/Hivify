@@ -1,0 +1,37 @@
+@using Hivify.Components.User.Staff
+
+<StaffSection Title="Kommittéansvariga" Staff="CommitteeMembers" />
+
+@code {
+    private List<StaffSection.StaffMember> CommitteeMembers = new()
+    {
+        new StaffSection.StaffMember
+        {
+            Name = "Fredrik Berg",
+            Role = "Trivselansvarig",
+            Email = "fredrik.berg@hivify.se",
+            Phone = "070-123 45 06"
+        },
+        new StaffSection.StaffMember
+        {
+            Name = "Gunnel Holm",
+            Role = "Miljöansvarig",
+            Email = "gunnel.holm@hivify.se",
+            Phone = "070-123 45 07"
+        },
+        new StaffSection.StaffMember
+        {
+            Name = "Henrik Wallin",
+            Role = "Fastighetsansvarig",
+            Email = "henrik.wallin@hivify.se",
+            Phone = "070-123 45 08"
+        },
+        new StaffSection.StaffMember
+        {
+            Name = "Ida Ljung",
+            Role = "Evenemangsansvarig",
+            Email = "ida.ljung@hivify.se",
+            Phone = "070-123 45 09"
+        }
+    };
+}

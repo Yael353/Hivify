@@ -1,0 +1,45 @@
+
+@using Hivify.UseCases.Association.DTOs
+@using MudBlazor
+
+@if (Members.Count == 0)
+{
+  <MudAlert Severity="Severity.Info"
+    Variant="Variant.Outlined">
+
+    Det finns inga styrelsemedlemmar.
+
+  </MudAlert>
+}
+else
+{
+  <MudGrid Spacing="2">
+
+    @foreach (var member in Members)
+    {
+      <MudItem xs="12"
+        sm="6"
+        md="4">
+
+        <StaffMemberCard Member="member"
+          AssociationId="AssociationId"
+          OnDeleted="OnMemberDeleted" />
+
+      </MudItem>
+    }
+
+  </MudGrid>
+}
+
+@code {
+
+  [Parameter]
+  public IReadOnlyList<StaffMemberDto> Members { get; set; } = [];
+
+  [Parameter, EditorRequired]
+  public Guid AssociationId { get; set; }
+
+  [Parameter]
+  public EventCallback OnMemberDeleted { get; set; }
+}
+

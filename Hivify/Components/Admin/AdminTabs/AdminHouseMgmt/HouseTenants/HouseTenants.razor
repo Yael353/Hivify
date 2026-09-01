@@ -1,0 +1,110 @@
+@using Hivify.UseCases.Abstractions.Messaging
+@using Hivify.UseCases.Houses.DTOs
+@using Hivify.UseCases.Houses.Queries.GetHouseTenants
+@using MudBlazor
+
+@inject IQuerySender QuerySender
+
+<AddHouseTenant HouseId="HouseId"
+  OnTenantAdded="LoadTenantsAsync" />
+
+<MudDivider Class="my-4" />
+
+@if (_loading)
+{
+  <div class="d-flex justify-center pa-4">
+    <MudProgressCircular Indeterminate="true"
+      Color="Color.Primary" />
+  </div>
+}
+else if (_errorMessage is not null)
+{
+  <MudAlert Severity="Severity.Error"
+    Variant="Variant.Outlined">
+
+    @_errorMessage
+
+  </MudAlert>
+}
+else if (_tenants.Count == 0)
+{
+  <MudAlert Severity="Severity.Info"
+    Variant="Variant.Outlined">
+
+    Inga boende är registrerade i detta hus ännu.
+
+  </MudAlert>
+}
+else
+{
+  <MudStack Spacing="2">
+
+    <MudText Typo="Typo.body2"
+      Color="Color.Tertiary">
+
+      Boende (@_tenants.Count)
+
+    </MudText>
+
+    @foreach (var tenant in _tenants)
+    {
+      <TenantCard Tenant="tenant"
+        HouseId="HouseId"
+        OnTenantRemoved="LoadTenantsAsync" />
+    }
+
+  </MudStack>
+}
+
+@code {
+
+  [Parameter, EditorRequired]
+  public Guid HouseId { get; set; }
+
+  private IReadOnlyList<TenantListItemDto> _tenants = [];
+
+  private bool _loading;
+
+  private string? _errorMessage;
+
+  private Guid _lastLoadedHouseId;
+
+
+  protected override async Task OnParametersSetAsync()
+  {
+    if (HouseId == Guid.Empty)
+      return;
+
+    if (_lastLoadedHouseId == HouseId)
+      return;
+
+    _lastLoadedHouseId = HouseId;
+
+    await LoadTenantsAsync();
+  }
+
+
+  private async Task LoadTenantsAsync()
+  {
+    _loading = true;
+    _errorMessage = null;
+
+    try
+    {
+      _tenants =
+          await QuerySender.Send(
+              new GetHouseTenantsQuery(HouseId));
+    }
+    catch (Exception ex)
+    {
+      Console.Error.WriteLine(ex);
+
+      _errorMessage =
+          "Kunde inte ladda boende.";
+    }
+    finally
+    {
+      _loading = false;
+    }
+  }
+}

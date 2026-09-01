@@ -1,0 +1,65 @@
+@implements IDisposable
+@using Hivify.Components.Layout.Shared
+
+@inject NavigationManager NavigationManager
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+        <NavBrand />
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <NavLinks />
+
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <AuthorizeView Context="authState">
+                    <Authorized>
+                        <UserMenu CurrentUrl="@currentUrl" User="@authState.User" />
+                        <AuthorizeView Roles="Admin">
+                            <Authorized>
+                                <div class="nav-item px-3">
+                                    <NavLink class="nav-link" href="/admin/nyheter">
+                                        <span class="bi bi-gear" aria-hidden="true"></span> Admin
+                                    </NavLink>
+                                </div>
+                            </Authorized>
+                        </AuthorizeView>
+                    </Authorized>
+                    <NotAuthorized>
+                        <GuestMenu />
+                    </NotAuthorized>
+                </AuthorizeView>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+@code {
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += LocationChanged;
+    }
+
+    private void LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= LocationChanged;
+    }
+}

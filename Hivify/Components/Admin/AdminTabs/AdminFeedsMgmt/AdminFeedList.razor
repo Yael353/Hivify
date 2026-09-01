@@ -1,0 +1,85 @@
+@using Hivify.UseCases.Abstractions.Messaging
+@using Hivify.UseCases.Feeds.DTOs
+@using Hivify.UseCases.Feeds.Queries.GetFeeds
+@using Hivify.Components.Common
+@using MudBlazor
+
+@inject IQuerySender QuerySender
+
+@if (_loading)
+{
+    <div class="text-center py-6">
+        <MudProgressCircular Indeterminate="true" Color="Color.Primary" Style="color: #d4a373;" />
+        <MudText Class="mt-3" Style="color: #b8a08e;">Laddar feeds...</MudText>
+    </div>
+}
+else if (!_allItems.Any())
+{
+    <div class="text-center py-8">
+        <MudIcon Icon="@Icons.Material.Filled.Article" Size="Size.Large" Style="color: #d4a373;" />
+        <MudText Typo="Typo.h5" Class="mt-2" Style="color: #5c4b3a;">Inga feeds ännu</MudText>
+        <MudText Style="color: #b8a08e;">Skapa din första feed nedan.</MudText>
+    </div>
+}
+else
+{
+    <MudStack Spacing="4">
+        @foreach (var feed in _displayedItems)
+        {
+            <AdminFeedCard Feed="feed" OnChanged="Refresh" />
+        }
+    </MudStack>
+
+    <div class="mt-4">
+        <Pagination TotalItems="@_totalItems"
+                    PageSize="@_pageSize"
+                    Skip="@_skip"
+                    OnPageChanged="OnPageChanged" />
+    </div>
+}
+
+@code {
+    private List<FeedListItemDto> _allItems = [];
+    private List<FeedListItemDto> _displayedItems = [];
+    private bool _loading = true;
+    private int _totalItems = 0;
+    private int _pageSize = 5;
+    private int _skip = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _loading = true;
+        StateHasChanged();
+
+        var query = new GetFeedsQuery();
+        _allItems = (await QuerySender.Send(query)).ToList();
+
+        _totalItems = _allItems.Count;
+        _displayedItems = _allItems.Skip(_skip).Take(_pageSize).ToList();
+
+        _loading = false;
+        StateHasChanged();
+    }
+
+    public async Task Refresh()
+    {
+        await LoadData();
+    }
+
+    private async Task OnPageChanged(int newSkip)
+    {
+        _skip = newSkip;
+        _displayedItems = _allItems.Skip(_skip).Take(_pageSize).ToList();
+        StateHasChanged();
+    }
+
+    public int GetTotalCount()
+    {
+        return _allItems?.Count ?? 0;
+    }
+}

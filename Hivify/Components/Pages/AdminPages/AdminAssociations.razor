@@ -1,0 +1,189 @@
+@page "/admin/associations"
+@attribute [Authorize(Roles = "Admin")]
+@layout AdminLayout
+@rendermode InteractiveServer
+
+@using Hivify.Components.Admin.AdminTabs.AssociationMgmt
+@using Hivify.UseCases.Abstractions.Messaging
+@using Hivify.UseCases.Association.DTOs
+@using Hivify.UseCases.Association.Queries.GetAssociations
+
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@inject IQuerySender QuerySender
+@inject NavigationManager Navigation
+
+<PageTitle>Hantera föreningar</PageTitle>
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+
+        <MudContainer MaxWidth="MaxWidth.Large">
+
+            <MudText Typo="Typo.h5"
+                     Color="Color.Primary"
+                     Class="font-weight-bold mb-3">
+
+                Hantera kommittéer
+
+            </MudText>
+
+            <MudText Typo="Typo.body2"
+                     Color="Color.Tertiary"
+                     Class="mb-4">
+
+                Här kan du se alla kommittéer och lägga till nya.
+
+            </MudText>
+
+            <MudDivider Class="mb-4" />
+
+            <MudGrid>
+
+                <MudItem xs="12">
+
+<AddAssociation
+    OnAssociationAdded="RefreshAssociations" />
+                </MudItem>
+
+
+                <MudItem xs="12">
+
+                    <MudPaper Class="pa-4"
+                              Elevation="2"
+                              Style="border-radius: 12px;">
+
+                        <MudText Typo="Typo.subtitle2"
+                                 Color="Color.Primary"
+                                 Class="font-weight-semibold mb-3">
+
+                            Alla kommittéer
+
+                        </MudText>
+
+                        @if (_loading)
+                        {
+                            <div class="d-flex justify-content-center py-4">
+
+                                <MudProgressCircular
+                                    Indeterminate="true"
+                                    Color="Color.Primary" />
+
+                            </div>
+                        }
+                        else if (_associations.Count == 0)
+                        {
+                            <MudAlert Severity="Severity.Info">
+
+                                Det finns inga kommittéer.
+
+                            </MudAlert>
+                        }
+                        else
+                        {
+                            <MudGrid>
+
+                                @foreach (var association in _associations)
+                                {
+                                    <MudItem xs="12"
+                                             md="6"
+                                             lg="4">
+
+                                        <MudCard>
+
+                                            <MudCardContent>
+
+                                                <MudText Typo="Typo.h6">
+
+                                                    @association.Name
+
+                                                </MudText>
+
+                                            </MudCardContent>
+
+                                            <MudCardActions>
+
+                                                <MudButton
+                                                    Color="Color.Primary"
+                                                    OnClick="@(() => OpenAssociation(association.Id))">
+
+                                                    Hantera
+
+                                                </MudButton>
+
+                                            </MudCardActions>
+
+                                        </MudCard>
+
+                                    </MudItem>
+                                }
+
+                            </MudGrid>
+                        }
+
+                    </MudPaper>
+
+                </MudItem>
+
+            </MudGrid>
+
+        </MudContainer>
+
+    </Authorized>
+
+    <NotAuthorized>
+
+        <MudAlert Severity="Severity.Error">
+
+            Du har inte behörighet att visa denna sida.
+
+        </MudAlert>
+
+    </NotAuthorized>
+
+</AuthorizeView>
+
+
+@code {
+
+    private IReadOnlyList<AssociationListDto> _associations = [];
+
+    private bool _loading;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAssociationsAsync();
+    }
+
+
+    private async Task LoadAssociationsAsync()
+    {
+        _loading = true;
+
+        try
+        {
+            _associations =
+                await QuerySender.Send(
+                    new GetAssociationsQuery());
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+
+    private async Task RefreshAssociations()
+    {
+        await LoadAssociationsAsync();
+    }
+
+
+    private void OpenAssociation(Guid associationId)
+    {
+        Navigation.NavigateTo(
+            $"/admin/associations/{associationId}");
+    }
+}

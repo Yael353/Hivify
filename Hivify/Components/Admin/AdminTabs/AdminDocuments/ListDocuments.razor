@@ -1,0 +1,90 @@
+@using Hivify.UseCases.Abstractions.Messaging
+@using Hivify.UseCases.Documents.Quries
+@using Hivify.UseCases.Documents.Results
+
+@inject IQuerySender QuerySender
+
+@if (_loading)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else if (_documents.Count == 0)
+{
+    <MudAlert Severity="Severity.Info">
+        Det finns inga dokument.
+    </MudAlert>
+}
+else
+{
+    <MudGrid>
+
+        @foreach (var document in _documents)
+        {
+            <MudItem xs="12" md="6" lg="4">
+
+                <MudCard Class="pa-3">
+
+                    <MudCardContent>
+
+                        <MudText Typo="Typo.h6">
+                            @document.FileName
+                        </MudText>
+
+                    </MudCardContent>
+
+                    <MudCardActions>
+
+                        <MudButton Href="@document.SecureUrl"
+                                   Target="_blank"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary">
+
+                            Visa dokument
+
+                        </MudButton>
+
+                    </MudCardActions>
+
+                </MudCard>
+
+            </MudItem>
+        }
+
+    </MudGrid>
+}
+
+@code {
+
+    private IReadOnlyList<FileDocumentResult> _documents = [];
+
+    private bool _loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDocumentsAsync();
+    }
+
+    public async Task Refresh()
+    {
+        await LoadDocumentsAsync();
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task LoadDocumentsAsync()
+    {
+        _loading = true;
+
+        try
+        {
+            var documents = await QuerySender.Send(
+                new GetDocumentsQuery());
+
+            _documents = documents.ToList();
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+}

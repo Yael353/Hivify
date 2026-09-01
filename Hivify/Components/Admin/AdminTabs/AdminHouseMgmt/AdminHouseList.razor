@@ -1,0 +1,187 @@
+@using Hivify.Components.Common
+@using Hivify.UseCases.Abstractions.Messaging
+@using Hivify.UseCases.Houses.DTOs
+@using Hivify.UseCases.Houses.Queries.GetHouses
+@using MudBlazor
+
+@inject IQuerySender QuerySender
+@inject NavigationManager NavigationManager
+
+@if (_loading)
+{
+  <div class="text-center py-6">
+
+    <MudProgressCircular Indeterminate="true"
+      Color="Color.Primary" />
+
+    <MudText Class="mt-3"
+      Color="Color.Tertiary">
+
+      Laddar hus...
+
+    </MudText>
+
+  </div>
+}
+else if (_houses.Count == 0)
+{
+  <div class="text-center py-6">
+
+    <MudIcon Icon="@Icons.Material.Filled.House"
+      Size="Size.Large"
+      Color="Color.Tertiary" />
+
+    <MudText Typo="Typo.h6"
+      Class="mt-2">
+
+      Inga hus ännu
+
+    </MudText>
+
+    <MudText Color="Color.Tertiary">
+
+      Lägg till ditt första hus ovan.
+
+    </MudText>
+
+  </div>
+}
+else
+{
+  <MudTable Items="_displayedHouses"
+    Hover="true"
+    Striped="true"
+    Bordered="true"
+    Elevation="1"
+    Class="mt-2"
+    Style="border-radius: 12px; overflow: hidden;">
+
+    <HeaderContent>
+
+      <MudTh>
+        Adress
+      </MudTh>
+
+      <MudTh>
+        Husnummer
+      </MudTh>
+
+      <MudTh>
+        Postnummer
+      </MudTh>
+
+      <MudTh Class="text-right">
+        Åtgärd
+      </MudTh>
+
+    </HeaderContent>
+
+    <RowTemplate>
+
+      <MudTd>
+        @context.Address
+      </MudTd>
+
+      <MudTd>
+        @context.HouseNumber
+      </MudTd>
+
+      <MudTd>
+        @context.PostalCode
+      </MudTd>
+
+      <MudTd Class="text-right">
+
+        <MudButton Variant="Variant.Filled"
+          Color="Color.Primary"
+          Size="Size.Small"
+          OnClick="@(() => OpenHouse(context.Id))">
+
+          Se detaljer
+
+        </MudButton>
+
+      </MudTd>
+
+    </RowTemplate>
+
+  </MudTable>
+
+  <Pagination TotalItems="@_totalItems"
+    PageSize="@_pageSize"
+    Skip="@_skip"
+    OnPageChanged="ChangePage" />
+}
+
+@code {
+
+  private List<HouseListItemDto> _houses = [];
+  private List<HouseListItemDto> _displayedHouses = [];
+
+  private const int _pageSize = 10;
+
+  private int _totalItems;
+  private int _skip;
+
+  private bool _loading;
+
+
+  protected override async Task OnInitializedAsync()
+  {
+    await Refresh();
+  }
+
+
+  public async Task Refresh()
+  {
+    _loading = true;
+
+    try
+    {
+      var houses = await QuerySender.Send(
+          new GetHousesQuery());
+
+      _houses = houses.ToList();
+
+      _totalItems = _houses.Count;
+
+      _skip = 0;
+
+      UpdateDisplayedHouses();
+    }
+    finally
+    {
+      _loading = false;
+    }
+  }
+
+
+  private void ChangePage(int skip)
+  {
+    if (skip < 0)
+      return;
+
+    if (skip >= _totalItems)
+      return;
+
+    _skip = skip;
+
+    UpdateDisplayedHouses();
+  }
+
+
+  private void UpdateDisplayedHouses()
+  {
+    _displayedHouses = _houses
+        .Skip(_skip)
+        .Take(_pageSize)
+        .ToList();
+  }
+
+
+  private void OpenHouse(Guid houseId)
+  {
+    NavigationManager.NavigateTo(
+        $"/admin/hus/{houseId}");
+  }
+}

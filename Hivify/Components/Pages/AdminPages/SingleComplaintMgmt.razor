@@ -1,0 +1,14 @@
+@page "/admin/arandehantering/{complaintId:guid}"
+@layout AdminLayout
+@rendermode InteractiveServer
+
+@using Hivify.Components.Admin.AdminTabs.AdminComplaintsMgmt
+
+<PageTitle>Admin – Ärende</PageTitle>
+
+<AdminComplaintDetail ComplaintId="@ComplaintId" />
+
+@code {
+    [Parameter]
+    public Guid ComplaintId { get; set; }
+}

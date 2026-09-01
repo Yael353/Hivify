@@ -1,0 +1,40 @@
+using Hivify.Core.Aggregates.Houses;
+using Hivify.UseCases.Abstractions.Messaging;
+using Hivify.UseCases.Abstractions.Presistence;
+using Hivify.UseCases.Houses.DTOs;
+
+namespace Hivify.UseCases.Houses.Queries.GetHouse;
+
+public sealed class GetHouseQueryHandler
+    : IQueryHandler<GetHouseQuery, HouseListItemDto>
+{
+    private readonly IHouseRepo _houseRepo;
+
+    public GetHouseQueryHandler(
+        IHouseRepo houseRepo)
+    {
+        _houseRepo = houseRepo;
+    }
+
+    public async Task<HouseListItemDto> Handle(
+        GetHouseQuery query,
+        CancellationToken cancellationToken)
+    {
+        var house = await _houseRepo.GetByIdAsync(
+            new HouseID(query.HouseId),
+            cancellationToken);
+
+        if (house is null)
+        {
+            throw new InvalidOperationException(
+                "House could not be found.");
+        }
+
+        return new HouseListItemDto(
+            house.Id.Value,
+            house.Address.Value,
+            house.HouseNumber.Value,
+            house.PostalCode.Value,
+            house.CreatedAt);
+    }
+}

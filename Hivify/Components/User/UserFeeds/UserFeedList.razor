@@ -1,0 +1,26 @@
+@using Hivify.UseCases.Feeds.DTOs
+@using MudBlazor
+
+@if (!Feeds.Any())
+{
+  <MudAlert Severity="Severity.Info">
+    Inga feeds hittades.
+  </MudAlert>
+}
+else
+{
+  <MudStack Spacing="3">
+
+    @foreach (var feed in Feeds)
+    {
+      <UserFeedCard Feed="feed" />
+    }
+
+  </MudStack>
+}
+
+@code {
+
+  [Parameter, EditorRequired]
+  public IReadOnlyList<FeedListItemDto> Feeds { get; set; } = [];
+}

@@ -1,0 +1,28 @@
+@page "/admin/nyheter"
+@layout AdminLayout
+@rendermode InteractiveServer
+
+@using Hivify.Components.Admin.AdminTabs.AdminFeedsMgmt
+@using MudBlazor
+
+<PageTitle>Admin – Nyheter</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
+    <div class="mb-6">
+        <MudText Typo="Typo.h4" Color="Color.Primary" Class="font-weight-medium" Style="letter-spacing: -0.3px;">
+            Hantera nyheter
+        </MudText>
+        <MudText Typo="Typo.body1" Color="Color.Tertiary" Class="mt-1">
+            Skapa, redigera och administrera alla nyheter i communityn.
+        </MudText>
+    </div>
+
+    <AdminFeed />
+</MudContainer>
+
+<style>
+    .mud-container {
+        background: #ffffff;
+        min-height: 100vh;
+    }
+</style>
