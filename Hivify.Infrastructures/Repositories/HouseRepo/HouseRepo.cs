@@ -1,4 +1,4 @@
-using Hivify.Core.Aggregates.Houses;
+using Hivify.Core.Houses;
 using Hivify.Infrastructures.SqlDatabase;
 using Hivify.UseCases.Abstractions.Presistence;
 using Microsoft.EntityFrameworkCore;

@@ -12,8 +12,4 @@
     <PackageReference Include="OllamaSharp" Version="5.4.30" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Hivify.UseCases\Hivify.UseCases.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -1,9 +1,9 @@
 using Hivify.Components;
 using Hivify.Components.Account;
+using Hivify.Core.Associations.Infrastructure.AssociationRepo;
 using Hivify.Infrastructures.ContextProviders;
 using Hivify.Infrastructures.Data;
 using Hivify.Infrastructures.Identity;
-using Hivify.Infrastructures.Repositories.AssociationRepo;
 using Hivify.Infrastructures.Repositories.ComplaintRepos;
 using Hivify.Infrastructures.Repositories.FeedRepo;
 using Hivify.Infrastructures.Repositories.HouseRepo;

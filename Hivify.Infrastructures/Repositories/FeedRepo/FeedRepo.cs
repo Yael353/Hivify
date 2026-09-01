@@ -1,4 +1,4 @@
-using Hivify.Core.Aggregates.Feeds;
+using Hivify.Core.Feeds;
 using Hivify.Infrastructures.SqlDatabase;
 using Hivify.UseCases.Abstractions.Presistence;
 using Microsoft.EntityFrameworkCore;

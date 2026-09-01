@@ -16,9 +16,4 @@
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.8" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Hivify.Core\Hivify.Core.csproj" />
-    <ProjectReference Include="..\Hivify.UseCases\Hivify.UseCases.csproj" />
-  </ItemGroup>
-
 </Project>

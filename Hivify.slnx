@@ -1,9 +1,35 @@
 <Solution>
-  <Project Path="Hivify.AI/Hivify.AI.csproj" />
-  <Project Path="Hivify.Core/Hivify.Core.csproj" />
-  <Project Path="Hivify.Infrastructures/Hivify.Infrastructures.csproj" Id="3e779152-bd0f-47e7-8acb-d3b0496a051c" />
-  <Project Path="Hivify.UseCases/Hivify.UseCases.csproj" />
-  <Project Path="Hivify/Hivify.csproj" />
+  <Folder Name="/src/" />
+  <Folder Name="/src/AdminUserMgmt/" />
+
+  <Folder Name="/src/Association/">
+    <Project Path="src/Association/Application/Association.Application.csproj" />
+    <Project Path="src/Association/Domain/Association.Domain.csproj" />
+    <Project Path="src/Association/Infrastructure/Association.Infrastructure.csproj" />
+  </Folder>
+
+  <Folder Name="/src/Complaints/">
+    <Project Path="src/Complaints/Application/Complaints.Application.csproj" />
+    <Project Path="src/Complaints/Domain/Complaints.Domain.csproj" />
+    <Project Path="src/Complaints/Infrastructure/Complaints.Infrastructure.csproj" />
+  </Folder>
+
+  <Folder Name="/src/Feeds/">
+    <Project Path="src/Feeds/Application/Feeds.Application.csproj" />
+    <Project Path="src/Feeds/Domain/Feeds.Domain.csproj" />
+    <Project Path="src/Feeds/Infrastructure/Feeds.Infrastructure.csproj" />
+  </Folder>
+
+  <Folder Name="/src/Houses/">
+    <Project Path="src/Houses/Application/Houses.Application.csproj" />
+    <Project Path="src/Houses/Domain/Houses.Domain.csproj" />
+    <Project Path="src/Houses/Infrastructure/Houses.Infrastructure.csproj" />
+  </Folder>
+
   <Project Path="AppHost1/AppHost.csproj" />
+  <Project Path="Hivify.AI/Hivify.AI.csproj" />
+  <Project Path="Hivify.Infrastructures/Hivify.Infrastructures.csproj" Id="3e779152-bd0f-47e7-8acb-d3b0496a051c" />
+  <Project Path="Hivify/Hivify.csproj" />
   <Project Path="ServiceDefaults1/ServiceDefaults.csproj" />
+  <Project Path="SharedKernel/SharedKernel.csproj" Id="9432ab2b-f2fd-4ad8-811f-99bbe4cc1c27" />
 </Solution>

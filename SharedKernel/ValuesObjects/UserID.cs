@@ -1,0 +1,18 @@
+using Hivify.Core.Exceptions;
+using SharedKernel;
+
+namespace SharedKernel.ValuesObjects;
+
+
+public readonly record struct UserID : IValue
+{
+    public Guid Value { get; }
+
+    public UserID(Guid value)
+    {
+        if (value == Guid.Empty)
+            throw new DomainException("Tenant ID cannot be empty.");
+
+        Value = value;
+    }
+}

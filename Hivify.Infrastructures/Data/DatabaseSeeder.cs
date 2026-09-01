@@ -1,4 +1,4 @@
-using Hivify.Core.Aggregates.Feeds;
+using Hivify.Core.Feeds;
 using Hivify.Core.SharedKernel.ValuesObjects;
 using Hivify.Infrastructures.SqlDatabase;
 using Microsoft.EntityFrameworkCore;

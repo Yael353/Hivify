@@ -17,9 +17,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Hivify.AI\Hivify.AI.csproj" />
-		<ProjectReference Include="..\Hivify.Core\Hivify.Core.csproj" />
 		<ProjectReference Include="..\Hivify.Infrastructures\Hivify.Infrastructures.csproj" />
-		<ProjectReference Include="..\Hivify.UseCases\Hivify.UseCases.csproj" />
 		<ProjectReference Include="..\ServiceDefaults1\ServiceDefaults.csproj" />
 	</ItemGroup>
 

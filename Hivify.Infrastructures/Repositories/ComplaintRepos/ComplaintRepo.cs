@@ -1,4 +1,4 @@
-using Hivify.Core.Aggregates.Complaints;
+using Hivify.Core.Complaints;
 using Hivify.Core.SharedKernel.ValuesObjects;
 using Hivify.Infrastructures.SqlDatabase;
 using Hivify.UseCases.Abstractions.Presistence;
