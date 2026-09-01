@@ -1,4 +1,4 @@
-namespace Hivify.UseCases.Abstractions.Messaging
+namespace SharedKernel.Messaging
 {
     public interface ICommandHandler<TCommand, TResult> where TCommand : ICommand<TResult>
     {

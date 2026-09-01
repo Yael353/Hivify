@@ -1,4 +1,4 @@
-namespace Hivify.UseCases.Abstractions.Messaging;
+namespace SharedKernel.Messaging;
 
 public interface IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
 {

@@ -1,5 +1,5 @@
-using Association.Domain.Members;
-using Hivify.UseCases.Abstractions.Messaging;
+using Hivify.Association.Domain.Members;
+using SharedKernel.Messaging;
 
 public sealed record AddStaffMemberCommand(
     Guid AssociationId,
@@ -7,3 +7,5 @@ public sealed record AddStaffMemberCommand(
     string FullName,
     string Email,
     MemberRole Role) : ICommand<MemberID>;
+
+

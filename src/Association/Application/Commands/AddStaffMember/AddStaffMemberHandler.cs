@@ -1,10 +1,10 @@
-using Association.Domain.Members;
-using Hivify.Core.Aggregates.Associations;
-using Hivify.Core.SharedKernel.ValuesObjects;
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Abstractions.Presistence;
+using Association.Application.Abstractions;
+using Hivify.Association.Domain.Associations;
+using Hivify.Association.Domain.Members;
+using SharedKernel.Messaging;
+using SharedKernel.ValuesObjects;
 
-namespace Association.Application.Commands.AddStaffMember;
+namespace Hivify.Association.Application.Commands.AddStaffMember;
 
 public sealed class AddStaffMemberCommandHandler : ICommandHandler<AddStaffMemberCommand, MemberID>
 {
@@ -17,15 +17,17 @@ public sealed class AddStaffMemberCommandHandler : ICommandHandler<AddStaffMembe
 
     public async Task<MemberID> Handle(AddStaffMemberCommand command, CancellationToken cancellationToken)
     {
-        var association = await _associationRepository.GetByIdAsync(new AssociationID(command.AssociationId), cancellationToken);
+        var AssociationEntity = await _associationRepository.GetByIdAsync(new AssociationID(command.AssociationId), cancellationToken);
 
-        if (association is null)
-            throw new InvalidOperationException("Association was not found.");
+        if (AssociationEntity is null)
+            throw new InvalidOperationException("AssociationEntity was not found.");
 
-        var member = association.CreateMember(new UserID(command.UserId), new Name(command.FullName), new Email(command.Email), command.Role);
+        var member = AssociationEntity.CreateMember(new UserID(command.UserId), new Name(command.FullName), new Email(command.Email), command.Role);
 
         await _associationRepository.SaveChangesAsync(cancellationToken);
 
         return member.Id;
     }
 }
+
+

@@ -1,4 +1,4 @@
-using Hivify.Core.Exceptions;
+using SharedKernel.Exceptions;
 
 namespace SharedKernel.ValuesObjects
 {

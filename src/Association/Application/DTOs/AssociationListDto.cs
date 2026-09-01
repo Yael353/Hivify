@@ -1,3 +1,5 @@
+using Hivify.Association.Application.DTOs;
+
 namespace Association.Application.DTOs;
 
 public sealed class AssociationListDto
@@ -8,3 +10,5 @@ public sealed class AssociationListDto
 
     public IReadOnlyList<StaffMemberDto> StaffMembers { get; init; } = [];
 }
+
+

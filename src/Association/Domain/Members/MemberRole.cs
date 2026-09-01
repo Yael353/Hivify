@@ -1,4 +1,4 @@
-namespace Association.Domain.Members
+namespace Hivify.Association.Domain.Members
 {
     public enum MemberRole
     {
@@ -6,3 +6,6 @@ namespace Association.Domain.Members
         CommiteAnsvarig
     }
 }
+
+
+

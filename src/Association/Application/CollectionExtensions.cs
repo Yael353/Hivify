@@ -1,16 +1,17 @@
 using Association.Application.Commands.AddAssociation;
-using Association.Application.Commands.AddStaffMember;
-using Association.Application.Commands.RemoveStaffMember;
-using Association.Application.Commands.UpdateStaffMemberRole;
 using Association.Application.DTOs;
 using Association.Application.Queries.GetAssociation;
-using Association.Application.Queries.GetAssociations;
-using Association.Domain;
-using Association.Domain.Members;
-using Hivify.UseCases.Abstractions.Messaging;
+using Hivify.Association.Application.Commands.AddAssociation;
+using Hivify.Association.Application.Commands.AddStaffMember;
+using Hivify.Association.Application.Commands.RemoveStaffMember;
+using Hivify.Association.Application.Commands.UpdateStaffMemberRole;
+using Hivify.Association.Application.Queries.GetAssociations;
+using Hivify.Association.Domain.Associations;
+using Hivify.Association.Domain.Members;
 using Microsoft.Extensions.DependencyInjection;
+using SharedKernel.Messaging;
 
-namespace Association.Application;
+namespace Hivify.Association.Application;
 
 public static class ServiceCollectionExtensions
 {
@@ -31,3 +32,8 @@ public static class ServiceCollectionExtensions
         }
     }
 }
+
+
+
+
+

@@ -1,9 +1,9 @@
-using Hivify.Core.Aggregates.Associations;
-using Hivify.Core.Aggregates.Associations.Members;
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Abstractions.Presistence;
+using Association.Application.Abstractions;
+using Hivify.Association.Domain.Associations;
+using Hivify.Association.Domain.Members;
+using SharedKernel.Messaging;
 
-namespace Association.Application.Commands.UpdateStaffMemberRole;
+namespace Hivify.Association.Application.Commands.UpdateStaffMemberRole;
 
 public sealed class UpdateStaffMemberRoleCommandHandler
     : ICommandHandler<UpdateStaffMemberRoleCommand, bool>
@@ -22,18 +22,18 @@ public sealed class UpdateStaffMemberRoleCommandHandler
     {
         ArgumentNullException.ThrowIfNull(command);
 
-        var association =
+        var AssociationEntity =
             await _associationRepository.GetByIdAsync(
                 new AssociationID(command.AssociationId),
                 cancellationToken);
 
-        if (association is null)
+        if (AssociationEntity is null)
         {
             throw new KeyNotFoundException(
-                $"Association {command.AssociationId} was not found.");
+                $"AssociationEntity {command.AssociationId} was not found.");
         }
 
-        association.UpdateMemberRole(
+        AssociationEntity.UpdateMemberRole(
             new MemberID(command.MemberId),
             command.Role);
 
@@ -43,3 +43,5 @@ public sealed class UpdateStaffMemberRoleCommandHandler
         return true;
     }
 }
+
+

@@ -1,8 +1,13 @@
 using SharedKernel;
 
-namespace Association.Domain
+namespace Hivify.Association.Domain.Associations
 {
     public readonly record struct AssociationID(Guid Value) : IValue
     {
     }
 }
+
+
+
+
+

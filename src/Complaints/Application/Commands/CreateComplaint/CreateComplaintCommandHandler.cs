@@ -3,7 +3,7 @@ using Hivify.UseCases.Abstractions.Context;
 using Hivify.UseCases.Abstractions.Messaging;
 using Hivify.UseCases.Abstractions.Presistence;
 using FluentValidation;
-using Hivify.Core.Complaints;
+using Complaints.Domain;
 
 namespace Hivify.UseCases.Complaints.Commands.CreateComplaint;
 

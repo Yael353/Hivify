@@ -5,8 +5,8 @@ using Hivify.Core.Aggregates.Feeds;
 using Hivify.Core.Aggregates.Houses;
 using Hivify.Core.Aggregates.Houses.Tenants;
 using Hivify.Core.Associations;
-using Hivify.Core.Associations.Domain;
-using Hivify.Core.Associations.Domain.Members;
+using Hivify.Association.Domain.Associations;
+using Hivify.Association.Domain.Members;
 using Hivify.Core.Associations.Members;
 using Hivify.Core.Complaints;
 using Hivify.Core.Feeds;
@@ -23,7 +23,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<House> Houses { get; set; }
-    public DbSet<Association> Associations { get; set; }
+    public DbSet<AssociationEntity> Associations { get; set; }
     public DbSet<Member> StaffMembers { get; set; }
     public DbSet<Feed> Feeds => Set<Feed>();
     public DbSet<Complaint> Complaints => Set<Complaint>();
@@ -138,10 +138,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
 
         // =====================
-        // Association
+        // AssociationEntity
         // =====================
 
-        modelBuilder.Entity<Association>(builder =>
+        modelBuilder.Entity<AssociationEntity>(builder =>
         {
             builder.Property(a => a.Id)
                 .HasConversion(
@@ -329,3 +329,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     }
 
 }
+
+

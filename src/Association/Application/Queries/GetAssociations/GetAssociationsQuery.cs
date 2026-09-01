@@ -1,6 +1,9 @@
 using Association.Application.DTOs;
-using Hivify.UseCases.Abstractions.Messaging;
+using SharedKernel.Messaging;
 
-namespace Association.Application.Queries.GetAssociations;
+namespace Hivify.Association.Application.Queries.GetAssociations;
 
 public sealed record GetAssociationsQuery : IQuery<IReadOnlyList<AssociationListDto>>;
+
+
+

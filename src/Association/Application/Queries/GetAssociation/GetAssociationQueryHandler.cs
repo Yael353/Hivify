@@ -1,9 +1,9 @@
+using Association.Application.Abstractions;
 using Association.Application.DTOs;
 using Association.Application.Queries.GetAssociation;
-using Hivify.Core.Aggregates.Associations;
-using Hivify.Core.Associations.Application.DTOs;
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Abstractions.Presistence;
+using Hivify.Association.Application.DTOs;
+using Hivify.Association.Domain.Associations;
+using SharedKernel.Messaging;
 
 public sealed class GetAssociationQueryHandler
     : IQueryHandler<GetAssociationQuery, AssociationListDto>
@@ -20,21 +20,21 @@ public sealed class GetAssociationQueryHandler
         GetAssociationQuery query,
         CancellationToken cancellationToken)
     {
-        var association =
+        var AssociationEntity =
             await _associationRepository.GetByIdAsync(
                 new AssociationID(query.AssociationId),
                 cancellationToken);
 
-        if (association is null)
+        if (AssociationEntity is null)
             throw new InvalidOperationException(
-                "Association was not found.");
+                "AssociationEntity was not found.");
 
         return new AssociationListDto
         {
-            Id = association.Id.Value,
-            Name = association.Name.Value,
+            Id = AssociationEntity.Id.Value,
+            Name = AssociationEntity.Name.Value,
 
-            StaffMembers = association.StaffMembers
+            StaffMembers = AssociationEntity.StaffMembers
                 .Where(member => member.DeletedAt == null)
                 .Select(member => new StaffMemberDto(
                     member.Id.Value,
@@ -45,3 +45,5 @@ public sealed class GetAssociationQueryHandler
         };
     }
 }
+
+

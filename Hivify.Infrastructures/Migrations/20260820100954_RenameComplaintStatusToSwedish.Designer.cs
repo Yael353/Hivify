@@ -25,7 +25,7 @@ namespace Hivify.Infrastructures.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Hivify.Core.Aggregates.Associations.Association", b =>
+            modelBuilder.Entity("Hivify.Core.Aggregates.Associations.AssociationEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -374,7 +374,7 @@ namespace Hivify.Infrastructures.Migrations
 
             modelBuilder.Entity("Hivify.Core.Aggregates.Associations.Members.Member", b =>
                 {
-                    b.HasOne("Hivify.Core.Aggregates.Associations.Association", null)
+                    b.HasOne("Hivify.Core.Aggregates.Associations.AssociationEntity", null)
                         .WithMany("StaffMembers")
                         .HasForeignKey("AssociationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -555,7 +555,7 @@ namespace Hivify.Infrastructures.Migrations
                         .HasForeignKey("HouseId");
                 });
 
-            modelBuilder.Entity("Hivify.Core.Aggregates.Associations.Association", b =>
+            modelBuilder.Entity("Hivify.Core.Aggregates.Associations.AssociationEntity", b =>
                 {
                     b.Navigation("StaffMembers");
                 });

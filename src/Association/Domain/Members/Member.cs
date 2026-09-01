@@ -1,7 +1,8 @@
+using Hivify.Association.Domain.Associations;
 using SharedKernel;
 using SharedKernel.Exceptions;
 using SharedKernel.ValuesObjects;
-namespace Association.Domain.Members;
+namespace Hivify.Association.Domain.Members;
 
 public class Member : BaseEntity<MemberID>
 {
@@ -56,3 +57,7 @@ public class Member : BaseEntity<MemberID>
         DeletedAt = DateTime.UtcNow;
     }
 }
+
+
+
+

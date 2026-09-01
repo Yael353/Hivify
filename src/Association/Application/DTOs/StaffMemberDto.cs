@@ -1,6 +1,6 @@
-using Association.Domain.Members;
+using Hivify.Association.Domain.Members;
 
-namespace Association.Application.DTOs
+namespace Hivify.Association.Application.DTOs
 {
     public sealed record StaffMemberDto(
         Guid Id,
@@ -9,3 +9,6 @@ namespace Association.Application.DTOs
         MemberRole Role
     );
 }
+
+
+

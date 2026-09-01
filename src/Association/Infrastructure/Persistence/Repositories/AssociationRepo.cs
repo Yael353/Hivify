@@ -1,20 +1,19 @@
-using Association.Domain;
-using Hivify.Infrastructures.SqlDatabase;
-using Hivify.UseCases.Abstractions.Presistence;
+using Association.Application.Abstractions;
+using Hivify.Association.Domain.Associations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hivify.Core.Associations.Infrastructure.AssociationRepo;
+namespace Association.Infrastructure.Persistence.Repositories;
 
 public sealed class AssociationRepo : IAssociationRepo
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly AssociationDbContext _dbContext;
 
-    public AssociationRepo(ApplicationDbContext dbContext)
+    public AssociationRepo(AssociationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<Association?> GetByIdAsync(
+    public async Task<AssociationEntity?> GetByIdAsync(
         AssociationID associationId,
         CancellationToken cancellationToken = default)
     {
@@ -25,7 +24,7 @@ public sealed class AssociationRepo : IAssociationRepo
                 cancellationToken);
     }
 
-    public async Task<IReadOnlyList<Association>> GetAllAsync(
+    public async Task<IReadOnlyList<AssociationEntity>> GetAllAsync(
         CancellationToken cancellationToken)
     {
         return await _dbContext.Associations
@@ -34,11 +33,11 @@ public sealed class AssociationRepo : IAssociationRepo
     }
 
     public async Task AddAsync(
-        Association association,
+        AssociationEntity AssociationEntity,
         CancellationToken cancellationToken = default)
     {
         await _dbContext.Associations.AddAsync(
-            association,
+            AssociationEntity,
             cancellationToken);
     }
 
@@ -48,3 +47,7 @@ public sealed class AssociationRepo : IAssociationRepo
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }
+
+
+
+

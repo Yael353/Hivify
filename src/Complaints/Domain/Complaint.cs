@@ -2,7 +2,7 @@ using Hivify.Core.Exceptions;
 using Hivify.Core.SharedKernel;
 using Hivify.Core.SharedKernel.ValuesObjects;
 
-namespace Hivify.Core.Complaints
+namespace Complaints.Domain
 {
     public class Complaint : BaseEntity<ComplaintID>, IAggregateRoot
     {

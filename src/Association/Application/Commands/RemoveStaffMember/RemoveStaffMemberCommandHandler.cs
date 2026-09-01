@@ -1,8 +1,8 @@
-using Hivify.Core.Aggregates.Associations;
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Abstractions.Presistence;
+using Association.Application.Abstractions;
+using Hivify.Association.Domain.Associations;
+using SharedKernel.Messaging;
 
-namespace Association.Application.Commands.RemoveStaffMember;
+namespace Hivify.Association.Application.Commands.RemoveStaffMember;
 
 public sealed class RemoveStaffMemberCommandHandler
     : ICommandHandler<RemoveStaffMemberCommand, bool>
@@ -21,17 +21,17 @@ public sealed class RemoveStaffMemberCommandHandler
     {
         ArgumentNullException.ThrowIfNull(command);
 
-        var association = await _associationRepository.GetByIdAsync(
+        var AssociationEntity = await _associationRepository.GetByIdAsync(
             new AssociationID(command.AssociationId),
             cancellationToken);
 
-        if (association is null)
+        if (AssociationEntity is null)
         {
             throw new KeyNotFoundException(
-                $"Association {command.AssociationId} was not found.");
+                $"AssociationEntity {command.AssociationId} was not found.");
         }
 
-        var member = association.StaffMembers
+        var member = AssociationEntity.StaffMembers
             .FirstOrDefault(member =>
                 member.Id.Value == command.MemberId &&
                 member.DeletedAt == null);
@@ -42,7 +42,7 @@ public sealed class RemoveStaffMemberCommandHandler
                 $"Member {command.MemberId} was not found.");
         }
 
-        association.RemoveMember(member);
+        AssociationEntity.RemoveMember(member);
 
         await _associationRepository.SaveChangesAsync(
             cancellationToken);
@@ -50,3 +50,5 @@ public sealed class RemoveStaffMemberCommandHandler
         return true;
     }
 }
+
+

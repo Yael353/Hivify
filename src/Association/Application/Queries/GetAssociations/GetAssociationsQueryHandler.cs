@@ -1,8 +1,8 @@
+using Association.Application.Abstractions;
 using Association.Application.DTOs;
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Abstractions.Presistence;
+using SharedKernel.Messaging;
 
-namespace Association.Application.Queries.GetAssociations;
+namespace Hivify.Association.Application.Queries.GetAssociations;
 
 public sealed class GetAssociationsQueryHandler
     : IQueryHandler<
@@ -26,12 +26,15 @@ public sealed class GetAssociationsQueryHandler
                 cancellationToken);
 
         return associations
-            .Select(association =>
+            .Select(AssociationEntity =>
                 new AssociationListDto
                 {
-                    Id = association.Id.Value,
-                    Name = association.Name.Value
+                    Id = AssociationEntity.Id.Value,
+                    Name = AssociationEntity.Name.Value
                 })
             .ToList();
     }
 }
+
+
+

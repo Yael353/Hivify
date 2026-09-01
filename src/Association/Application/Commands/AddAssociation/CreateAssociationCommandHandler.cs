@@ -1,9 +1,10 @@
-using Association.Domain;
-using Hivify.Core.SharedKernel.ValuesObjects;
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Abstractions.Presistence;
+using Association.Application.Abstractions;
+using Association.Application.Commands.AddAssociation;
+using Hivify.Association.Domain.Associations;
+using SharedKernel.Messaging;
+using SharedKernel.ValuesObjects;
 
-namespace Association.Application.Commands.AddAssociation;
+namespace Hivify.Association.Application.Commands.AddAssociation;
 
 public sealed class CreateAssociationCommandHandler : ICommandHandler<AddAssociationCommand, AssociationID>
 {
@@ -16,13 +17,12 @@ public sealed class CreateAssociationCommandHandler : ICommandHandler<AddAssocia
 
     public async Task<AssociationID> Handle(AddAssociationCommand command, CancellationToken cancellationToken)
     {
-        var association = Core.Associations.Domain.Association.Create(new Name(command.Name));
+        var associationEntity = AssociationEntity.Create(new Name(command.Name));
 
-        await _associationRepository.AddAsync(association, cancellationToken);
+        await _associationRepository.AddAsync(associationEntity, cancellationToken);
 
-        await _associationRepository.SaveChangesAsync(
-            cancellationToken);
+        await _associationRepository.SaveChangesAsync(cancellationToken);
 
-        return association.Id;
+        return associationEntity.Id;
     }
 }

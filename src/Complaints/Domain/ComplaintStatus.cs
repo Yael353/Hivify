@@ -1,4 +1,4 @@
-namespace Hivify.Core.Complaints
+namespace Complaints.Domain
 {
 
     public enum ComplaintStatus

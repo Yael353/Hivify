@@ -1,6 +1,6 @@
 using Hivify.Core.SharedKernel;
 
-namespace Hivify.Core.Complaints
+namespace Complaints.Domain
 {
     public readonly record struct ComplaintID(Guid Value) : IValue
     {

@@ -1,4 +1,4 @@
-using Hivify.Core.Complaints;
+using Complaints.Domain;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hivify.UseCases.Complaints.DTOs

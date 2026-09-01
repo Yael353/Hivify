@@ -1,4 +1,4 @@
-using Hivify.Core.Complaints;
+using Complaints.Domain;
 using Hivify.UseCases.Abstractions.Messaging;
 
 namespace Hivify.UseCases.Complaints.Commands.UpdateComplaintStatus;

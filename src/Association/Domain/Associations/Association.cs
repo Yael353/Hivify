@@ -1,11 +1,11 @@
-using Association.Domain.Members;
+using Hivify.Association.Domain.Members;
 using SharedKernel;
 using SharedKernel.Exceptions;
 using SharedKernel.ValuesObjects;
 
-namespace Association.Domain;
+namespace Hivify.Association.Domain.Associations;
 
-public class Association : BaseEntity<AssociationID>, IAggregateRoot
+public class AssociationEntity : BaseEntity<AssociationID>, IAggregateRoot
 {
     public Name Name { get; private set; }
 
@@ -15,12 +15,12 @@ public class Association : BaseEntity<AssociationID>, IAggregateRoot
         _members.AsReadOnly();
 
 
-    private Association()
+    private AssociationEntity()
     {
     }
 
 
-    private Association(
+    private AssociationEntity(
         AssociationID id,
         Name name) : base(id)
     {
@@ -28,9 +28,9 @@ public class Association : BaseEntity<AssociationID>, IAggregateRoot
     }
 
 
-    public static Association Create(Name name)
+    public static AssociationEntity Create(Name name)
     {
-        return new Association(
+        return new AssociationEntity(
             new AssociationID(Guid.NewGuid()),
             name);
     }
@@ -104,3 +104,7 @@ public class Association : BaseEntity<AssociationID>, IAggregateRoot
         }
     }
 }
+
+
+
+
