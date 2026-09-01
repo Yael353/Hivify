@@ -1,4 +1,5 @@
-using Feeds.Application.Abstractions;
+﻿using Feeds.Application.Abstractions;
+using Feeds.Domain.Feeds;
 using Microsoft.EntityFrameworkCore;
 
 namespace Feeds.Infrastructure.Presistence;

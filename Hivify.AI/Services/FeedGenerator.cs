@@ -1,5 +1,4 @@
-using Hivify.UseCases.Abstractions.Services;
-using Hivify.UseCases.Feeds.DTOs;
+using BuildingBlocks.ApplicationPorts.AI.Services;
 using Microsoft.Extensions.AI;
 using System.Text.Json;
 

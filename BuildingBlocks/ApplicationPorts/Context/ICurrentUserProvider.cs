@@ -1,4 +1,4 @@
-namespace Hivify.Abstractions.Context
+﻿namespace BuildingBlocks.ApplicationPorts.Context
 {
     public interface ICurrentUser
     {

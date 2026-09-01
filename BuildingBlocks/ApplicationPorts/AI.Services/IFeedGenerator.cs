@@ -1,7 +1,4 @@
-
-using BuildingBlocks.ApplicationPorts.AI.Services;
-
-namespace Hivify.UseCases.Abstractions.Services
+﻿namespace BuildingBlocks.ApplicationPorts.AI.Services
 {
     public interface IFeedGenerator
     {

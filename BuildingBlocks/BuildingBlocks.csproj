@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\src\Abstractions\Storage\IFileStorage.cs" Link="ApplicationPorts\Storage\IFileStorage.cs" />
+    <Compile Include="..\src\Documents\Results\FileDocumentResult.cs" Link="ApplicationPorts\Storage\FileDocumentResult.cs" />
+    <Compile Include="..\src\Documents\Results\FileUploadResult.cs" Link="ApplicationPorts\Storage\FileUploadResult.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ApplicationPorts\Storage\" />
+  </ItemGroup>
+
+</Project>

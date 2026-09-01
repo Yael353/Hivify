@@ -25,8 +25,7 @@ public static class ServiceCollectionExtensions
             services.AddScoped<IQueryHandler<GetAssociationQuery, AssociationListDto>, GetAssociationQueryHandler>();
             services.AddScoped<ICommandHandler<RemoveStaffMemberCommand, bool>, RemoveStaffMemberCommandHandler>();
             services.AddScoped<
-    ICommandHandler<UpdateStaffMemberRoleCommand, bool>,
-    UpdateStaffMemberRoleCommandHandler>();
+    ICommandHandler<UpdateStaffMemberRoleCommand, bool>, UpdateStaffMemberRoleCommandHandler>();
 
             return services;
         }
