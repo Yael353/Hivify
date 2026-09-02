@@ -1,7 +1,7 @@
 using Houses.Domain.Houses;
 
 
-namespace Hivify.UseCases.Abstractions.Presistence
+namespace Houses.Application.Abstractions
 {
     public interface IHouseRepo
     {

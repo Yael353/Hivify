@@ -1,4 +1,4 @@
-﻿using Hivify.UseCases.Abstractions.Presistence;
+﻿using Houses.Application.Abstractions;
 using Houses.Application.DTOs;
 using Houses.Domain.Houses;
 using SharedKernel.Messaging;

@@ -1,7 +1,7 @@
 ﻿using Houses.Domain.Houses;
 using Microsoft.EntityFrameworkCore;
 
-namespace Houses.Infrastructure.Persistence;
+namespace Houses.Infrastructure.Presistence;
 
 public sealed class HouseDbContext : DbContext
 {
