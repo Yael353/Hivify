@@ -1,13 +1,13 @@
-using Hivify.Core.SharedKernel.ValuesObjects;
-using Hivify.UseCases.Abstractions.Context;
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Abstractions.Presistence;
-using Hivify.UseCases.Complaints.DTOs;
+using BuildingBlocks.ApplicationPorts.Context;
+using Complaints.Application.Abstractions.Persistence;
+using Complaints.Application.Contracts;
+using SharedKernel.Messaging;
+using SharedKernel.ValuesObjects;
 
 namespace Hivify.UseCases.Complaints.Queries.GetComplaint;
 
 public sealed class GetUserComplaintsQueryHandler
-    : IQueryHandler<GetUserComplaintsQuery, IReadOnlyList<ComplaintListItemDto>>
+    : IQueryHandler<GetUserComplaintsQuery, IReadOnlyList<ComplaintListItem>>
 {
     private readonly IComplaintRepo _complaintRepository;
     private readonly ICurrentUser _currentUser;
@@ -18,7 +18,7 @@ public sealed class GetUserComplaintsQueryHandler
         _currentUser = currentUser;
     }
 
-    public async Task<IReadOnlyList<ComplaintListItemDto>> Handle(
+    public async Task<IReadOnlyList<ComplaintListItem>> Handle(
         GetUserComplaintsQuery query,
         CancellationToken cancellationToken)
     {
@@ -30,7 +30,7 @@ public sealed class GetUserComplaintsQueryHandler
 
         return complaints
             .OrderByDescending(c => c.CreatedDate)
-            .Select(c => new ComplaintListItemDto(
+            .Select(c => new ComplaintListItem(
                 c.Id.Value,
                 c.Title.Value,
                 c.Description.Value,

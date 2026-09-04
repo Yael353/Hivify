@@ -1,9 +1,9 @@
-using Association.Application.Abstractions;
+using Association.Application.Contracts;
 using Hivify.Association.Domain.Associations;
 using Hivify.Association.Domain.Members;
 using SharedKernel.Messaging;
 
-namespace Hivify.Association.Application.Commands.UpdateStaffMemberRole;
+namespace Association.Application.Commands.UpdateStaffMemberRole;
 
 public sealed class UpdateStaffMemberRoleCommandHandler
     : ICommandHandler<UpdateStaffMemberRoleCommand, bool>

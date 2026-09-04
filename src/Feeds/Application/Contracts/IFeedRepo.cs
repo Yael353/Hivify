@@ -1,6 +1,6 @@
 ﻿using Feeds.Domain.Feeds;
 
-namespace Feeds.Application.Abstractions;
+namespace Feeds.Application.Contracts;
 
 public interface IFeedRepo
 {

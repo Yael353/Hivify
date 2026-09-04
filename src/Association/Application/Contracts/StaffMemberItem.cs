@@ -1,8 +1,8 @@
 using Hivify.Association.Domain.Members;
 
-namespace Hivify.Association.Application.DTOs
+namespace Association.Application.Contracts
 {
-    public sealed record StaffMemberDto(
+    public sealed record StaffMemberItem(
         Guid Id,
         string FullName,
         string Email,

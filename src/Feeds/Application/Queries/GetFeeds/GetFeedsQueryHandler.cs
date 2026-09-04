@@ -1,10 +1,9 @@
-﻿using Feeds.Application.Abstractions;
-using Feeds.Application.DTOs;
+﻿using Feeds.Application.Contracts;
 using SharedKernel.Messaging;
 
 namespace Feeds.Application.Queries.GetFeeds;
 
-public sealed class GetFeedsQueryHandler : IQueryHandler<GetFeedsQuery, IReadOnlyList<FeedListItemDto>>
+public sealed class GetFeedsQueryHandler : IQueryHandler<GetFeedsQuery, IReadOnlyList<FeedListItem>>
 {
     private readonly IFeedRepo _feedRepository;
 
@@ -14,7 +13,7 @@ public sealed class GetFeedsQueryHandler : IQueryHandler<GetFeedsQuery, IReadOnl
         _feedRepository = feedRepository;
     }
 
-    public async Task<IReadOnlyList<FeedListItemDto>> Handle(
+    public async Task<IReadOnlyList<FeedListItem>> Handle(
         GetFeedsQuery query,
         CancellationToken cancellationToken)
     {
@@ -24,7 +23,7 @@ public sealed class GetFeedsQueryHandler : IQueryHandler<GetFeedsQuery, IReadOnl
 
         return feeds
             .OrderByDescending(f => f.CreatedDate)
-            .Select(f => new FeedListItemDto(
+            .Select(f => new FeedListItem(
                 f.Id.Value,
                 f.Title.Value,
                 f.Content.Value,

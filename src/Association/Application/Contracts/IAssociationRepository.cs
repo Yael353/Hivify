@@ -1,6 +1,6 @@
 using Hivify.Association.Domain.Associations;
 
-namespace Association.Application.Abstractions
+namespace Association.Application.Contracts
 {
     public interface IAssociationRepo
     {

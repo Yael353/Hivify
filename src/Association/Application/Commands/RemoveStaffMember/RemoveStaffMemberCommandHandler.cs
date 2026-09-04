@@ -1,8 +1,8 @@
-using Association.Application.Abstractions;
+using Association.Application.Contracts;
 using Hivify.Association.Domain.Associations;
 using SharedKernel.Messaging;
 
-namespace Hivify.Association.Application.Commands.RemoveStaffMember;
+namespace Association.Application.Commands.RemoveStaffMember;
 
 public sealed class RemoveStaffMemberCommandHandler
     : ICommandHandler<RemoveStaffMemberCommand, bool>

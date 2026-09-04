@@ -1,9 +1,9 @@
 using Complaints.Domain;
 using System.ComponentModel.DataAnnotations;
 
-namespace Hivify.UseCases.Complaints.DTOs;
+namespace Complaints.Application.Contracts;
 
-public class CreateComplaintDto
+public class CreateComplaint
 {
     [Required(ErrorMessage = "Kategori är obligatorisk")]
     public ComplaintCategory Category { get; set; }

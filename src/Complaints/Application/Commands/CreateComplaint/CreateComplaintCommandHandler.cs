@@ -1,9 +1,6 @@
-using Hivify.Core.SharedKernel.ValuesObjects;
-using Hivify.UseCases.Abstractions.Context;
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Abstractions.Presistence;
-using FluentValidation;
 using Complaints.Domain;
+using FluentValidation;
+using SharedKernel.Messaging;
 
 namespace Hivify.UseCases.Complaints.Commands.CreateComplaint;
 
@@ -32,7 +29,7 @@ public sealed class CreateComplaintCommandHandler : ICommandHandler<CreateCompla
 
         var userId = await _currentUser.GetUserIdAsync();
 
-   
+
 
         var complaint = Complaint.Create(
             new UserID(userId),

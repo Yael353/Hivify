@@ -1,12 +1,12 @@
+using Complaints.Application.Contracts;
 using Hivify.UseCases.Abstractions.Messaging;
 using Hivify.UseCases.Abstractions.Presistence;
-using Hivify.UseCases.Complaints.DTOs;
 
 
 namespace Hivify.UseCases.Complaints.Queries.GetComplaint
 {
     public sealed class GetAllComplaintsQueryHandler
-        : IQueryHandler<GetAllComplaintsQuery, IReadOnlyList<ComplaintListItemDto>>
+        : IQueryHandler<GetAllComplaintsQuery, IReadOnlyList<ComplaintListItem>>
     {
         private readonly IComplaintRepo _complaintRepository;
 
@@ -15,7 +15,7 @@ namespace Hivify.UseCases.Complaints.Queries.GetComplaint
             _complaintRepository = complaintRepository;
         }
 
-        public async Task<IReadOnlyList<ComplaintListItemDto>> Handle(
+        public async Task<IReadOnlyList<ComplaintListItem>> Handle(
             GetAllComplaintsQuery query,
             CancellationToken cancellationToken)
         {

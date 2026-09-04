@@ -1,12 +1,12 @@
 ﻿using Houses.Application.Abstractions;
-using Houses.Application.DTOs;
+using Houses.Application.Contracts;
 using Houses.Domain.Houses;
 using SharedKernel.Messaging;
 
 namespace Houses.Application.Queries.GetHouse;
 
 public sealed class GetHouseQueryHandler
-    : IQueryHandler<GetHouseQuery, HouseListItemDto>
+    : IQueryHandler<GetHouseQuery, HouseListItem>
 {
     private readonly IHouseRepo _houseRepo;
 
@@ -16,7 +16,7 @@ public sealed class GetHouseQueryHandler
         _houseRepo = houseRepo;
     }
 
-    public async Task<HouseListItemDto> Handle(
+    public async Task<HouseListItem> Handle(
         GetHouseQuery query,
         CancellationToken cancellationToken)
     {
@@ -30,7 +30,7 @@ public sealed class GetHouseQueryHandler
                 "House could not be found.");
         }
 
-        return new HouseListItemDto(
+        return new HouseListItem(
             house.Id.Value,
             house.Address.Value,
             house.HouseNumber.Value,

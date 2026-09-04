@@ -1,11 +1,11 @@
 ﻿using Houses.Application.Abstractions;
-using Houses.Application.DTOs;
+using Houses.Application.Contracts;
 using Houses.Domain.Houses;
 using SharedKernel.Messaging;
 
 namespace Houses.Application.Queries.GetHouseTenants;
 
-public sealed class GetHouseTenantsQueryHandler : IQueryHandler<GetHouseTenantsQuery, IReadOnlyList<TenantListItemDto>>
+public sealed class GetHouseTenantsQueryHandler : IQueryHandler<GetHouseTenantsQuery, IReadOnlyList<TenantListItem>>
 {
     private readonly IHouseRepo _houseRepo;
 
@@ -14,7 +14,7 @@ public sealed class GetHouseTenantsQueryHandler : IQueryHandler<GetHouseTenantsQ
         _houseRepo = houseRepo;
     }
 
-    public async Task<IReadOnlyList<TenantListItemDto>> Handle(GetHouseTenantsQuery query, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<TenantListItem>> Handle(GetHouseTenantsQuery query, CancellationToken cancellationToken)
     {
         var house = await _houseRepo.GetByIdAsync(
             new HouseID(query.HouseId),
@@ -26,7 +26,7 @@ public sealed class GetHouseTenantsQueryHandler : IQueryHandler<GetHouseTenantsQ
 
         return house.Tenants
             .Where(t => t.DeletedAt == null)
-            .Select(t => new TenantListItemDto(
+            .Select(t => new TenantListItem(
                 t.Id.Value,
                 t.UserId.Value,
                 t.Email.Value,

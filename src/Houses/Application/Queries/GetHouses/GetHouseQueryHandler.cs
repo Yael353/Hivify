@@ -1,5 +1,5 @@
 ﻿using Houses.Application.Abstractions;
-using Houses.Application.DTOs;
+using Houses.Application.Contracts;
 using SharedKernel.Messaging;
 
 namespace Houses.Application.Queries.GetHouses;
@@ -7,7 +7,7 @@ namespace Houses.Application.Queries.GetHouses;
 public sealed class GetHousesQueryHandler
     : IQueryHandler<
         GetHousesQuery,
-        IReadOnlyList<HouseListItemDto>>
+        IReadOnlyList<HouseListItem>>
 {
     private readonly IHouseRepo _houseRepo;
 
@@ -17,7 +17,7 @@ public sealed class GetHousesQueryHandler
         _houseRepo = houseRepo;
     }
 
-    public async Task<IReadOnlyList<HouseListItemDto>> Handle(
+    public async Task<IReadOnlyList<HouseListItem>> Handle(
         GetHousesQuery query,
         CancellationToken cancellationToken)
     {
@@ -26,7 +26,7 @@ public sealed class GetHousesQueryHandler
 
         return houses
             .Select(house =>
-                new HouseListItemDto(
+                new HouseListItem(
                     house.Id.Value,
                     house.Address.Value,
                     house.HouseNumber.Value,

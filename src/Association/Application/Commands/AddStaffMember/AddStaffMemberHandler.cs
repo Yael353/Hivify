@@ -1,10 +1,10 @@
-using Association.Application.Abstractions;
+using Association.Application.Contracts;
 using Hivify.Association.Domain.Associations;
 using Hivify.Association.Domain.Members;
 using SharedKernel.Messaging;
 using SharedKernel.ValuesObjects;
 
-namespace Hivify.Association.Application.Commands.AddStaffMember;
+namespace Association.Application.Commands.AddStaffMember;
 
 public sealed class AddStaffMemberCommandHandler : ICommandHandler<AddStaffMemberCommand, MemberID>
 {

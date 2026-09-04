@@ -1,7 +1,7 @@
-﻿namespace Houses.Application.DTOs;
+﻿namespace Houses.Application.Contracts;
 
 
-public sealed record TenantListItemDto(
+public sealed record TenantListItem(
     Guid TenantId,
     Guid UserId,
     string Email,

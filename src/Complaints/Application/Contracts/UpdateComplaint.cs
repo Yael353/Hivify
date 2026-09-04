@@ -1,9 +1,9 @@
 using Complaints.Domain;
 using System.ComponentModel.DataAnnotations;
 
-namespace Hivify.UseCases.Complaints.DTOs
+namespace Complaints.Application.Contracts
 {
-    public class UpdateComplaintDto
+    public class UpdateComplaint
     {
         [Required(ErrorMessage = "Titel är obligatorisk")]
         [StringLength(200, ErrorMessage = "Titeln får vara max 200 tecken")]

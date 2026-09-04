@@ -1,11 +1,10 @@
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Common.Validators;
+using Complaints.Application.Contracts;
+using FluentValidation;
 using Hivify.UseCases.Complaints.Commands.CreateComplaint;
 using Hivify.UseCases.Complaints.Commands.UpdateComplaintStatus;
-using Hivify.UseCases.Complaints.DTOs;
 using Hivify.UseCases.Complaints.Queries.GetComplaint;
-using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using SharedKernel.Messaging;
 
 namespace Hivify.UseCases.Complaints;
 
@@ -15,16 +14,16 @@ public static class ServiceCollectionExtensions
     {
         // Commands
         services.AddScoped<ICommandHandler<CreateComplaintCommand, Guid>, CreateComplaintCommandHandler>();
-        services.AddScoped<IQueryHandler<GetComplaintByIdQuery, ComplaintListItemDto?>, GetComplaintByIdQueryHandler>();
+        services.AddScoped<IQueryHandler<GetComplaintByIdQuery, ComplaintListItem?>, GetComplaintByIdQueryHandler>();
         services.AddScoped<ICommandHandler<UpdateComplaintStatusCommand, bool>, UpdateComplaintStatusCommandHandler>();
 
         // Queries
-        services.AddScoped<IQueryHandler<GetUserComplaintsQuery, IReadOnlyList<ComplaintListItemDto>>, GetUserComplaintsQueryHandler>();
-        services.AddScoped<IQueryHandler<GetAllComplaintsQuery, IReadOnlyList<ComplaintListItemDto>>, GetAllComplaintsQueryHandler>();
+        services.AddScoped<IQueryHandler<GetUserComplaintsQuery, IReadOnlyList<ComplaintListItem>>, GetUserComplaintsQueryHandler>();
+        services.AddScoped<IQueryHandler<GetAllComplaintsQuery, IReadOnlyList<ComplaintListItem>>, GetAllComplaintsQueryHandler>();
 
         // Validators
-        services.AddScoped<IValidator<CreateComplaintDto>, ComplaintDtoValidator>();
-        services.AddScoped<IValidator<UpdateComplaintDto>, UpdateComplaintDtoValidator>();
+        services.AddScoped<IValidator<CreateComplaint>, ComplaintDtoValidator>();
+        services.AddScoped<IValidator<UpdateComplaint>, UpdateComplaintDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<CreateComplaintCommandValidator>();
 
         return services;

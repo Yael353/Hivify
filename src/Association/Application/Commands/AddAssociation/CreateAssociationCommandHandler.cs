@@ -1,10 +1,9 @@
-using Association.Application.Abstractions;
-using Association.Application.Commands.AddAssociation;
+using Association.Application.Contracts;
 using Hivify.Association.Domain.Associations;
 using SharedKernel.Messaging;
 using SharedKernel.ValuesObjects;
 
-namespace Hivify.Association.Application.Commands.AddAssociation;
+namespace Association.Application.Commands.AddAssociation;
 
 public sealed class CreateAssociationCommandHandler : ICommandHandler<AddAssociationCommand, AssociationID>
 {

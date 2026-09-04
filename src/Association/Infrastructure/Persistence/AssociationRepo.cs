@@ -1,4 +1,4 @@
-using Association.Application.Abstractions;
+using Association.Application.Contracts;
 using Hivify.Association.Domain.Associations;
 using Microsoft.EntityFrameworkCore;
 

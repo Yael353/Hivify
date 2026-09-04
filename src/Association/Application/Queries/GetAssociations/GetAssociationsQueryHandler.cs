@@ -1,13 +1,12 @@
-using Association.Application.Abstractions;
-using Association.Application.DTOs;
+using Association.Application.Contracts;
 using SharedKernel.Messaging;
 
-namespace Hivify.Association.Application.Queries.GetAssociations;
+namespace Association.Application.Queries.GetAssociations;
 
 public sealed class GetAssociationsQueryHandler
     : IQueryHandler<
         GetAssociationsQuery,
-        IReadOnlyList<AssociationListDto>>
+        IReadOnlyList<AssociationListItem>>
 {
     private readonly IAssociationRepo _associationRepository;
 
@@ -17,7 +16,7 @@ public sealed class GetAssociationsQueryHandler
         _associationRepository = associationRepository;
     }
 
-    public async Task<IReadOnlyList<AssociationListDto>> Handle(
+    public async Task<IReadOnlyList<AssociationListItem>> Handle(
         GetAssociationsQuery query,
         CancellationToken cancellationToken)
     {
@@ -27,7 +26,7 @@ public sealed class GetAssociationsQueryHandler
 
         return associations
             .Select(AssociationEntity =>
-                new AssociationListDto
+                new AssociationListItem
                 {
                     Id = AssociationEntity.Id.Value,
                     Name = AssociationEntity.Name.Value

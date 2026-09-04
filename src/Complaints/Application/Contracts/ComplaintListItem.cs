@@ -1,8 +1,8 @@
 using Complaints.Domain;
 
-namespace Hivify.UseCases.Complaints.DTOs;
+namespace Complaints.Application.Contracts;
 
-public sealed record ComplaintListItemDto(
+public sealed record ComplaintListItem(
     Guid Id,
     string Title,
     string Description,

@@ -1,4 +1,6 @@
 ﻿using Complaints.Domain;
+using Microsoft.EntityFrameworkCore;
+using SharedKernel.ValuesObjects;
 
 namespace Complaints.Infrastructure.Presistence;
 

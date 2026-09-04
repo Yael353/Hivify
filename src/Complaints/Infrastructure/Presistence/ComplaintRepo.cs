@@ -1,16 +1,15 @@
-using Hivify.Core.Complaints;
-using Hivify.Core.SharedKernel.ValuesObjects;
-using Hivify.Infrastructures.SqlDatabase;
-using Hivify.UseCases.Abstractions.Presistence;
+using Complaints.Application.Abstractions.Persistence;
+using Complaints.Domain;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.ValuesObjects;
 
 namespace Complaints.Infrastructure.Presistence;
 
 public class ComplaintRepo : IComplaintRepo
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ComplaintDbContext _context;
 
-    public ComplaintRepo(ApplicationDbContext context)
+    public ComplaintRepo(ComplaintDbContext context)
     {
         _context = context;
     }

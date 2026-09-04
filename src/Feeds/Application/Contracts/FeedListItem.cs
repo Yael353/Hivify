@@ -1,6 +1,6 @@
-﻿namespace Feeds.Application.DTOs;
+﻿namespace Feeds.Application.Contracts;
 
-public sealed record FeedListItemDto(
+public sealed record FeedListItem(
     Guid Id,
     string Title,
     string Content,

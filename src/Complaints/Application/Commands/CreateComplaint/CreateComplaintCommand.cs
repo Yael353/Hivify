@@ -1,8 +1,5 @@
 using Complaints.Domain;
-using Hivify.UseCases.Abstractions.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SharedKernel.Messaging;
 
 namespace Hivify.UseCases.Complaints.Commands.CreateComplaint
 {

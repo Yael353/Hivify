@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <Compile Include="..\..\Abstractions\Presistence\IHouseRepo.cs" Link="Abstractions\IHouseRepo.cs" />
+    <Compile Include="..\..\Abstractions\Presistence\IHouseRepo.cs" Link="Contracts\IHouseRepo.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -11,10 +11,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\UserMgmt\UserMgmt.Application\UserMgmt.Application.csproj" />
     <ProjectReference Include="..\Domain\Houses.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Abstractions\" />
   </ItemGroup>
 
   <PropertyGroup>

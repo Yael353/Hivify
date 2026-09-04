@@ -1,17 +1,16 @@
 using Association.Application.Commands.AddAssociation;
-using Association.Application.DTOs;
+using Association.Application.Commands.AddStaffMember;
+using Association.Application.Commands.RemoveStaffMember;
+using Association.Application.Commands.UpdateStaffMemberRole;
+using Association.Application.Contracts;
 using Association.Application.Queries.GetAssociation;
-using Hivify.Association.Application.Commands.AddAssociation;
-using Hivify.Association.Application.Commands.AddStaffMember;
-using Hivify.Association.Application.Commands.RemoveStaffMember;
-using Hivify.Association.Application.Commands.UpdateStaffMemberRole;
-using Hivify.Association.Application.Queries.GetAssociations;
+using Association.Application.Queries.GetAssociations;
 using Hivify.Association.Domain.Associations;
 using Hivify.Association.Domain.Members;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Messaging;
 
-namespace Hivify.Association.Application;
+namespace Association.Application;
 
 public static class ServiceCollectionExtensions
 {
@@ -21,8 +20,8 @@ public static class ServiceCollectionExtensions
         {
             services.AddScoped<ICommandHandler<AddStaffMemberCommand, MemberID>, AddStaffMemberCommandHandler>();
             services.AddScoped<ICommandHandler<AddAssociationCommand, AssociationID>, CreateAssociationCommandHandler>();
-            services.AddScoped<IQueryHandler<GetAssociationsQuery, IReadOnlyList<AssociationListDto>>, GetAssociationsQueryHandler>();
-            services.AddScoped<IQueryHandler<GetAssociationQuery, AssociationListDto>, GetAssociationQueryHandler>();
+            services.AddScoped<IQueryHandler<GetAssociationsQuery, IReadOnlyList<AssociationListItem>>, GetAssociationsQueryHandler>();
+            services.AddScoped<IQueryHandler<GetAssociationQuery, AssociationListItem>, GetAssociationQueryHandler>();
             services.AddScoped<ICommandHandler<RemoveStaffMemberCommand, bool>, RemoveStaffMemberCommandHandler>();
             services.AddScoped<
     ICommandHandler<UpdateStaffMemberRoleCommand, bool>, UpdateStaffMemberRoleCommandHandler>();

@@ -1,6 +1,6 @@
 using SharedKernel.Messaging;
 
-namespace Hivify.Association.Application.Commands.RemoveStaffMember;
+namespace Association.Application.Commands.RemoveStaffMember;
 
 public sealed record RemoveStaffMemberCommand(
     Guid AssociationId,

@@ -1,5 +1,5 @@
 ﻿using BuildingBlocks.ApplicationPorts.Context;
-using Feeds.Application.Abstractions;
+using Feeds.Application.Contracts;
 using Feeds.Domain.Feeds;
 using FluentValidation;
 using SharedKernel.Messaging;
