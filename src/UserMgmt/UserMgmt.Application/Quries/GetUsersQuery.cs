@@ -1,4 +1,4 @@
-using Hivify.UseCases.Abstractions.Messaging;
+using SharedKernel.Messaging;
 using UserMgmt.Application.Contracts;
 
 namespace UserMgmt.Application.Quries;

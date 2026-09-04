@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace Hivify.Infrastructures.Identity
+namespace UserMgmt.Infrastructure.Identity
 {
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser<Guid>

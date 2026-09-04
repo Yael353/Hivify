@@ -1,16 +1,15 @@
-using Hivify.Infrastructures.SqlDatabase;
-using Hivify.UseCases.Abstractions.Presistence;
-using Hivify.UseCases.AdminUserMgmt.DTOs;
 using Microsoft.EntityFrameworkCore;
+using UserMgmt.Application.Contracts;
 
-namespace Hivify.Infrastructures.Repositories.UsersRepo;
+namespace UserMgmt.Infrastructure.Presistence;
 
-public sealed class UsersRepo : IUserRepo
+public sealed class UserDirectory : IUserDirectory
 {
-    private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
+    private readonly IDbContextFactory<UserManagementDbContext> _contextFactory;
 
-    public UsersRepo(
-        IDbContextFactory<ApplicationDbContext> contextFactory)
+
+    public UserDirectory(
+        IDbContextFactory<UserManagementDbContext> contextFactory)
     {
         _contextFactory = contextFactory;
     }

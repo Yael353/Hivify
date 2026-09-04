@@ -25,13 +25,8 @@
     <Project Path="src/Houses/Infrastructure/Houses.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/src/UserMgmt/">
-    <File Path="Hivify.Infrastructures/Data/IdentitySeeder.cs" />
-    <File Path="src/AdminUserMgmt/CollectionExtensions.cs" />
-    <Project Path="UserMgmt.Application/UserMgmt.Application.csproj" Id="7a47378e-fcdd-4d83-9698-b9ddc0e4029f" />
-    <Project Path="UserMgmt.Infrastructure/UserMgmt.Infrastructure.csproj" Id="29548b65-b530-4d08-9601-9d30078bec35" />
-  </Folder>
-  <Folder Name="/src/UserMgmt/DTOs/">
-    <File Path="src/AdminUserMgmt/DTOs/UserListItem.cs" />
+    <Project Path="src/UserMgmt/UserMgmt.Application/UserMgmt.Application.csproj" />
+    <Project Path="src/UserMgmt/UserMgmt.Infrastructure/UserMgmt.Infrastructure.csproj" />
   </Folder>
   <Project Path="AppHost1/AppHost.csproj" />
   <Project Path="BuildingBlocks/BuildingBlocks.csproj" Id="13b67b05-8a26-45f2-98f5-2c21f4070ade" />

@@ -1,9 +1,8 @@
-using Hivify.Infrastructures.Identity;
-using Hivify.Infrastructures.SqlDatabase;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using UserMgmt.Infrastructure.Presistence;
 
-namespace Hivify.Infrastructures.Data;
+namespace UserMgmt.Infrastructure.Identity;
 
 public static class IdentitySeeder
 {
@@ -11,7 +10,7 @@ public static class IdentitySeeder
     {
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-        var dbContext = services.GetRequiredService<ApplicationDbContext>();
+        var dbContext = services.GetRequiredService<UserManagementDbContext>();
 
         // Seed role
         if (!await roleManager.RoleExistsAsync("Admin"))

@@ -1,26 +1,10 @@
-using Hivify.Core.Aggregates.Associations;
-using Hivify.Core.Aggregates.Associations.Members;
-using Hivify.Core.Aggregates.Complaints;
-using Hivify.Core.Aggregates.Feeds;
-using Hivify.Core.Aggregates.Houses;
-using Hivify.Core.Aggregates.Houses.Tenants;
-using Hivify.Core.Associations;
-using Hivify.Association.Domain.Associations;
-using Hivify.Association.Domain.Members;
-using Hivify.Core.Associations.Members;
-using Hivify.Core.Complaints;
-using Hivify.Core.Feeds;
-using Hivify.Core.Houses;
-using Hivify.Core.SharedKernel.ValuesObjects;
-using Hivify.Infrastructures.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hivify.Infrastructures.SqlDatabase;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<House> Houses { get; set; }
     public DbSet<AssociationEntity> Associations { get; set; }

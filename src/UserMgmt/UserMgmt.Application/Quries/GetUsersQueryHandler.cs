@@ -1,8 +1,7 @@
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Abstractions.Presistence;
-using Hivify.UseCases.AdminUserMgmt.DTOs;
+using SharedKernel.Messaging;
+using UserMgmt.Application.Contracts;
 
-namespace Hivify.UseCases.AdminUserMgmt.Queries;
+namespace UserMgmt.Application.Quries;
 
 public sealed class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, IReadOnlyList<UserListItem>>
 {

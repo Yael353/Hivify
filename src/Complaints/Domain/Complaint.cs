@@ -1,6 +1,6 @@
-using Hivify.Core.Exceptions;
-using Hivify.Core.SharedKernel;
-using Hivify.Core.SharedKernel.ValuesObjects;
+using SharedKernel;
+using SharedKernel.Exceptions;
+using SharedKernel.ValuesObjects;
 
 namespace Complaints.Domain
 {

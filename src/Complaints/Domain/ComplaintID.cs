@@ -1,4 +1,4 @@
-using Hivify.Core.SharedKernel;
+using SharedKernel;
 
 namespace Complaints.Domain
 {

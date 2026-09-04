@@ -16,4 +16,10 @@
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
+    <ProjectReference Include="..\UserMgmt.Application\UserMgmt.Application.csproj" />
+    <ProjectReference Include="..\UserMgmt.Infrastructure\UserMgmt.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

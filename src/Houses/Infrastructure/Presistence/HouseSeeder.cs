@@ -1,13 +1,12 @@
-using Hivify.Core.Aggregates.Houses;
-using Hivify.Core.Houses;
-using Hivify.Infrastructures.SqlDatabase;
+using Houses.Domain.Houses;
+using Houses.Infrastructure.Presistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hivify.Infrastructures.Data;
 
 public static class HouseSeeder
 {
-    public static async Task SeedAsync(ApplicationDbContext context)
+    public static async Task SeedAsync(HouseDbContext context)
     {
         if (await context.Houses.AnyAsync())
             return;

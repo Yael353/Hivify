@@ -2,7 +2,7 @@ using Association.Application.Abstractions;
 using Hivify.Association.Domain.Associations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Association.Infrastructure.Persistence.Repositories;
+namespace Association.Infrastructure.Persistence;
 
 public sealed class AssociationRepo : IAssociationRepo
 {

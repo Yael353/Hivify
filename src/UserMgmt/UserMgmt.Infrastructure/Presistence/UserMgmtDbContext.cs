@@ -1,0 +1,23 @@
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using UserMgmt.Infrastructure.Identity;
+
+namespace UserMgmt.Infrastructure.Presistence;
+
+public sealed class UserManagementDbContext(
+    DbContextOptions<UserManagementDbContext> options)
+    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
+{
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<ApplicationUser>(entity =>
+        {
+            entity.Property(u => u.FullName)
+                .HasMaxLength(200)
+                .IsRequired();
+        });
+    }
+}

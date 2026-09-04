@@ -1,9 +1,9 @@
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.AdminUserMgmt.DTOs;
-using Hivify.UseCases.AdminUserMgmt.Queries;
 using Microsoft.Extensions.DependencyInjection;
+using SharedKernel.Messaging;
+using UserMgmt.Application.Contracts;
+using UserMgmt.Application.Quries;
 
-namespace Hivify.UseCases.AdminUserMgmt;
+namespace UserMgmt.Application;
 
 
 public static class ServiceCollectionExtensions
