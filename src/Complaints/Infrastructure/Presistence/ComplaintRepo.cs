@@ -4,7 +4,7 @@ using Hivify.Infrastructures.SqlDatabase;
 using Hivify.UseCases.Abstractions.Presistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hivify.Infrastructures.Repositories.ComplaintRepos;
+namespace Complaints.Infrastructure.Presistence;
 
 public class ComplaintRepo : IComplaintRepo
 {
