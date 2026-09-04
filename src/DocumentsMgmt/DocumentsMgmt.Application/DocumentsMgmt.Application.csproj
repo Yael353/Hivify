@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Compile Include="..\..\Documents\CollectionExtensions.cs" Link="CollectionExtensions.cs" />
-    <Compile Include="..\..\Documents\Commands\UploadDocumentCommand.cs" Link="Commands\UploadDocumentCommand.cs" />
     <Compile Include="..\..\Documents\Commands\UploadDocumentCommandHandler.cs" Link="Commands\UploadDocumentCommandHandler.cs" />
     <Compile Include="..\..\Documents\Quries\GetDocumentsQuery.cs" Link="Quries\GetDocumentsQuery.cs" />
     <Compile Include="..\..\Documents\Quries\GetDocumentsQueryHandler.cs" Link="Quries\GetDocumentsQueryHandler.cs" />

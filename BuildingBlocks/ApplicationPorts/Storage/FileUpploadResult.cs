@@ -1,4 +1,4 @@
-namespace BuildingBlocks.ApplicationPorts.Storage
+﻿namespace BuildingBlocks.ApplicationPorts.Storage
 {
     public sealed record FileUploadResult(
       string PublicId,
