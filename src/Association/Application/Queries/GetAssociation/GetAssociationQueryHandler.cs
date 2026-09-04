@@ -1,7 +1,7 @@
 using Association.Application.Contracts;
 using Association.Application.Queries.GetAssociation;
-using Hivify.Association.Domain.Associations;
-using SharedKernel.Messaging;
+using Association.Domain.Associations;
+using BuildingBlocks.ApplicationPorts.Messeging;
 
 public sealed class GetAssociationQueryHandler
     : IQueryHandler<GetAssociationQuery, AssociationListItem>

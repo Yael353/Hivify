@@ -1,5 +1,5 @@
+using BuildingBlocks.ApplicationPorts.Messeging;
 using Complaints.Domain;
-using SharedKernel.Messaging;
 
 namespace Complaints.Application.Commands.UpdateComplaintStatus;
 

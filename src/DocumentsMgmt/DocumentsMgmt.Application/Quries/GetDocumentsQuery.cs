@@ -1,7 +1,7 @@
+using BuildingBlocks.ApplicationPorts.Messeging;
 using BuildingBlocks.ApplicationPorts.Storage;
-using SharedKernel.Messaging;
 
-namespace DocumentsMgmt.Application
+namespace DocumentsMgmt.Application.Quries
 {
     public sealed record GetDocumentsQuery : IQuery<IReadOnlyList<FileDocumentResult>>;
 }

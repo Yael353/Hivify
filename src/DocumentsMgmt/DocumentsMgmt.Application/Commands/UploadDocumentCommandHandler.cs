@@ -1,7 +1,7 @@
+using BuildingBlocks.ApplicationPorts.Messeging;
 using BuildingBlocks.ApplicationPorts.Storage;
-using SharedKernel.Messaging;
 
-namespace DocumentsMgmt.Application
+namespace DocumentsMgmt.Application.Commands
 {
     public sealed class UploadDocumentCommandHandler : ICommandHandler<UploadDocumentCommand, string>
     {

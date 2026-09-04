@@ -1,9 +1,9 @@
-using Hivify.Association.Domain.Members;
+using Association.Domain.Members;
 using SharedKernel;
 using SharedKernel.Exceptions;
 using SharedKernel.ValuesObjects;
 
-namespace Hivify.Association.Domain.Associations;
+namespace Association.Domain.Associations;
 
 public class AssociationEntity : BaseEntity<AssociationID>, IAggregateRoot
 {

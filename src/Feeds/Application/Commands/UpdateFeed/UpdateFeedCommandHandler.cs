@@ -1,7 +1,7 @@
-﻿using Feeds.Application.Contracts;
+﻿using BuildingBlocks.ApplicationPorts.Messeging;
+using Feeds.Application.Contracts;
 using Feeds.Domain.Feeds;
 using FluentValidation;
-using SharedKernel.Messaging;
 using SharedKernel.ValuesObjects;
 
 namespace Feeds.Application.Commands.UpdateFeed;

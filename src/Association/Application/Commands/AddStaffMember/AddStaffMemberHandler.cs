@@ -1,7 +1,7 @@
 using Association.Application.Contracts;
-using Hivify.Association.Domain.Associations;
-using Hivify.Association.Domain.Members;
-using SharedKernel.Messaging;
+using Association.Domain.Associations;
+using Association.Domain.Members;
+using BuildingBlocks.ApplicationPorts.Messeging;
 using SharedKernel.ValuesObjects;
 
 namespace Association.Application.Commands.AddStaffMember;

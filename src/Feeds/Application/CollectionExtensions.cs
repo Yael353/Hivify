@@ -1,10 +1,10 @@
-﻿using Feeds.Application.Commands.CreateFeed;
+﻿using BuildingBlocks.ApplicationPorts.Messeging;
+using Feeds.Application.Commands.CreateFeed;
 using Feeds.Application.Commands.DeleteFeed;
 using Feeds.Application.Commands.UpdateFeed;
 using Feeds.Application.Contracts;
 using Feeds.Application.Queries.GetFeeds;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.Messaging;
 
 namespace Feeds.Application;
 

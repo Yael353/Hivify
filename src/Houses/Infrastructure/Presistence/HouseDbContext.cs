@@ -2,7 +2,7 @@
 using Houses.Domain.Tenants;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.ValuesObjects;
-namespace Houses.Infrastructure.Persistence;
+namespace Houses.Infrastructure.Presistence;
 
 public sealed class HouseDbContext : DbContext
 {

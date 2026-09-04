@@ -1,5 +1,5 @@
-using Hivify.Association.Domain.Associations;
-using Hivify.Association.Domain.Members;
+using Association.Domain.Associations;
+using Association.Domain.Members;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.ValuesObjects;
 

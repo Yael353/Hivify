@@ -1,4 +1,3 @@
-using SharedKernel.Messaging;
 using UserMgmt.Application.Contracts;
 
 namespace UserMgmt.Application.Quries;

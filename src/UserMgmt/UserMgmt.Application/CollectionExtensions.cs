@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.Messaging;
 using UserMgmt.Application.Contracts;
 using UserMgmt.Application.Quries;
 

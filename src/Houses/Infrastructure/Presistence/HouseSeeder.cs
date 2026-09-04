@@ -1,8 +1,7 @@
 using Houses.Domain.Houses;
-using Houses.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hivify.Infrastructures.Data;
+namespace Houses.Infrastructure.Presistence;
 
 public static class HouseSeeder
 {

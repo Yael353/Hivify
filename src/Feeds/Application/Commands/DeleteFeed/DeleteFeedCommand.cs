@@ -1,4 +1,4 @@
-﻿using SharedKernel.Messaging;
+﻿using BuildingBlocks.ApplicationPorts.Messeging;
 
 namespace Feeds.Application.Commands.DeleteFeed;
 

@@ -1,4 +1,4 @@
-namespace SharedKernel.Messaging
+namespace BuildingBlocks.ApplicationPorts.Messeging
 {
     public interface ICommandHandler<TCommand, TResult> where TCommand : ICommand<TResult>
     {

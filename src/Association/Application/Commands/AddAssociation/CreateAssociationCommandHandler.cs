@@ -1,6 +1,6 @@
 using Association.Application.Contracts;
-using Hivify.Association.Domain.Associations;
-using SharedKernel.Messaging;
+using Association.Domain.Associations;
+using BuildingBlocks.ApplicationPorts.Messeging;
 using SharedKernel.ValuesObjects;
 
 namespace Association.Application.Commands.AddAssociation;

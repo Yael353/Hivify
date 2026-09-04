@@ -13,7 +13,6 @@
     <Project Path="src/Complaints/Infrastructure/Complaints.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/src/DocumentsMgmt/">
-    <Project Path="src/DocumentsMgmt/Documents.Infrastructure/Documents.Infrastructure.csproj" />
     <Project Path="src/DocumentsMgmt/DocumentsMgmt.Application/DocumentsMgmt.Application.csproj" />
   </Folder>
 

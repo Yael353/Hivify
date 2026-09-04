@@ -1,5 +1,5 @@
 using Association.Application.Contracts;
-using Hivify.Association.Domain.Associations;
+using Association.Domain.Associations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Association.Infrastructure.Persistence;

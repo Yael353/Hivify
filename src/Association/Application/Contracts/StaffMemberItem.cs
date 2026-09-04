@@ -1,4 +1,4 @@
-using Hivify.Association.Domain.Members;
+using Association.Domain.Members;
 
 namespace Association.Application.Contracts
 {

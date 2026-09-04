@@ -1,5 +1,5 @@
-﻿using Feeds.Application.Contracts;
-using SharedKernel.Messaging;
+﻿using BuildingBlocks.ApplicationPorts.Messeging;
+using Feeds.Application.Contracts;
 
 namespace Feeds.Application.Queries.GetFeeds;
 

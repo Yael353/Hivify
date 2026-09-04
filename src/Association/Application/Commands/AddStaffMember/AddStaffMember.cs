@@ -1,5 +1,5 @@
-using Hivify.Association.Domain.Members;
-using SharedKernel.Messaging;
+using Association.Domain.Members;
+using BuildingBlocks.ApplicationPorts.Messeging;
 
 public sealed record AddStaffMemberCommand(
     Guid AssociationId,

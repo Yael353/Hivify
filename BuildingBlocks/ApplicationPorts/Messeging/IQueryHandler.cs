@@ -1,4 +1,4 @@
-namespace SharedKernel.Messaging;
+namespace BuildingBlocks.ApplicationPorts.Messeging;
 
 public interface IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
 {

@@ -1,24 +1,71 @@
 using Association.Application.Contracts;
+using Association.Infrastructure.Persistence;
+using BuildingBlocks.ApplicationPorts.CurrentUserProvider;
+using BuildingBlocks.ApplicationPorts.Messeging;
+using BuildingBlocks.Infrastructure.CurrentUserProvider;
+using BuildingBlocks.Infrastructure.Messeging;
+using BuildingBlocks.Infrastructure.Storage;
+using BuildingBlocks.Infrastructure.Storage.CloudinaryStorage;
+using Complaints.Application.Contracts;
+using Complaints.Infrastructure.Presistence;
+using Feeds.Application.Contracts;
+using Feeds.Infrastructure.Presistence;
+using Houses.Application.Contracts;
 using Houses.Infrastructure.Presistence;
 using Microsoft.AspNetCore.Identity;
-using SharedKernel.Messaging;
+using Microsoft.EntityFrameworkCore;
+using UserMgmt.Application.Contracts;
+using UserMgmt.Infrastructure.Identity;
+using UserMgmt.Infrastructure.Presistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+#region API
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+#endregion
+
+
+#region Database
+
+var connectionString =
+    builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException(
+        "Connection string 'DefaultConnection' not found.");
+
+builder.Services.AddDbContextFactory<HouseDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+});
+
+builder.Services.AddDbContextFactory<AssociationDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+});
+
+builder.Services.AddDbContextFactory<FeedDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+});
+
+builder.Services.AddDbContextFactory<ComplaintDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+});
+
+builder.Services.AddDbContextFactory<UserManagementDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+});
+
+#endregion
 
 
 
 
 #region Authentication & Authorization
-
-builder.Services.AddCascadingAuthenticationState();
-
-builder.Services.AddScoped<IdentityRedirectManager>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -31,37 +78,6 @@ builder.Services.AddAuthorization();
 
 #endregion
 
-#region Database
-
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-var connectionString =
-    builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException(
-        "Connection string 'DefaultConnection' not found.");
-
-builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(connectionString);
-});
-
-// Scoped context for Identity and other code that explicitly
-// requires ApplicationDbContext.
-builder.Services.AddScoped<ApplicationDbContext>(sp =>
-{
-    var factory =
-        sp.GetRequiredService<
-            IDbContextFactory<ApplicationDbContext>>();
-
-    return factory.CreateDbContext();
-});
-
-#endregion
-
-#region Storage
-builder.Services.Configure<CloudinaryOptions>(builder.Configuration.GetSection("Cloudinary"));
-builder.Services.AddStorageServices();
-#endregion
 
 #region Identity
 
@@ -69,17 +85,16 @@ builder.Services
     .AddIdentityCore<ApplicationUser>(options =>
     {
         options.SignIn.RequireConfirmedAccount = true;
+
         options.Stores.SchemaVersion =
             IdentitySchemaVersions.Version3;
     })
     .AddRoles<IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddEntityFrameworkStores<UserManagementDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<
-    IUserRepo,
-    UsersRepo>();
+builder.Services.AddScoped<IUserDirectory, UserDirectory>();
 
 builder.Services.AddSingleton<
     IEmailSender<ApplicationUser>,
@@ -87,41 +102,58 @@ builder.Services.AddSingleton<
 
 #endregion
 
+
 #region Infrastructure
+
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<ICurrentUser, CurrentUserProvider>();
+
 builder.Services.AddScoped<IFeedRepo, FeedRepo>();
 builder.Services.AddScoped<IComplaintRepo, ComplaintRepo>();
 builder.Services.AddScoped<IAssociationRepo, AssociationRepo>();
-builder.Services.AddScoped<IHouseRepository, HouseRepo>();
-builder.Services.AddScoped<IUserRepo, UsersRepo>();
-
+builder.Services.AddScoped<IHouseRepo, HouseRepo>();
 
 #endregion
 
+
 #region Application
+
 builder.Services.AddScoped<ISender, Sender>();
 builder.Services.AddScoped<IQuerySender, QuerySender>();
+
 builder.Services.AddFeedServices();
 builder.Services.AddHouseServices();
 builder.Services.AddAdminServices();
 builder.Services.AddAssociationServices();
 builder.Services.AddComplaintServices();
-builder.Services.AddRazorComponents();
-builder.Services.AddComplaintServices();
 builder.Services.AddDocumentServices();
-
 
 #endregion
 
-#region AI Integration
+
+#region Storage
+
+builder.Services.Configure<CloudinaryOptions>(
+    builder.Configuration.GetSection("Cloudinary"));
+
+builder.Services.AddStorageServices();
+
+#endregion
+
+
+#region AI
+
 builder.Services.AddHivifyAIServices();
+
 #endregion
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
+#region HTTP Pipeline
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -129,8 +161,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+#endregion
+
 
 app.Run();

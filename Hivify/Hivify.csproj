@@ -16,11 +16,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\BuildingBlocks\BuildingBlocks.csproj" />
+		<ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
 		<ProjectReference Include="..\Hivify.AI\Hivify.AI.csproj" />
 		<ProjectReference Include="..\ServiceDefaults1\ServiceDefaults.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.11" />
 		<PackageReference Include="MudBlazor" Version="9.5.0" />
 	</ItemGroup>
 

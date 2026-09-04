@@ -1,6 +1,5 @@
 ﻿using Feeds.Application.Contracts;
 using Feeds.Domain.Feeds;
-using Feeds.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Feeds.Infrastructure.Presistence;

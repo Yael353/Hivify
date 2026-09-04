@@ -1,8 +1,8 @@
-using Hivify.Association.Domain.Associations;
+using Association.Domain.Associations;
 using SharedKernel;
 using SharedKernel.Exceptions;
 using SharedKernel.ValuesObjects;
-namespace Hivify.Association.Domain.Members;
+namespace Association.Domain.Members;
 
 public class Member : BaseEntity<MemberID>
 {

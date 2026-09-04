@@ -1,5 +1,5 @@
 using Association.Application.Contracts;
-using SharedKernel.Messaging;
+using BuildingBlocks.ApplicationPorts.Messeging;
 
 namespace Association.Application.Queries.GetAssociation;
 

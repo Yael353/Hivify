@@ -5,10 +5,10 @@ using Association.Application.Commands.UpdateStaffMemberRole;
 using Association.Application.Contracts;
 using Association.Application.Queries.GetAssociation;
 using Association.Application.Queries.GetAssociations;
-using Hivify.Association.Domain.Associations;
-using Hivify.Association.Domain.Members;
+using Association.Domain.Associations;
+using Association.Domain.Members;
+using BuildingBlocks.ApplicationPorts.Messeging;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.Messaging;
 
 namespace Association.Application;
 

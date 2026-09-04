@@ -1,6 +1,8 @@
+using BuildingBlocks.ApplicationPorts.Messeging;
 using BuildingBlocks.ApplicationPorts.Storage;
+using DocumentsMgmt.Application.Commands;
+using DocumentsMgmt.Application.Quries;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.Messaging;
 
 namespace DocumentsMgmt.Application;
 

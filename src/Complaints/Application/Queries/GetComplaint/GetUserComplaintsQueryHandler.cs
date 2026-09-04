@@ -1,6 +1,6 @@
-using BuildingBlocks.ApplicationPorts.Context;
+using BuildingBlocks.ApplicationPorts.CurrentUserProvider;
+using BuildingBlocks.ApplicationPorts.Messeging;
 using Complaints.Application.Contracts;
-using SharedKernel.Messaging;
 using SharedKernel.ValuesObjects;
 
 namespace Complaints.Application.Queries.GetComplaint;

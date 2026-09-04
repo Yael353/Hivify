@@ -1,8 +1,8 @@
-using BuildingBlocks.ApplicationPorts.Context;
+using BuildingBlocks.ApplicationPorts.CurrentUserProvider;
+using BuildingBlocks.ApplicationPorts.Messeging;
 using Complaints.Application.Contracts;
 using Complaints.Domain;
 using FluentValidation;
-using SharedKernel.Messaging;
 
 namespace Complaints.Application.Commands.UpdateComplaintStatus;
 

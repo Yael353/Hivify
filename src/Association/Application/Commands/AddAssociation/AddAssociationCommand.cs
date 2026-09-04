@@ -1,5 +1,5 @@
-using Hivify.Association.Domain.Associations;
-using SharedKernel.Messaging;
+using Association.Domain.Associations;
+using BuildingBlocks.ApplicationPorts.Messeging;
 
 namespace Association.Application.Commands.AddAssociation;
 

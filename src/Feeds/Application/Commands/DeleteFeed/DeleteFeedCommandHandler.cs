@@ -1,7 +1,7 @@
-﻿using BuildingBlocks.ApplicationPorts.Context;
+﻿using BuildingBlocks.ApplicationPorts.CurrentUserProvider;
+using BuildingBlocks.ApplicationPorts.Messeging;
 using Feeds.Application.Contracts;
 using Feeds.Domain.Feeds;
-using SharedKernel.Messaging;
 
 namespace Feeds.Application.Commands.DeleteFeed;
 
