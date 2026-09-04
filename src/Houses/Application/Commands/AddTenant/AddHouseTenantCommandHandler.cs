@@ -1,5 +1,5 @@
-﻿using Houses.Application.Abstractions;
-using Houses.Application.Commands.AddTenant;
+﻿using Houses.Application.Commands.AddTenant;
+using Houses.Application.Contracts;
 using Houses.Domain.Houses;
 using SharedKernel.Messaging;
 using SharedKernel.ValuesObjects;

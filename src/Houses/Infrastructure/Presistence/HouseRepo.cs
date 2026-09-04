@@ -1,4 +1,4 @@
-using Houses.Application.Abstractions;
+using Houses.Application.Contracts;
 using Houses.Domain.Houses;
 using Houses.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
