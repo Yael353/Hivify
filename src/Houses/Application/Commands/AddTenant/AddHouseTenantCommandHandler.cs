@@ -3,13 +3,14 @@ using Houses.Application.Commands.AddTenant;
 using Houses.Domain.Houses;
 using SharedKernel.Messaging;
 using SharedKernel.ValuesObjects;
+using UserMgmt.Application.Contracts;
 
 public sealed class AddHouseTenantCommandHandler : ICommandHandler<AddHouseTenantCommand, Guid>
 {
     private readonly IHouseRepo _houseRepo;
-    private readonly IUserRepo _userManagementService;
+    private readonly IUserDirectory _userManagementService;
 
-    public AddHouseTenantCommandHandler(IHouseRepo houseRepo, IUserRepo userManagementService)
+    public AddHouseTenantCommandHandler(IHouseRepo houseRepo, IUserDirectory userManagementService)
     {
         _houseRepo = houseRepo;
         _userManagementService = userManagementService;

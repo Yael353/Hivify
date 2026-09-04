@@ -18,8 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
-    <ProjectReference Include="..\UserMgmt.Application\UserMgmt.Application.csproj" />
-    <ProjectReference Include="..\UserMgmt.Infrastructure\UserMgmt.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

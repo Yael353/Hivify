@@ -1,5 +1,5 @@
 using Houses.Domain.Houses;
-using Houses.Infrastructure.Presistence;
+using Houses.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hivify.Infrastructures.Data;

@@ -1,5 +1,6 @@
 using Houses.Application.Abstractions;
 using Houses.Domain.Houses;
+using Houses.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Houses.Infrastructure.Presistence;

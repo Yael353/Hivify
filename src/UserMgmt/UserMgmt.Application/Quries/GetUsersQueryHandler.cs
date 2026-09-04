@@ -5,10 +5,10 @@ namespace UserMgmt.Application.Quries;
 
 public sealed class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, IReadOnlyList<UserListItem>>
 {
-    private readonly IUserRepo _userManagementService;
+    private readonly IUserDirectory _userManagementService;
 
     public GetUsersQueryHandler(
-        IUserRepo userManagementService)
+        IUserDirectory userManagementService)
     {
         _userManagementService = userManagementService;
     }
