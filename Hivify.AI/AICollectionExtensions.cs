@@ -1,8 +1,8 @@
 
 
+using BuildingBlocks.ApplicationPorts.AI.Services;
 using Hivify.AI.Agents;
 using Hivify.AI.Services;
-using Hivify.UseCases.Abstractions.Services;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using OllamaSharp;
