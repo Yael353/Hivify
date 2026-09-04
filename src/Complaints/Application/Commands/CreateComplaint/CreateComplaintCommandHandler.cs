@@ -31,7 +31,13 @@ public sealed class CreateComplaintCommandHandler : ICommandHandler<CreateCompla
 
         await _validator.ValidateAndThrowAsync(command, cancellationToken);
 
-        var userId = await _currentUser.GetUserIdAsync();
+        if (!_currentUser.IsAuthenticated || _currentUser.UserId == Guid.Empty)
+        {
+            throw new UnauthorizedAccessException("User is not authenticated.");
+        }
+
+        var userId = _currentUser.UserId;
+
 
 
 

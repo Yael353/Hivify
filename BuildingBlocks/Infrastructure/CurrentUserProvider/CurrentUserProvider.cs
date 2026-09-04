@@ -1,43 +1,43 @@
 ﻿using BuildingBlocks.ApplicationPorts.CurrentUserProvider;
-using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace BuildingBlocks.Infrastructure.CurrentUserProvider
+namespace BuildingBlocks.Infrastructure.CurrentUserProvider;
+
+public sealed class CurrentUserProvider : ICurrentUser
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-
-
-    public class CurrentUserProvider : ICurrentUser
+    public CurrentUserProvider(
+        IHttpContextAccessor httpContextAccessor)
     {
-        private readonly AuthenticationStateProvider _authenticationStateProvider;
+        _httpContextAccessor = httpContextAccessor;
+    }
 
-        public CurrentUserProvider(AuthenticationStateProvider authenticationStateProvider)
+    public Guid UserId
+    {
+        get
         {
-            _authenticationStateProvider = authenticationStateProvider;
-        }
+            var user = _httpContextAccessor.HttpContext?.User;
 
-        public async Task<Guid> GetUserIdAsync()
-        {
-            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-
-            var user = authState.User;
-
-            if (user.Identity?.IsAuthenticated != true)
+            if (user?.Identity?.IsAuthenticated != true)
                 throw new UnauthorizedAccessException();
 
-            var id = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            var value = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return Guid.Parse(id!);
-        }
+            if (!Guid.TryParse(value, out var userId))
+                throw new UnauthorizedAccessException(
+                    "The current user does not have a valid user ID.");
 
-
-
-        public async Task<bool> IsInRoleAsync(string role)
-        {
-            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-
-            return authState.User.IsInRole(role);
+            return userId;
         }
     }
 
+    public bool IsAuthenticated =>
+        _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == true;
+
+    Guid ICurrentUser.UserId => throw new NotImplementedException();
+
+    public bool IsInRole(string role) =>
+        _httpContextAccessor.HttpContext?.User?.IsInRole(role) ?? false;
 }

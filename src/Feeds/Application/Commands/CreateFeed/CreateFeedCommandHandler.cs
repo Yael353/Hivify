@@ -33,13 +33,13 @@ public sealed class CreateFeedCommandHandler
             command,
             cancellationToken);
 
-        if (!await _currentUser.IsInRoleAsync("Admin"))
+        if (!_currentUser.IsInRole("Admin") || _currentUser.UserId == Guid.Empty)
         {
             throw new UnauthorizedAccessException(
                 "Only administrators can create feeds.");
         }
 
-        var userId = await _currentUser.GetUserIdAsync();
+        var userId = _currentUser.UserId;
 
         var feed = Feed.CreateFeed(
             new UserID(userId),

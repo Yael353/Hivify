@@ -4,10 +4,10 @@ using Feeds.Application.Commands.DeleteFeed;
 using Feeds.Application.Commands.UpdateFeed;
 using Feeds.Application.Contracts;
 using Feeds.Application.Queries.GetFeeds;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Feeds.Application;
-
 
 public static class ServiceCollectionExtensions
 {
@@ -15,12 +15,17 @@ public static class ServiceCollectionExtensions
     {
         public IServiceCollection AddFeedServices()
         {
-
             services.AddScoped<ICommandHandler<CreateFeedCommand, Guid>, CreateFeedCommandHandler>();
             services.AddScoped<ICommandHandler<UpdateFeedCommand, bool>, UpdateFeedCommandHandler>();
             services.AddScoped<ICommandHandler<DeleteFeedCommand, bool>, DeleteFeedCommandHandler>();
-            services.AddScoped<IQueryHandler<GetFeedsQuery, IReadOnlyList<FeedListItem>>, GetFeedsQueryHandler>();
-            services.AddScoped<CreateFeedCommandValidator>();
+
+            services.AddScoped<
+                IQueryHandler<GetFeedsQuery, IReadOnlyList<FeedListItem>>,
+                GetFeedsQueryHandler>();
+
+            services.AddScoped<IValidator<CreateFeedCommand>, CreateFeedCommandValidator>();
+            services.AddScoped<IValidator<UpdateFeedCommand>, UpdateFeedCommandValidator>();
+
             return services;
         }
     }

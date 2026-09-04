@@ -32,7 +32,7 @@ public sealed class UpdateComplaintStatusCommandHandler
         await _validator.ValidateAndThrowAsync(command, cancellationToken);
 
         // Authorization – endast admin
-        if (!await _currentUser.IsInRoleAsync("Admin"))
+        if (!_currentUser.IsInRole("Admin"))
             throw new UnauthorizedAccessException("Endast administratörer kan ändra status.");
 
         var complaint = await _complaintRepository.GetComplaintByIdAsync(

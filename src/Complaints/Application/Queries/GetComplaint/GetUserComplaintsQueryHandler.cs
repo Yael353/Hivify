@@ -21,7 +21,7 @@ public sealed class GetUserComplaintsQueryHandler
         GetUserComplaintsQuery query,
         CancellationToken cancellationToken)
     {
-        var userId = await _currentUser.GetUserIdAsync();
+        var userId = _currentUser.UserId;
 
         var complaints = await _complaintRepository.GetComplaintsByUserAsync(
             new UserID(userId),

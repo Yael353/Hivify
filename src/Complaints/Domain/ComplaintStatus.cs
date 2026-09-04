@@ -3,7 +3,7 @@ namespace Complaints.Domain
 
     public enum ComplaintStatus
     {
-        Ny,          
+        Ny,
         Granskas,
         Pågår,
         Löst

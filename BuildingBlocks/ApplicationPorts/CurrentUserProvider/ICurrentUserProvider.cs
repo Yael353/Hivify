@@ -2,8 +2,8 @@
 {
     public interface ICurrentUser
     {
-        Task<Guid> GetUserIdAsync();
-
-        Task<bool> IsInRoleAsync(string role);
+        Guid UserId { get; }
+        bool IsAuthenticated { get; }
+        bool IsInRole(string role);
     }
 }

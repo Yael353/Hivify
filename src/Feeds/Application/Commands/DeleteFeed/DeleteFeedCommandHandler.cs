@@ -25,7 +25,7 @@ public sealed class DeleteFeedCommandHandler
     {
         ArgumentNullException.ThrowIfNull(command);
 
-        if (!await _currentUser.IsInRoleAsync("Admin"))
+        if (!_currentUser.IsInRole("Admin"))
         {
             throw new UnauthorizedAccessException(
                 "Only administrators can delete feeds.");
