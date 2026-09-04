@@ -1,7 +1,7 @@
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Documents.Results;
+using BuildingBlocks.ApplicationPorts.Storage;
+using SharedKernel.Messaging;
 
-namespace Hivify.UseCases.Documents.Quries
+namespace DocumentsMgmt.Application
 {
     public sealed record GetDocumentsQuery : IQuery<IReadOnlyList<FileDocumentResult>>;
 }

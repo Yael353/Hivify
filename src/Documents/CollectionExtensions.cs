@@ -1,11 +1,8 @@
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Documents.Commands;
-using Hivify.UseCases.Documents.Quries;
-using Hivify.UseCases.Documents.Results;
+using BuildingBlocks.ApplicationPorts.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using SharedKernel.Messaging;
 
-namespace Hivify.UseCases.Documents;
-
+namespace DocumentsMgmt.Application;
 
 public static class ServiceCollectionExtensions
 {

@@ -1,4 +1,4 @@
-namespace Hivify.UseCases.Documents.Results
+namespace BuildingBlocks.ApplicationPorts.Storage
 {
     public sealed record FileUploadResult(
       string PublicId,

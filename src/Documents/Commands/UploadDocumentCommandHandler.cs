@@ -1,7 +1,7 @@
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Abstractions.Storage;
+using BuildingBlocks.ApplicationPorts.Storage;
+using SharedKernel.Messaging;
 
-namespace Hivify.UseCases.Documents.Commands
+namespace DocumentsMgmt.Application
 {
     public sealed class UploadDocumentCommandHandler : ICommandHandler<UploadDocumentCommand, string>
     {

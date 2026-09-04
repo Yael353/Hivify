@@ -1,6 +1,6 @@
-using Hivify.UseCases.Abstractions.Messaging;
+using SharedKernel.Messaging;
 
-namespace Hivify.UseCases.Documents.Commands
+namespace DocumentsMgmt.Application
 {
     public sealed record UploadDocumentCommand(
         string FileName,
