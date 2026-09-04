@@ -1,5 +1,5 @@
-﻿using Houses.Application.Contracts;
-using SharedKernel.Messaging;
+﻿using BuildingBlocks.ApplicationPorts.Messeging;
+using Houses.Application.Contracts;
 
 namespace Houses.Application.Queries.GetHouses;
 

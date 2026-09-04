@@ -1,3 +1,4 @@
+using BuildingBlocks.ApplicationPorts.Messeging;
 using UserMgmt.Application.Contracts;
 
 namespace UserMgmt.Application.Quries;

@@ -1,4 +1,5 @@
-﻿using Houses.Application.Commands.AddTenant;
+﻿using BuildingBlocks.ApplicationPorts.Messeging;
+using Houses.Application.Commands.AddTenant;
 using Houses.Application.Commands.CreateHouse;
 using Houses.Application.Commands.DeleteTenant;
 using Houses.Application.Commands.UpdateHouse;
@@ -7,7 +8,6 @@ using Houses.Application.Queries.GetHouse;
 using Houses.Application.Queries.GetHouses;
 using Houses.Application.Queries.GetHouseTenants;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.Messaging;
 
 namespace Houses.Application;
 

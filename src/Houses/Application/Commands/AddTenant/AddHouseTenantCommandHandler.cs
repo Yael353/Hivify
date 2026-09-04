@@ -1,7 +1,7 @@
-﻿using Houses.Application.Commands.AddTenant;
+﻿using BuildingBlocks.ApplicationPorts.Messeging;
+using Houses.Application.Commands.AddTenant;
 using Houses.Application.Contracts;
 using Houses.Domain.Houses;
-using SharedKernel.Messaging;
 using SharedKernel.ValuesObjects;
 using UserMgmt.Application.Contracts;
 

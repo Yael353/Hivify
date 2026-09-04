@@ -1,3 +1,4 @@
+using BuildingBlocks.ApplicationPorts.Messeging;
 using Microsoft.Extensions.DependencyInjection;
 using UserMgmt.Application.Contracts;
 using UserMgmt.Application.Quries;

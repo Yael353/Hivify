@@ -1,7 +1,8 @@
-﻿using Houses.Application.Abstractions;
+﻿using BuildingBlocks.ApplicationPorts.Messeging;
+using Houses.Application.Contracts;
 using Houses.Domain.Houses;
 using Houses.Domain.Tenants;
-using SharedKernel.Messaging;
+
 
 namespace Houses.Application.Commands.DeleteTenant;
 

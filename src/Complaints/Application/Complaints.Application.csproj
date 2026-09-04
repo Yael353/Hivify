@@ -1,11 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <Compile Include="..\Validators\ComplaintDtoValidator.cs" Link="Validator\ComplaintDtoValidator.cs" />
-    <Compile Include="..\Validators\UpdateComplaintDtoValidator.cs" Link="Validator\UpdateComplaintDtoValidator.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.11" />
   </ItemGroup>
@@ -14,10 +9,6 @@
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.csproj" />
     <ProjectReference Include="..\..\UserMgmt\UserMgmt.Application\UserMgmt.Application.csproj" />
     <ProjectReference Include="..\Domain\Complaints.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Validator\" />
   </ItemGroup>
 
   <PropertyGroup>

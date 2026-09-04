@@ -1,7 +1,7 @@
-﻿using Houses.Application.Abstractions;
+﻿using BuildingBlocks.ApplicationPorts.Messeging;
 using Houses.Application.Contracts;
 using Houses.Domain.Houses;
-using SharedKernel.Messaging;
+
 
 namespace Houses.Application.Queries.GetHouseTenants;
 
