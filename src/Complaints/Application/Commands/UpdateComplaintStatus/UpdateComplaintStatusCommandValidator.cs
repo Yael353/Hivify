@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Hivify.UseCases.Complaints.Commands.UpdateComplaintStatus;
+namespace Complaints.Application.Commands.UpdateComplaintStatus;
 
 public sealed class UpdateComplaintStatusCommandValidator : AbstractValidator<UpdateComplaintStatusCommand>
 {

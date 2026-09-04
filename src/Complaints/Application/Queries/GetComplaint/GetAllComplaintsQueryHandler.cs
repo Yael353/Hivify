@@ -1,9 +1,8 @@
 using Complaints.Application.Contracts;
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Abstractions.Presistence;
+using SharedKernel.Messaging;
 
 
-namespace Hivify.UseCases.Complaints.Queries.GetComplaint
+namespace Complaints.Application.Queries.GetComplaint
 {
     public sealed class GetAllComplaintsQueryHandler
         : IQueryHandler<GetAllComplaintsQuery, IReadOnlyList<ComplaintListItem>>
@@ -23,7 +22,7 @@ namespace Hivify.UseCases.Complaints.Queries.GetComplaint
 
             return complaints
                 .OrderByDescending(c => c.CreatedDate)
-                .Select(c => new ComplaintListItemDto(
+                .Select(c => new ComplaintListItem(
                     c.Id.Value,
                     c.Title.Value,
                     c.Description.Value,

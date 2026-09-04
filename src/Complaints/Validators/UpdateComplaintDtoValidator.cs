@@ -1,9 +1,10 @@
-using Hivify.UseCases.Complaints.DTOs;
+using Complaints.Application.Contracts;
 using FluentValidation;
 
-namespace Hivify.UseCases.Common.Validators
+
+namespace Complaints.Application.Validators
 {
-    public class UpdateComplaintDtoValidator : AbstractValidator<UpdateComplaintDto>
+    public class UpdateComplaintDtoValidator : AbstractValidator<UpdateComplaint>
     {
         public UpdateComplaintDtoValidator()
         {

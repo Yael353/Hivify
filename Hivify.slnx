@@ -31,7 +31,6 @@
   <Project Path="AppHost1/AppHost.csproj" />
   <Project Path="BuildingBlocks/BuildingBlocks.csproj" Id="13b67b05-8a26-45f2-98f5-2c21f4070ade" />
   <Project Path="Hivify.AI/Hivify.AI.csproj" />
-  <Project Path="Hivify.Infrastructures/Hivify.Infrastructures.csproj" Id="3e779152-bd0f-47e7-8acb-d3b0496a051c" />
   <Project Path="Hivify/Hivify.csproj" />
   <Project Path="ServiceDefaults1/ServiceDefaults.csproj" />
   <Project Path="SharedKernel/SharedKernel.csproj" Id="9432ab2b-f2fd-4ad8-811f-99bbe4cc1c27" />

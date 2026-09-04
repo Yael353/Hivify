@@ -1,12 +1,13 @@
+using Complaints.Application.Commands.CreateComplaint;
+using Complaints.Application.Commands.UpdateComplaintStatus;
 using Complaints.Application.Contracts;
+using Complaints.Application.Queries.GetComplaint;
+using Complaints.Application.Validators;
 using FluentValidation;
-using Hivify.UseCases.Complaints.Commands.CreateComplaint;
-using Hivify.UseCases.Complaints.Commands.UpdateComplaintStatus;
-using Hivify.UseCases.Complaints.Queries.GetComplaint;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Messaging;
 
-namespace Hivify.UseCases.Complaints;
+namespace Complaints.Application;
 
 public static class ServiceCollectionExtensions
 {
@@ -22,9 +23,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IQueryHandler<GetAllComplaintsQuery, IReadOnlyList<ComplaintListItem>>, GetAllComplaintsQueryHandler>();
 
         // Validators
-        services.AddScoped<IValidator<CreateComplaint>, ComplaintDtoValidator>();
+        services.AddScoped<IValidator<CreateComplaint>, CreateComplaintDtoValidator>();
         services.AddScoped<IValidator<UpdateComplaint>, UpdateComplaintDtoValidator>();
-        services.AddValidatorsFromAssemblyContaining<CreateComplaintCommandValidator>();
 
         return services;
     }

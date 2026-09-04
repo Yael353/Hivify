@@ -1,10 +1,8 @@
 using Complaints.Application.Contracts;
-using Hivify.Core.Aggregates.Complaints;
-using Hivify.Core.SharedKernel.ValuesObjects;
-using Hivify.UseCases.Abstractions.Messaging;
-using Hivify.UseCases.Abstractions.Presistence;
+using Complaints.Domain;
+using SharedKernel.Messaging;
 
-namespace Hivify.UseCases.Complaints.Queries.GetComplaint;
+namespace Complaints.Application.Queries.GetComplaint;
 
 public sealed class GetComplaintByIdQueryHandler
     : IQueryHandler<GetComplaintByIdQuery, ComplaintListItem?>
@@ -24,9 +22,10 @@ public sealed class GetComplaintByIdQueryHandler
             new ComplaintID(query.ComplaintId),
             cancellationToken);
 
-        if (complaint == null) return null;
+        if (complaint == null)
+            return null;
 
-        return new ComplaintListItemDto(
+        return new ComplaintListItem(
             complaint.Id.Value,
             complaint.Title.Value,
             complaint.Description.Value,

@@ -1,10 +1,9 @@
 using BuildingBlocks.ApplicationPorts.Context;
-using Complaints.Application.Abstractions.Persistence;
 using Complaints.Application.Contracts;
 using SharedKernel.Messaging;
 using SharedKernel.ValuesObjects;
 
-namespace Hivify.UseCases.Complaints.Queries.GetComplaint;
+namespace Complaints.Application.Queries.GetComplaint;
 
 public sealed class GetUserComplaintsQueryHandler
     : IQueryHandler<GetUserComplaintsQuery, IReadOnlyList<ComplaintListItem>>

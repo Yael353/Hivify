@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Hivify.UseCases.Complaints.Commands.CreateComplaint;
+namespace Complaints.Application.Commands.CreateComplaint;
 
 public sealed class CreateComplaintCommandValidator : AbstractValidator<CreateComplaintCommand>
 {

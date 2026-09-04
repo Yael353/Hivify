@@ -1,8 +1,8 @@
 using Complaints.Application.Contracts;
-using Hivify.UseCases.Abstractions.Messaging;
+using SharedKernel.Messaging;
 
 
-namespace Hivify.UseCases.Complaints.Queries.GetComplaint
+namespace Complaints.Application.Queries.GetComplaint
 {
     public sealed record GetAllComplaintsQuery() : IQuery<IReadOnlyList<ComplaintListItem>>;
 }

@@ -1,4 +1,4 @@
-using Complaints.Application.Abstractions.Persistence;
+using Complaints.Application.Contracts;
 using Complaints.Domain;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.ValuesObjects;

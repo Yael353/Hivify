@@ -1,11 +1,11 @@
-using Hivify.UseCases.Complaints.DTOs;
+using Complaints.Application.Contracts;
 using FluentValidation;
 
-namespace Hivify.UseCases.Common.Validators
+namespace Complaints.Application.Validators
 {
-    public class ComplaintDtoValidator : AbstractValidator<CreateComplaintDto>
+    public class CreateComplaintDtoValidator : AbstractValidator<CreateComplaint>
     {
-        public ComplaintDtoValidator()
+        public CreateComplaintDtoValidator()
         {
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Titel är obligatorisk.")

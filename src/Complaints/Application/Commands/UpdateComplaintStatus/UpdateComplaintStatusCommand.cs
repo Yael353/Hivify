@@ -1,7 +1,7 @@
 using Complaints.Domain;
 using SharedKernel.Messaging;
 
-namespace Hivify.UseCases.Complaints.Commands.UpdateComplaintStatus;
+namespace Complaints.Application.Commands.UpdateComplaintStatus;
 
 public sealed record UpdateComplaintStatusCommand(
     Guid ComplaintId,

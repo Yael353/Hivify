@@ -1,10 +1,10 @@
 using BuildingBlocks.ApplicationPorts.Context;
-using Complaints.Application.Abstractions.Persistence;
+using Complaints.Application.Contracts;
 using Complaints.Domain;
 using FluentValidation;
 using SharedKernel.Messaging;
 
-namespace Hivify.UseCases.Complaints.Commands.UpdateComplaintStatus;
+namespace Complaints.Application.Commands.UpdateComplaintStatus;
 
 public sealed class UpdateComplaintStatusCommandHandler
     : ICommandHandler<UpdateComplaintStatusCommand, bool>

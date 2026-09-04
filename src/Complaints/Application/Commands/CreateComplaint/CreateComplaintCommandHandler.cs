@@ -1,8 +1,12 @@
+using BuildingBlocks.ApplicationPorts.Context;
+using Complaints.Application.Contracts;
 using Complaints.Domain;
 using FluentValidation;
 using SharedKernel.Messaging;
+using SharedKernel.ValuesObjects;
+using UserMgmt.Application.Contracts;
 
-namespace Hivify.UseCases.Complaints.Commands.CreateComplaint;
+namespace Complaints.Application.Commands.CreateComplaint;
 
 public sealed class CreateComplaintCommandHandler : ICommandHandler<CreateComplaintCommand, Guid>
 {
@@ -12,7 +16,7 @@ public sealed class CreateComplaintCommandHandler : ICommandHandler<CreateCompla
 
     public CreateComplaintCommandHandler(
         IComplaintRepo complaintRepository,
-        IUserRepo userRepository,
+        IUserDirectory userRepository,
         ICurrentUser currentUser,
         IValidator<CreateComplaintCommand> validator)
     {

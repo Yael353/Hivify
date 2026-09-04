@@ -1,7 +1,7 @@
 using Complaints.Domain;
 using SharedKernel.Messaging;
 
-namespace Hivify.UseCases.Complaints.Commands.CreateComplaint
+namespace Complaints.Application.Commands.CreateComplaint
 {
     public sealed record CreateComplaintCommand(
     ComplaintCategory Category,

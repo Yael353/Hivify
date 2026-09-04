@@ -1,7 +1,7 @@
 ﻿using Complaints.Domain;
 using SharedKernel.ValuesObjects;
 
-namespace Complaints.Application.Abstractions.Persistence;
+namespace Complaints.Application.Contracts;
 
 public interface IComplaintRepo
 {
