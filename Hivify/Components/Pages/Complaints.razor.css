@@ -1,9 +1,0 @@
-.complaints-page {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-}
-
-.complaints-page__surface {
-    border-radius: 20px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.98) 100%);
-}

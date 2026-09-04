@@ -1,30 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\..\Documents\CollectionExtensions.cs" Link="CollectionExtensions.cs" />
-    <Compile Include="..\..\Documents\Commands\UploadDocumentCommandHandler.cs" Link="Commands\UploadDocumentCommandHandler.cs" />
-    <Compile Include="..\..\Documents\Quries\GetDocumentsQuery.cs" Link="Quries\GetDocumentsQuery.cs" />
-    <Compile Include="..\..\Documents\Quries\GetDocumentsQueryHandler.cs" Link="Quries\GetDocumentsQueryHandler.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"
+						  Version="10.0.11" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="Quries\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.11" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.csproj" />
-    <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.csproj" />
+		<ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
+	</ItemGroup>
 
 </Project>

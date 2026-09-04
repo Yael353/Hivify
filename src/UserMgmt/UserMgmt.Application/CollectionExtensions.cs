@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddAdminServices()
+        public IServiceCollection AddUserMgmtServices()
         {
 
 

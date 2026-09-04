@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Complaints.Application;
 
-public static class ServiceCollectionExtensions
+public static class CollectionExtensions
 {
     public static IServiceCollection AddComplaintServices(this IServiceCollection services)
     {
